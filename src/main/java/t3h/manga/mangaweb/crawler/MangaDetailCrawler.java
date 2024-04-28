@@ -5,11 +5,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import t3h.manga.mangaweb.crawler.action.FolderProvider;
 import t3h.manga.mangaweb.entity.Author;
 import t3h.manga.mangaweb.entity.Chapter;
 import t3h.manga.mangaweb.entity.Manga;
 import t3h.manga.mangaweb.entity.Tag;
+import t3h.manga.mangaweb.repository.AuthorRepository;
+import t3h.manga.mangaweb.repository.ChapterRepository;
+import t3h.manga.mangaweb.repository.MangaRepository;
+import t3h.manga.mangaweb.repository.TagRepository;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +27,17 @@ public class MangaDetailCrawler implements FolderProvider {
     Author author;
     Tag tag;
     Manga manga;
+    @Autowired
+    private MangaRepository mangaRepository;
 
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private ChapterRepository chapterRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
 
     public void getUrlChapterV2(String url) {
@@ -75,7 +90,7 @@ public class MangaDetailCrawler implements FolderProvider {
 
                 if (authorElement != null) {
                     String authorName = authorElement.text();
-                    author = new Author(authorName);
+//                    author = new Author(authorName);
                     manga = new Manga();
                     manga.setAuthor(author);
                     manga.setDescription(content.text());
