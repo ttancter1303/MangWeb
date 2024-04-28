@@ -1,11 +1,18 @@
-package org.example.model;
+package t3h.manga.mangaweb.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
-
+@Entity
+@Data
+@Table(name = "manga")
 public class Manga {
 
     public Manga() {
     }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String MangaID;
     private String name;
     private String description;

@@ -1,8 +1,8 @@
-package org.example;
-import org.example.model.Author;
+package t3h.manga.mangaweb.crawler;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import t3h.manga.mangaweb.entity.Author;
 
 import java.util.List;
 

@@ -1,14 +1,15 @@
-package org.example;
+package t3h.manga.mangaweb.crawler;
 
-import org.example.action.FolderProvider;
-import org.example.model.Author;
-import org.example.model.Chapter;
-import org.example.model.Manga;
-import org.example.model.Tag;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import t3h.manga.mangaweb.crawler.action.FolderProvider;
+import t3h.manga.mangaweb.entity.Author;
+import t3h.manga.mangaweb.entity.Chapter;
+import t3h.manga.mangaweb.entity.Manga;
+import t3h.manga.mangaweb.entity.Tag;
 
 import java.io.File;
 import java.io.IOException;

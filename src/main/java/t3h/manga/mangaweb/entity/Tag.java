@@ -1,13 +1,19 @@
-package org.example.model;
+package t3h.manga.mangaweb.entity;
 
+import jakarta.persistence.*;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name = "tag")
 public class Tag {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String tagID;
     private String name;
     private String description;
+    public Tag() {
 
-    public Tag(String name, String description) {
-        this.name = name;
-        this.description = description;
     }
 
     public String getName() {

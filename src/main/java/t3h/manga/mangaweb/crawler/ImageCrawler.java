@@ -1,15 +1,14 @@
-package org.example;
+package t3h.manga.mangaweb.crawler;
 
-import org.example.action.FolderProvider;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import t3h.manga.mangaweb.crawler.action.FolderProvider;
 
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Set;

@@ -1,9 +1,16 @@
-package org.example.model;
+package t3h.manga.mangaweb.entity;
+
+import jakarta.persistence.*;
+import lombok.Data;
 
 import java.awt.*;
 import java.util.LinkedList;
-
+@Entity
+@Data
+@Table(name = "chapter")
 public class Chapter {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String chapterID;
     private String name;
     private String date;
