@@ -13,6 +13,9 @@ public class Chapter {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String chapterID;
     private String name;
+    @ManyToOne
+    @JoinColumn(name = "manga_id")
+    private Manga manga;
     private String date;
     @ElementCollection
     @CollectionTable(name = "chapter_images", joinColumns = @JoinColumn(name = "chapter_id"))

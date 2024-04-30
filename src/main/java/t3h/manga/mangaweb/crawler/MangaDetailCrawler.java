@@ -87,13 +87,25 @@ public class MangaDetailCrawler implements FolderProvider {
                 Element listWrapElement = document.selectFirst("div.list-chapters");
                 Element authorElement = document.selectFirst("a.color-green label label-info");
 
-
+                String mangaTitle = entryTitle.text();
+                String authorName = authorElement.text();
                 if (authorElement != null) {
-                    String authorName = authorElement.text();
-//                    author = new Author(authorName);
-                    manga = new Manga();
-                    manga.setAuthor(author);
+
+                    author = authorRepository.findAuthorByName(authorName);
+                    if (author == null) {
+                        author = new Author(authorName);
+                        authorRepository.save(author);
+                    }
+
+                    manga = mangaRepository.findMangaByName(mangaTitle);
                     manga.setDescription(content.text());
+                    if (manga == null) {
+                        manga = new Manga();
+                        manga.setName(mangaTitle);
+                        manga.setDescription(content.text());
+                        manga.setAuthor(author);
+                        mangaRepository.save(manga);
+                    }
                 }
 
                 if (entryTitle != null || titleElement != null) {
@@ -108,6 +120,11 @@ public class MangaDetailCrawler implements FolderProvider {
                             String chapterUrl = linkElement.absUrl("href");
 
                             File chapterEntryFolder = new File(mangaEntryFolder, chapterTitleText);
+
+                            Chapter chapter = new Chapter();
+                            chapter.setName(chapterTitleText);
+                            chapter.setManga(manga);
+                            chapterRepository.save(chapter);
 
                             chapterEntryFolder.mkdirs();
                             System.out.println("Đã tạo thư mục: " + chapterEntryFolder.getAbsolutePath());

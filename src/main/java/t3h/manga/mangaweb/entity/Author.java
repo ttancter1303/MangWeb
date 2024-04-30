@@ -13,4 +13,6 @@ public class Author {
     @Column(name = "AuthorName", nullable = false)
     private String name;
 
+    public Author(String authorName) {
+    }
 }
