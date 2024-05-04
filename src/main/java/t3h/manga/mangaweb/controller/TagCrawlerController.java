@@ -3,35 +3,35 @@ package t3h.manga.mangaweb.controller;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import t3h.manga.mangaweb.crawler.MangaDetailCrawler;
+import t3h.manga.mangaweb.crawler.TagCrawler;
 import t3h.manga.mangaweb.entity.Author;
+import t3h.manga.mangaweb.entity.Tag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/crawler")
-public class CrawlerController {
+@RequestMapping("/crawler/tag")
+public class TagCrawlerController {
     @GetMapping()
-    public ResponseEntity crawler(){
+    public ResponseEntity tagCrawler() {
+
         SessionFactory sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
-            List<Author> authors = session.createQuery("FROM Author", Author.class).getResultList();
-            MangaDetailCrawler mangaDetailCrawler = new MangaDetailCrawler();
-            mangaDetailCrawler.mangaCrawler();
-            // In ra thông tin các tác giả
-            for (Author author : authors) {
-                System.out.println("Author ID: " + author.getAuthorID());
-                System.out.println("Author Name: " + author.getName());
+            TagCrawler tagCrawler = new TagCrawler();
+            ArrayList<String> tags = tagCrawler.tagAfterCrawler();
+            for (String tag : tags) {
+                Tag newTag = new Tag();
+                newTag.setName(tag);
+                session.save(newTag);
             }
-
-            // Kết thúc giao dịch
             session.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();
