@@ -92,6 +92,8 @@ public class MangaDetailCrawler implements FolderProvider {
                 if (authorElement != null) {
 
                     author = authorRepository.findAuthorByName(authorName);
+                    System.out.println("author");
+                    System.out.println(author);
                     if (author == null) {
                         author = new Author(authorName);
                         authorRepository.save(author);

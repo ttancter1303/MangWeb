@@ -15,4 +15,10 @@ public class Author {
 
     public Author(String authorName) {
     }
+
+    public Author() {
+
+    }
+
+
 }

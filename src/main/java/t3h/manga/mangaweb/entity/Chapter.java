@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 @Entity
 @Data
@@ -18,9 +19,8 @@ public class Chapter {
     private Manga manga;
     private String date;
     @ElementCollection
-    @CollectionTable(name = "chapter_images", joinColumns = @JoinColumn(name = "chapter_id"))
-    // Thiết lập tên bảng và tên cột liên kết với khóa ngoại
-    @Column(name = "image_path")
-    private LinkedList<String> imagePathLinkedList;
+    @CollectionTable(name = "image_path", joinColumns = @JoinColumn(name = "chapter_id"))
+    @Column(name = "path")
+    private ArrayList<String> imagePathList;
 
 }

@@ -1,4 +1,7 @@
-package t3h.manga.mangaweb.entity;
-
-public class Admin {
-}
+//package t3h.manga.mangaweb.entity;
+//
+//import jakarta.persistence.Entity;
+//
+//@Entity
+//public class Admin {
+//}
