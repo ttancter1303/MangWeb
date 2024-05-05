@@ -16,7 +16,7 @@ public class Manga {
     private String thumbnailImg;
     private boolean status;
     @ManyToOne // Một tác giả có thể viết nhiều manga
-    @JoinColumn(name = "author_id") // Khóa ngoại trong bảng manga
+    @JoinColumn(name = "author_id",nullable = true) // Khóa ngoại trong bảng manga
     private Author author;
 
     @ManyToMany // Một manga có thể có nhiều tag và một tag có thể được gắn cho nhiều manga

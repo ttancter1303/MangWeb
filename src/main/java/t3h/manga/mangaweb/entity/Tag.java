@@ -9,7 +9,7 @@ import lombok.Data;
 public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String tagID;
+    private Integer tagID;
     private String name;
 
 }

@@ -12,7 +12,7 @@ import java.util.LinkedList;
 public class Chapter {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private String chapterID;
+    private Integer chapterID;
     private String name;
     @ManyToOne
     @JoinColumn(name = "manga_id")

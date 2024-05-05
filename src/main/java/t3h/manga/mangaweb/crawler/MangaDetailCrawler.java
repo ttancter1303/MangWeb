@@ -40,12 +40,13 @@ public class MangaDetailCrawler implements FolderProvider {
     private TagRepository tagRepository;
 
 
-    public void getUrlChapterV2(String url) {
+    public ArrayList<String> getImageChapter(String url) {
+        ArrayList<String> imageChapter = new ArrayList<>();
         try {
             // Kiểm tra nếu url là "javascript:void(0)", thì bỏ qua
             if ("javascript:void(0)".equals(url)) {
                 System.out.println("Skipping invalid URL: " + url);
-                return;
+                return null;
             }
 
             Document document = Jsoup.connect(url).get();
@@ -57,18 +58,31 @@ public class MangaDetailCrawler implements FolderProvider {
                 for (Element imgElement : imgElements) {
                     String imageUrl = imgElement.absUrl("src");
                     System.out.println("Image URL: " + imageUrl);
-
-                    // Sử dụng đường dẫn folder từ FolderProvider
-//                    String folderPath = getFolderPath(titleText, chapterTitleText);
-                    ImageCrawler imageCrawler = new ImageCrawler(this, titleText,chapterTitleText);
-                    imageCrawler.imageDownloader2(imageUrl);
+                    imageChapter.add(imageUrl);
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return imageChapter;
     }
-
+    public ArrayList<Tag> tagAfterCrawler() {
+        ArrayList<Tag> listTag = new ArrayList<>();
+        String url = "https://blogtruyen.vn/";
+        try {
+            Document document = Jsoup.connect(url).get();
+            Elements tags = document.select("ul.submenu.category.list-unstyled a");
+            for (Element element : tags) {
+                Tag tag = new Tag();
+                tag.setName(element.text());
+                listTag.add(tag);
+                System.out.println("tag: " + element.text());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return listTag;
+    }
     public void mangaCrawler() {
         File mangaFolder = new File("manga");
         if (!mangaFolder.exists()) {
@@ -106,6 +120,7 @@ public class MangaDetailCrawler implements FolderProvider {
                         manga.setName(mangaTitle);
                         manga.setDescription(content.text());
                         manga.setAuthor(author);
+                        manga.setListTag(tagAfterCrawler());
                         mangaRepository.save(manga);
                     }
                 }
@@ -131,7 +146,7 @@ public class MangaDetailCrawler implements FolderProvider {
                             chapterEntryFolder.mkdirs();
                             System.out.println("Đã tạo thư mục: " + chapterEntryFolder.getAbsolutePath());
                             System.out.println("Đường dẫn chap: " + chapterUrl);
-                            getUrlChapterV2(chapterUrl);
+                            getImageChapter(chapterUrl);
                         }
                     } else {
                         System.out.println("Không tìm thấy thẻ div có class 'list-wrap'");
