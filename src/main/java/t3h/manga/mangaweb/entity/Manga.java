@@ -3,6 +3,7 @@ package t3h.manga.mangaweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 @Entity
 @Data
@@ -25,8 +26,8 @@ public class Manga {
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private List<Tag> listTag;
+    private ArrayList<Tag> listTag;
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL) // Một manga có thể có nhiều chapter
-    private List<Chapter> chapterList;
+    private ArrayList<Chapter> chapterList;
 }
