@@ -30,12 +30,17 @@ public class CrawlerController {
     MangaRepository mangaRepository;
     @Autowired
     TagRepository tagRepository;
+
+    public CrawlerController(AuthorRepository authorRepository, MangaRepository mangaRepository, TagRepository tagRepository) {
+        this.authorRepository = authorRepository;
+        this.mangaRepository = mangaRepository;
+        this.tagRepository = tagRepository;
+    }
+
     @PostMapping("/tag")
     public ResponseEntity create() {
         ArrayList<Tag> strings = tagAfterCrawler();
-        for (Tag tag : strings) {
-            tagRepository.save(tag);
-        }
+        tagRepository.saveAll(strings);
         return new ResponseEntity<>("Create successfully", HttpStatus.OK);
     }
     @PostMapping("/manga")
@@ -43,6 +48,7 @@ public class CrawlerController {
         ArrayList<String> urlList = new ArrayList<>();
         urlList.add("https://blogtruyen.vn/33314/zankokuna-kami-ga-shihaisuru");
         urlList.add("https://blogtruyen.vn/33396/o-long-vien-linh-vat-song");
+        urlList.add("https://blogtruyen.vn/33474/gannibal-lang-an-thit-nguoi");
 
         for (String url : urlList) {
             try {
@@ -50,36 +56,48 @@ public class CrawlerController {
                 Elements entryTitle = document.select("h1.entry-title");
                 Elements content = document.select("div.content");
                 Element titleElement = document.selectFirst("span.title");
-                Element listWrapElement = document.selectFirst("div.list-chapters");
-                Elements authorElement = document.select("a.color-green label label-info");
+                Element listChapterElement = document.selectFirst("div.list-chapters");
+                Elements authorElements = document.select("p:contains(Tác giả)").select("a");
+                Elements tags = document.select("ul.submenu.category.list-unstyled a");
+                Element thumbnailElement = document.selectFirst("div.thumbnail");
+
+
+                String imageUrl = thumbnailElement.selectFirst("img").attr("src");
 
                 String mangaTitle = entryTitle.text();
+                Author author = null;
+                Manga manga = new Manga();
 
-                for (Element element : authorElement) {
-                    if (element != null){
-                        Author author;
-                        Manga manga;
-                        String authorName = element.text();
-                        author = authorRepository.findAuthorByName(authorName);
-                        System.out.println("author");
-                        System.out.println(author);
-                        if (author == null) {
-                            author = new Author(authorName);
-                            authorRepository.save(author);
-                        }
+                Element authorElement = authorElements.first();
+                System.out.println("Author: "+authorElement.text());
+//                if (!authorElements.isEmpty()) {
+//                    Element authorElement = authorElements.first();
+//                    author.setName(authorElement.text());
+//                    System.out.println("Tác giả: " + author);
+//                } else {
+//                    System.out.println("Không tìm thấy thông tin về tác giả.");
+//                }
+//                authorRepository.save(author);
 
-                        manga = mangaRepository.findMangaByName(mangaTitle);
-                        manga.setDescription(content.text());
-                        if (manga == null) {
-                            manga = new Manga();
-                            manga.setName(mangaTitle);
-                            manga.setDescription(content.text());
-                            manga.setAuthor(author);
-                            manga.setListTag(tagAfterCrawler());
-                            mangaRepository.save(manga);
-                        }
-                    }
-                }
+
+//                author = authorRepository.findAuthorByName(authorName);
+//                System.out.println("author");
+//                System.out.println(author);
+//                if (author == null) {
+//                    author = new Author(authorName);
+//                            authorRepository.save(author);
+//                    System.out.println(author);
+//                }
+//                manga = mangaRepository.findMangaByName(mangaTitle);
+//                manga.setDescription(content.text());
+
+                manga = new Manga();
+                manga.setName(mangaTitle);
+                manga.setDescription(content.text());
+                manga.setThumbnailImg(imageUrl);
+                System.out.println(manga);
+                mangaRepository.save(manga);
+
                 String titleText;
                 String chapterTitleText;
 //                if (entryTitle != null || titleElement != null) {

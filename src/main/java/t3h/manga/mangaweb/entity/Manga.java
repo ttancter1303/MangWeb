@@ -13,6 +13,7 @@ public class Manga {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer MangaID;
     private String name;
+    @Column(columnDefinition = "TEXT")
     private String description;
     private String thumbnailImg;
     private boolean status;
@@ -26,8 +27,20 @@ public class Manga {
             joinColumns = @JoinColumn(name = "manga_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id")
     )
-    private ArrayList<Tag> listTag;
+    private List<Tag> listTag;
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL) // Một manga có thể có nhiều chapter
-    private ArrayList<Chapter> chapterList;
+    private List<Chapter> chapterList;
+    public void addTag(Tag tag) {
+        if (listTag == null) {
+            listTag = new ArrayList<>();
+        }
+        listTag.add(tag);
+    }
+    public void addChapter(Chapter chapter) {
+        if (chapterList == null) {
+            chapterList = new ArrayList<>();
+        }
+        chapterList.add(chapter);
+    }
 }
