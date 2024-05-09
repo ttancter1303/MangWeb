@@ -16,6 +16,7 @@ import t3h.manga.mangaweb.entity.Tag;
 import t3h.manga.mangaweb.repository.AuthorRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
+import t3h.manga.mangaweb.service.MangaService;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,8 @@ public class CrawlerController {
     MangaRepository mangaRepository;
     @Autowired
     TagRepository tagRepository;
+    @Autowired
+    MangaService mangaService;
 
     public CrawlerController(AuthorRepository authorRepository, MangaRepository mangaRepository, TagRepository tagRepository) {
         this.authorRepository = authorRepository;
@@ -39,7 +42,7 @@ public class CrawlerController {
 
     @PostMapping("/tag")
     public ResponseEntity create() {
-        ArrayList<Tag> strings = tagAfterCrawler();
+        ArrayList<Tag> strings = getAllTagCrawler();
         tagRepository.saveAll(strings);
         return new ResponseEntity<>("Create successfully", HttpStatus.OK);
     }
@@ -47,7 +50,6 @@ public class CrawlerController {
     public ResponseEntity crawManga(){
         ArrayList<String> urlList = new ArrayList<>();
         urlList.add("https://blogtruyen.vn/33314/zankokuna-kami-ga-shihaisuru");
-        urlList.add("https://blogtruyen.vn/33396/o-long-vien-linh-vat-song");
         urlList.add("https://blogtruyen.vn/33474/gannibal-lang-an-thit-nguoi");
 
         for (String url : urlList) {
@@ -57,46 +59,44 @@ public class CrawlerController {
                 Elements content = document.select("div.content");
                 Element titleElement = document.selectFirst("span.title");
                 Element listChapterElement = document.selectFirst("div.list-chapters");
-                Elements authorElements = document.select("p:contains(Tác giả)").select("a");
+                Element authorElement = document.selectFirst("a.color-green.label.label-info");
                 Elements tags = document.select("ul.submenu.category.list-unstyled a");
                 Element thumbnailElement = document.selectFirst("div.thumbnail");
-
-
+                Element status = document.selectFirst("span.color-red");
                 String imageUrl = thumbnailElement.selectFirst("img").attr("src");
 
+                String statusTxt = status.text();
+
+
                 String mangaTitle = entryTitle.text();
-                Author author = null;
+
                 Manga manga = new Manga();
 
-                Element authorElement = authorElements.first();
-                System.out.println("Author: "+authorElement.text());
-//                if (!authorElements.isEmpty()) {
-//                    Element authorElement = authorElements.first();
-//                    author.setName(authorElement.text());
-//                    System.out.println("Tác giả: " + author);
-//                } else {
-//                    System.out.println("Không tìm thấy thông tin về tác giả.");
-//                }
-//                authorRepository.save(author);
-
-
-//                author = authorRepository.findAuthorByName(authorName);
-//                System.out.println("author");
-//                System.out.println(author);
-//                if (author == null) {
-//                    author = new Author(authorName);
-//                            authorRepository.save(author);
-//                    System.out.println(author);
-//                }
-//                manga = mangaRepository.findMangaByName(mangaTitle);
-//                manga.setDescription(content.text());
+                String authorName = authorElement.text();
+                System.out.println("Author: "+ authorName);
+                Author author = new Author();
+                author.setName(authorName);
+                authorRepository.save(author);
 
                 manga = new Manga();
                 manga.setName(mangaTitle);
                 manga.setDescription(content.text());
+                if (statusTxt.equals("Đang tiến hành")){
+                    manga.setStatus(true);
+                }else{
+                    manga.setStatus(false);
+                }
                 manga.setThumbnailImg(imageUrl);
+                for (String tag : getTagCrawler(url)) {
+                    Tag localTag = tagRepository.findByName(tag);
+                    manga.setListTag(new ArrayList<>());
+                    manga.getListTag().add(localTag);
+
+                }
                 System.out.println(manga);
                 mangaRepository.save(manga);
+
+//                mangaService.saveMangaWithTags(manga,getTagCrawler(url));
 
                 String titleText;
                 String chapterTitleText;
@@ -136,7 +136,7 @@ public class CrawlerController {
         }
         return new ResponseEntity("Crawler done", HttpStatus.OK);
     }
-    public ArrayList<Tag> tagAfterCrawler() {
+    public ArrayList<Tag> getAllTagCrawler() {
         ArrayList<Tag> listTag = new ArrayList<>();
         String url = "https://blogtruyen.vn/";
         try {
@@ -147,6 +147,19 @@ public class CrawlerController {
                 tag.setName(element.text());
                 listTag.add(tag);
                 System.out.println("tag: " + element.text());
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return listTag;
+    }
+    public ArrayList<String> getTagCrawler(String url) {
+        ArrayList<String> listTag = new ArrayList<>();
+        try {
+            Document document = Jsoup.connect(url).get();
+            Elements tags = document.select("span.category");
+            for (Element element : tags) {
+                listTag.add(element.text());
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
