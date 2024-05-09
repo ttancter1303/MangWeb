@@ -51,6 +51,9 @@ public class CrawlerController {
         ArrayList<String> urlList = new ArrayList<>();
         urlList.add("https://blogtruyen.vn/33314/zankokuna-kami-ga-shihaisuru");
         urlList.add("https://blogtruyen.vn/33474/gannibal-lang-an-thit-nguoi");
+        urlList.add("https://blogtruyen.vn/33081/quyet-chien-33081");
+        urlList.add("https://blogtruyen.vn/21847/bua-an-am-long-voi-nguoi-me-fennir");
+        urlList.add("https://blogtruyen.vn/20740/fuufu-ijou-koibito-miman-20740");
 
         for (String url : urlList) {
             try {
@@ -64,39 +67,35 @@ public class CrawlerController {
                 Element thumbnailElement = document.selectFirst("div.thumbnail");
                 Element status = document.selectFirst("span.color-red");
                 String imageUrl = thumbnailElement.selectFirst("img").attr("src");
-
                 String statusTxt = status.text();
 
 
                 String mangaTitle = entryTitle.text();
-
                 Manga manga = new Manga();
-
                 String authorName = authorElement.text();
                 System.out.println("Author: "+ authorName);
                 Author author = new Author();
+
                 author.setName(authorName);
-                authorRepository.save(author);
+
 
                 manga = new Manga();
                 manga.setName(mangaTitle);
                 manga.setDescription(content.text());
-                if (statusTxt.equals("Đang tiến hành")){
-                    manga.setStatus(true);
-                }else{
-                    manga.setStatus(false);
-                }
+                manga.setAuthor(author);
                 manga.setThumbnailImg(imageUrl);
+                manga.setListTag(new ArrayList<>());
                 for (String tag : getTagCrawler(url)) {
                     Tag localTag = tagRepository.findByName(tag);
-                    manga.setListTag(new ArrayList<>());
                     manga.getListTag().add(localTag);
 
                 }
-                System.out.println(manga);
-                mangaRepository.save(manga);
+                System.out.println("Manga: "+manga);
+                author.getMangaList().add(manga);
 
-//                mangaService.saveMangaWithTags(manga,getTagCrawler(url));
+
+                authorRepository.save(author);
+                mangaRepository.save(manga);
 
                 String titleText;
                 String chapterTitleText;
