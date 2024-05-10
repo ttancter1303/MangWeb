@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import t3h.manga.mangaweb.entity.Author;
 import t3h.manga.mangaweb.entity.Chapter;
 import t3h.manga.mangaweb.entity.Manga;
 import t3h.manga.mangaweb.entity.Tag;
@@ -20,7 +19,6 @@ import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 import t3h.manga.mangaweb.service.MangaService;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,60 +52,59 @@ public class CrawlerController {
     @PostMapping("/manga")
     public ResponseEntity crawManga(){
         ArrayList<String> urlList = new ArrayList<>();
-        urlList.add("https://blogtruyen.vn/33314/zankokuna-kami-ga-shihaisuru");
-        urlList.add("https://blogtruyen.vn/33474/gannibal-lang-an-thit-nguoi");
-        urlList.add("https://blogtruyen.vn/33081/quyet-chien-33081");
-        urlList.add("https://blogtruyen.vn/21847/bua-an-am-long-voi-nguoi-me-fennir");
-        urlList.add("https://blogtruyen.vn/20740/fuufu-ijou-koibito-miman-20740");
+        urlList.add("https://m.blogtruyenmoi.com/c865784/zankokuna-kami-ga-shihaisuru-25");
+
         for (String url : urlList) {
             try {
                 Document document = Jsoup.connect(url).get();
-                Elements entryTitle = document.select("h1.entry-title");
-                Elements content = document.select("div.content");
-                Element titleElement = document.selectFirst("span.title");
+                Elements entryTitle = document.select("h1.title");
+                Elements content = document.select("article.introduce");
+                Element titleChapter = document.selectFirst("span.title");
                 Element listChapterElement = document.selectFirst("div.list-chapters");
-                Element authorElement = document.selectFirst("a.color-green.label.label-info");
+//                Element authorElement = document.selectFirst("a.color-green.label.label-info");
                 Elements tags = document.select("ul.submenu.category.list-unstyled a");
-                Element thumbnailElement = document.selectFirst("div.thumbnail");
-                Element status = document.selectFirst("span.color-red");
-                String imageUrl = thumbnailElement.selectFirst("img").attr("src");
+                Element imgElement = document.select("article.content img").first();
+
+
+                String imageUrl = "";
+                if (imgElement != null) {
+                    imageUrl = imgElement.attr("src");
+                } else {
+                    imageUrl = "Image not found";
+                }
 
                 String titleText;
                 String chapterTitleText;
 
 
 
-
-
-
                 String mangaTitle = entryTitle.text();
-                Manga manga = new Manga();
-                String authorName = authorElement.text();
-                System.out.println("Author: "+ authorName);
-                Author author = new Author();
-                author.setName(authorName);
+//                String authorName = authorElement.text();
+//                System.out.println("Author: "+ authorName);
+//                Author author = new Author();
+//                author.setName(authorName);
 
                 //set thuộc tính manga
-                manga = new Manga();
+                Manga manga = new Manga();
                 manga.setName(mangaTitle);
                 manga.setDescription(content.text());
-                manga.setAuthor(author);
+//                manga.setAuthor(author);
                 manga.setThumbnailImg(imageUrl);
                 manga.setListTag(new ArrayList<>());
 
                 for (String tag : getTagCrawler(url)) {
                     Tag localTag = tagRepository.findByName(tag);
                     manga.getListTag().add(localTag);
-
                 }
+                manga.toString();
 
 
                 System.out.println("Manga: "+manga);
-                author.getMangaList().add(manga);//add id manga vào author
+//                author.getMangaList().add(manga);//add id manga vào author
 
 
 
-                if (entryTitle != null || titleElement != null) {
+                if (entryTitle != null || titleChapter != null) {
                     if (listChapterElement != null) {
                         Elements linkElements = listChapterElement.select("a");
                         for (Element linkElement : linkElements) {
@@ -120,8 +117,9 @@ public class CrawlerController {
                             chapter.setName(chapterTitleText);
                             chapter.setManga(manga);
 
-
+                            chapter.setImagePathList(new ArrayList<>());
                             List<String> imageUrls = getImageChapter(chapterUrl);
+
                             if (imageUrls == null){
                                 System.out.println("Image urls rỗng: ");
                             }else {
@@ -135,8 +133,8 @@ public class CrawlerController {
 //                                System.out.println("image url: "+s);
 //                                chapter.getImagePathList().add(s);
 //                            }
-//                            manga.getChapterList().add(chapter);
-//                            chapterRepository.save(chapter);
+                            manga.getChapterList().add(chapter);
+                            chapterRepository.save(chapter);
                         }
                     } else {
                         System.out.println("Không tìm thấy thẻ div có class 'list-wrap'");
@@ -145,8 +143,8 @@ public class CrawlerController {
                     System.out.println("Không tìm thấy thẻ h1 có class 'entry-title'");
                 }
 
-                authorRepository.save(author);
-                mangaRepository.save(manga);
+//                authorRepository.save(author);
+//                mangaRepository.save(manga);
 
 
 
@@ -158,7 +156,7 @@ public class CrawlerController {
         return new ResponseEntity("Crawler done", HttpStatus.OK);
     }
 
-        public ArrayList<String> getImageChapter(String chapterUrl) {
+    public ArrayList<String> getImageChapter(String chapterUrl) {
         ArrayList<String> imageChapter = new ArrayList<>();
         try {
             // Kiểm tra nếu url là "javascript:void(0)", thì bỏ qua
@@ -167,7 +165,7 @@ public class CrawlerController {
                 return null;
             }
             Document document = Jsoup.connect(chapterUrl).get();
-            Elements imgElements = document.select("article img");
+            Elements imgElements = document.select("div.content");
             for (Element imgElement : imgElements) {
                 String src = imgElement.attr("src");
                 System.out.println("Image source: " + src);
@@ -181,16 +179,28 @@ public class CrawlerController {
 
     public ArrayList<Tag> getAllTagCrawler() {
         ArrayList<Tag> listTag = new ArrayList<>();
-        String url = "https://blogtruyen.vn/";
+        String url = "https://m.blogtruyenmoi.com/theloai/truyen-full";
         try {
             Document document = Jsoup.connect(url).get();
-            Elements tags = document.select("ul.submenu.category.list-unstyled a");
-            for (Element element : tags) {
-                Tag tag = new Tag();
-                tag.setName(element.text());
-                listTag.add(tag);
-                System.out.println("tag: " + element.text());
+            Elements ulElements = document.select("div.ul-cate.ajax-content ul.list-unstyled");
+
+            if (!ulElements.isEmpty()) {
+                for (Element ulElement : ulElements) {
+                    Elements liElements = ulElement.select("li.item");
+
+                    for (Element liElement : liElements) {
+                        String nameTag = liElement.text();
+                        System.out.println("Tag: "+nameTag);
+                        Tag tag = new Tag();
+                        tag.setName(nameTag);
+                        listTag.add(tag);
+                    }
+                }
+            } else {
+                System.out.println("UL elements not found");
             }
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -201,7 +211,7 @@ public class CrawlerController {
         ArrayList<String> listTag = new ArrayList<>();
         try {
             Document document = Jsoup.connect(url).get();
-            Elements tags = document.select("span.category");
+            Elements tags = document.select("ul.list-unstyled li.item");
             for (Element element : tags) {
                 listTag.add(element.text());
             }
