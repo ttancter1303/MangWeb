@@ -3,6 +3,7 @@ package t3h.manga.mangaweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 @Entity
@@ -30,6 +31,8 @@ public class Manga {
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL) // Một manga có thể có nhiều chapter
     private List<Chapter> chapterList;
+    private LocalDate createdAt;
+    private LocalDate updateAt;
     public void addTag(Tag tag) {
         if (listTag == null) {
             listTag = new ArrayList<>();

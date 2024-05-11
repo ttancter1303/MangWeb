@@ -52,7 +52,7 @@ public class CrawlerController {
     @PostMapping("/manga")
     public ResponseEntity crawManga(){
         ArrayList<String> urlList = new ArrayList<>();
-        crawlerService.crawManga("https://nettruyencc.com/truyen-tranh/tham-hoa-tu-linh-su-14775");
+        crawlerService.crawManga("https://nettruyenfull.com/truyen-tranh/quai-luc-loan-than-s22258-22258");
         return new ResponseEntity("Crawler done", HttpStatus.OK);
     }
 }

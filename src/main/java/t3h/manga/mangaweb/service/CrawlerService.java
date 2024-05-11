@@ -15,8 +15,10 @@ import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashSet;
 import java.util.List;
 
@@ -34,10 +36,10 @@ public class CrawlerService {
 
     public ArrayList<Tag> getAllTagCrawler() {
         ArrayList<Tag> listTag = new ArrayList<>();
-        String url = "https://nettruyencc.com/tim-truyen";
+        String url = "https://nettruyenfull.com/tim-truyen";
         try {
             Document document = Jsoup.connect(url).get();
-            Elements links = document.select(".box.genres .nav li a");
+            Elements links = document.select("div.ModuleContent .nav li a");
             HashSet<String> uniqueTexts = new HashSet<>();
             for (Element liElement : links) {
                 String nameTag = liElement.text();
@@ -80,10 +82,25 @@ public class CrawlerService {
                 return null;
             }
             Document document = Jsoup.connect(chapterUrl).get();
-            Elements imgElements = document.select("div.reading-detail");
-            for (Element imgElement : imgElements) {
-                String src = imgElement.attr("data-src");
+            Elements elements = document.select("img.lazy");
+            int i=0;
+            for (Element imgElement : elements) {
+                String src = imgElement.attr("src");
+//                ảnh này được nhúng vào file html nên không có link
                 System.out.println("Image source: " + src);
+                i++;
+
+                String[] parts = src.split(",");
+                String base64Data = parts[1];
+                byte[] decodedBytes = Base64.getDecoder().decode(base64Data);
+                String directory = "/manga";
+                String fileName = i+".jpg";
+                try (FileOutputStream fos = new FileOutputStream(directory + fileName)) {
+                    fos.write(decodedBytes);
+                    System.out.println("Image saved successfully as: " + fileName);
+                } catch (IOException e) {
+                    System.err.println("Error saving image: " + e.getMessage());
+                }
                 imageChapter.add(src);
             }
         } catch (IOException e) {
