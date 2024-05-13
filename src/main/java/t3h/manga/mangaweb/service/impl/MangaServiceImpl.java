@@ -1,0 +1,66 @@
+package t3h.manga.mangaweb.service.impl;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import t3h.manga.mangaweb.model.Manga;
+import t3h.manga.mangaweb.service.MangaService;
+
+@Service
+public class MangaServiceImpl implements MangaService
+{
+    @Autowired private t3h.manga.mangaweb.repository.MangaRepository mangaRepository;
+
+    @Override public List<Manga> getAllManga()
+    {
+        return mangaRepository.findAll();
+    }
+
+    @Override public Manga  getMangaById(int id) 
+    {
+
+        Manga Manga = null;
+
+        Optional<Manga> optional = mangaRepository.findById(id);
+
+        if(optional.isPresent())
+        {
+            Manga = optional.get();
+        }
+
+        return Manga;
+
+    }
+
+    @Override public Manga  getMangaBySrc(String src) 
+    {
+
+        Manga Manga = null;
+
+        Optional<Manga> optional = mangaRepository.findBySource(src);
+
+        if(optional.isPresent())
+        {
+            Manga = optional.get();
+        }
+
+        return Manga;
+
+    }
+
+    @SuppressWarnings("null")
+    @Override
+    public void saveManga(Manga Manga)
+    {
+        this.mangaRepository.save(Manga);
+    }
+
+    @Override
+    public void deleteManga(int id)
+    {
+        this.mangaRepository.deleteById(id);
+    }
+}

@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import t3h.manga.mangaweb.entity.Manga;
+import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.repository.MangaRepository;
 
 import java.util.List;
@@ -39,18 +39,19 @@ public class MangaController {
         return new ResponseEntity<>(createdManga, HttpStatus.CREATED);
     }
 
-    // PUT update an existing manga
-    @PutMapping("/{id}")
-    public ResponseEntity<Manga> updateManga(@PathVariable("id") Integer id, @RequestBody Manga manga) {
-        Optional<Manga> mangaOptional = mangaRepository.findById(id);
-        if (mangaOptional.isPresent()) {
-            manga.setMangaID(id); // Set ID của manga trước khi cập nhật
-            Manga updatedManga = mangaRepository.save(manga);
-            return new ResponseEntity<>(updatedManga, HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
+    // //TODO:
+    // // PUT update an existing manga
+    // @PutMapping("/{id}")
+    // public ResponseEntity<Manga> updateManga(@PathVariable("id") Integer id, @RequestBody Manga manga) {
+    //     Optional<Manga> mangaOptional = mangaRepository.findById(id);
+    //     if (mangaOptional.isPresent()) {
+    //         manga.setMangaID(id); // Set ID của manga trước khi cập nhật
+    //         Manga updatedManga = mangaRepository.save(manga);
+    //         return new ResponseEntity<>(updatedManga, HttpStatus.OK);
+    //     } else {
+    //         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    //     }
+    // }
 
     // DELETE delete a manga
     @DeleteMapping("/{id}")

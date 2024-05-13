@@ -1,0 +1,4 @@
+src/main/resources/application.properties
+app.log
+app.log.2024-05-12.0.gz
+.vscode
