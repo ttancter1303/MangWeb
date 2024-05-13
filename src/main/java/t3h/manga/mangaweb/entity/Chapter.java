@@ -3,9 +3,8 @@ package t3h.manga.mangaweb.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.LinkedList;
+
 @Entity
 @Data
 @Table(name = "chapter")

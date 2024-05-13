@@ -15,7 +15,7 @@ public class Author {
     private Integer authorID;
     @Column(name = "AuthorName", nullable = false)
     private String name;
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = {CascadeType.DETACH,CascadeType.MERGE,CascadeType.PERSIST,CascadeType.REFRESH})
     private List<Manga> mangaList = new ArrayList<>();
     public Author(String authorName) {
     }
