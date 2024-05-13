@@ -1,7 +1,7 @@
 <script>
     var timeoutRequest;
     var loading = true;
-    var isComplete = true;;
+    var isComplete = true;
     $.ajaxSetup({
         beforeSend: function () {
             isComplete = false;
@@ -10,9 +10,10 @@
             }
         },
         complete: function () {
-            isComplete = true;
-            $("#wrap_loading").addClass("d-none");
-            $('#progress').width('0%').text('0%');
+            if (isComplete) {
+                $("#wrap_loading").addClass("d-none");
+                $('#progress').width('0%').text('0%');
+            }
         }
     });
 </script>
@@ -48,7 +49,7 @@
 </style>
 
 <div class="d-none" id="wrap_loading">
-    <h1>Đang cào dữ liệu...</h1>
+    <h1 class="w-75 text-center" id="crawling_status">Đang cào dữ liệu...</h1>
 </div>
 
 <div class="controller p-3">
@@ -58,6 +59,7 @@
 </div>
 
 <script>
+    var attemp = 1;
     swal({
         title: "CHÚ Ý!",
         text: "1. Khi đang cào không nên tắt hoặc thoát, nếu không thì sẽ dẫn đến điều số 2.\n2. Nếu số lượng chap cào được nhỏ hơn tổng số chap, HÃY cào lại cho đến khi nào bằng tổng số chap thì dừng.",
@@ -67,23 +69,53 @@
     });
 
     $(document).ready(function () {
-        $("#btn-crawl").click((ev) => {
-            let getUrl = $("#url-crawl").val().trim();
-            if (getUrl) {
+        const CrawlerService = (() => {
+            let module = {};
+
+            module.crawl = (url, callback) => {
                 $.ajax({
                     type: "post",
                     url: "/api/crawler/manga",
-                    data: { url: getUrl },
+                    data: { url: url },
                     success: (response) => {
-                        console.log(response);
-                        swal({
-                            title: "Xong!",
-                            text: response.status,
-                            icon: "info",
-                            button: "Ok",
-                        });
+                        callback(response);
                     }
                 });
+            }
+            return module;
+        })();
+
+        function crawlManga(url) {
+            isComplete = false;
+            CrawlerService.crawl(url, (response) => {
+                console.log(response);
+                if (response.total - response.curent > 0) {
+                    crawlManga(url);
+                    attemp += 1;
+                    let status;
+                    if (attemp > 1) {
+                        status = `Hãy cố gắng đợi một chút!<br>Đợt: ${attemp}<br> Tiến độ: ${response.curent}/${response.total} chap`;
+                    }
+                    $("#crawling_status").html(status);
+                } else {
+                    attemp = 1;
+                    $("#crawling_status").html("Đang cào dữ liệu...");
+                    isComplete = true;
+                    swal({
+                        title: "Xong!",
+                        text: response.status,
+                        icon: "success",
+                        button: "Ok",
+                    });
+                }
+
+            })
+        }
+
+        $("#btn-crawl").click((ev) => {
+            let getUrl = $("#url-crawl").val().trim();
+            if (getUrl) {
+                crawlManga(getUrl);
             }
         });
     });

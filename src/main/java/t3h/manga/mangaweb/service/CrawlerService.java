@@ -188,7 +188,9 @@ public class CrawlerService {
                 }
             }
             result.put("status", "Đã cào " + manga.getChapterList().size() + "/" + totalChap + " chap.");
-            result.put("manga", new MangaDTO(manga));
+            result.put("total", totalChap);
+            result.put("curent", manga.getChapterList().size());
+            // result.put("manga", new MangaDTO(manga));
             return result;
         } catch (IOException e) {
             return null;
