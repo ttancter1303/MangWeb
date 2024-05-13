@@ -25,6 +25,8 @@ public class Chapter {
 
     private String name;
 
+    private Long views;
+
     @Column(length = 1000)
     private String source;
 

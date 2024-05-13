@@ -16,6 +16,7 @@ public class ChapterDTO {
     public ChapterDTO(Chapter chapter) {
         this.id = AESEncryption.encrypt(chapter.getId().toString());
         this.name = chapter.getName();
+        this.views = chapter.getViews();
         this.source = chapter.getSource();
         this.createdAt = chapter.getCreatedTime();
         this.pathImagesList = new ArrayList<>(Arrays.asList(chapter.getPathImagesList().split(",")));
@@ -23,6 +24,7 @@ public class ChapterDTO {
 
     private String id;
     private String name;
+    private Long views;
     private String source;
     private String createdAt;
     private List<String> pathImagesList;
