@@ -3,21 +3,16 @@ package t3h.manga.mangaweb.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
-@Data
 @Entity
-@Table(name = "account")
+@Data
+@Table(name = "Account")
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String fullName;
-    @Column(unique = true, length = 20)
+    private Integer id;
     private String username;
     private String password;
-    private Date createdAt;
-    private Date updateAt;
-    @Column(unique = true)
-    private String Email;
+
 }
