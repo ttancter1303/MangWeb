@@ -18,9 +18,167 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 </head>
-
+<style>
+    body {
+        background-color: #1a1a1a;
+        color: #fff;
+    }
+    .navbar {
+        background-color: #000;
+    }
+    .navbar-brand {
+        color: #ff4b2b;
+    }
+    .nav-link, .navbar-text {
+        color: #fff;
+    }
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(255, 255, 255, 0.05);
+    }
+    .table-dark {
+        background-color: #2d2d2d;
+    }
+    .table-dark th, .table-dark td, .table-dark thead th {
+        border-color: #454d55;
+    }
+    .sidebar {
+        background-color: #2d2d2d;
+        height: 100vh;
+        padding-top: 20px;
+    }
+    .sidebar a {
+        color: #fff;
+    }
+    .sidebar a:hover {
+        color: #ff4b2b;
+    }
+    .form-control {
+        color: white; /* Đặt màu chữ là màu trắng */
+    }
+</style>
 <body>
-    <div th:replace="${content}"></div>
+<nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
+    <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
+        <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
+    </a>
+    <a href="#" class="sidebar-toggler flex-shrink-0">
+        <i class="fa fa-bars"></i>
+    </a>
+<!--    <form class="d-none d-md-flex ms-4">-->
+<!--        <input class="form-control bg-dark border-0" type="search" placeholder="Search">-->
+<!--    </form>-->
+
+
+    <form th:action="@{/admin/mangas/search}" method="get" class="d-none d-md-flex ms-4">
+        <input type="text" name="name" class="form-control  border-0" placeholder="Search by name" />
+        <input type="text" name="tag" class="form-control  border-0" placeholder="Search by tag" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <div class="navbar-nav align-items-center ms-auto">
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fa fa-envelope me-lg-2"></i>
+                <span class="d-none d-lg-inline-flex">Message</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                <a href="#" class="dropdown-item">
+                    <div class="d-flex align-items-center">
+                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <div class="ms-2">
+                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                            <small>15 minutes ago</small>
+                        </div>
+                    </div>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                    <div class="d-flex align-items-center">
+                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <div class="ms-2">
+                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                            <small>15 minutes ago</small>
+                        </div>
+                    </div>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                    <div class="d-flex align-items-center">
+                        <img class="rounded-circle" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                        <div class="ms-2">
+                            <h6 class="fw-normal mb-0">Jhon send you a message</h6>
+                            <small>15 minutes ago</small>
+                        </div>
+                    </div>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item text-center">See all message</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <i class="fa fa-bell me-lg-2"></i>
+                <span class="d-none d-lg-inline-flex">Notificatin</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                <a href="#" class="dropdown-item">
+                    <h6 class="fw-normal mb-0">Profile updated</h6>
+                    <small>15 minutes ago</small>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                    <h6 class="fw-normal mb-0">New user added</h6>
+                    <small>15 minutes ago</small>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                    <h6 class="fw-normal mb-0">Password changed</h6>
+                    <small>15 minutes ago</small>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item text-center">See all notifications</a>
+            </div>
+        </div>
+        <div class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img class="rounded-circle me-lg-2" src="img/user.jpg" alt="" style="width: 40px; height: 40px;">
+                <span class="d-none d-lg-inline-flex">John Doe</span>
+            </a>
+            <div class="dropdown-menu dropdown-menu-end bg-secondary border-0 rounded-0 rounded-bottom m-0">
+                <a href="#" class="dropdown-item">My Profile</a>
+                <a href="#" class="dropdown-item">Settings</a>
+                <a href="#" class="dropdown-item">Log Out</a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2 sidebar">
+                <!-- Sidebar -->
+                <div class="d-flex flex-column p-3">
+                    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                        <img src="https://via.placeholder.com/50" alt="Avatar" class="rounded-circle me-2">
+                        <span>John Doe</span>
+                    </a>
+                    <hr>
+                    <ul class="nav nav-pills flex-column mb-auto">
+                        <li class="nav-item">
+                            <a href="/admin/dashboard" class="nav-link text-white">Crawler</a>
+                        </li>
+                        <li>
+                            <a href="#" class="nav-link text-white">Orders</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div th:replace="${content}"></div>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
