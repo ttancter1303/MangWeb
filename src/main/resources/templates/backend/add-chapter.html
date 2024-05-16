@@ -1,0 +1,17 @@
+
+<body>
+<h1>Add New Chapter</h1>
+<form action="/admin/mangas/{mangaId}/add-chapter" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="mangaId" th:value="${mangaId}" />
+    <div>
+        <label for="name">Chapter Name:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+    <div>
+        <label for="image">Chapter Image:</label>
+        <input type="file" id="image" name="file" accept="image/*" required>
+    </div>
+    <button type="submit">Add Chapter</button>
+</form>
+</body>
+
