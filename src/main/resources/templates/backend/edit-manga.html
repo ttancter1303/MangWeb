@@ -1,0 +1,71 @@
+<body>
+<div class="container mt-5">
+  <h2>Edit Manga</h2>
+  <form th:action="@{/admin/mangas/edit/{id}(id=${manga.id})}" method="post">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" name="name" th:value="${manga.name}" required>
+    </div>
+    <div class="form-group">
+      <label for="listTag">List Tag:</label>
+      <div id="tagContainer" class="tag-container">
+        <!-- Hiển thị danh sách các tag của bộ truyện -->
+        <div th:each="tag : ${allTags}" class="tag-box">
+          <!-- Kiểm tra xem tag đã được chọn hay chưa -->
+          <input type="checkbox" class="form-check-input" th:id="'tag_' + ${tag.tagID}" th:name="selectedTags" th:value="${tag.tagID}" th:checked="${mangaTags.contains(tag)}">
+          <label class="form-check-label" th:for="'tag_' + ${tag.tagID}" th:text="${tag.name}"></label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="author">Author:</label>
+      <input type="text" class="form-control" id="author" name="author" th:value="${manga.author}" required>
+    </div>
+    <!-- Add other fields as needed -->
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+
+<!-- Modal -->
+<!-- Modal -->
+<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="tagModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="tagModalLabel">Select Tag</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <!-- Hiển thị danh sách tất cả các tag -->
+        <div th:each="tag : ${allTags}">
+          <!-- Thêm sự kiện onclick vào thẻ <span> -->
+          <span class="badge badge-primary tag" th:text="${tag.name}" th:data-tag-id="${tag.tagID}" onclick="addTag(this)"></span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script th:inline="javascript">
+  function removeTag(button) {
+    var tagContainer = button.parentNode;
+    tagContainer.parentNode.removeChild(tagContainer);
+  }
+  function addTag(tagElement) {
+    var tagName = tagElement.textContent;
+    var tagId = tagElement.getAttribute("data-tag-id");
+    var tagInput = document.createElement("input");
+    tagInput.type = "hidden";
+    tagInput.name = "listTag";
+    tagInput.value = tagName;
+    document.getElementById("tagContainer").appendChild(tagInput);
+  }
+</script>
+</body>

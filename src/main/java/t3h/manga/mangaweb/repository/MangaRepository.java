@@ -19,4 +19,6 @@ public interface MangaRepository extends JpaRepository<Manga,Integer> {
 
 
     Optional<Manga> findBySource(String source);
+
+    void deleteById(Integer id);
 }
