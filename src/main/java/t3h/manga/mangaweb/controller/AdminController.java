@@ -1,5 +1,10 @@
 package t3h.manga.mangaweb.controller;
 
+import com.github.junrar.Archive;
+import com.github.junrar.exception.RarException;
+import com.github.junrar.rarfile.FileHeader;
+import com.github.junrar.volume.FileVolumeManager;
+import org.hibernate.boot.archive.spi.ArchiveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -10,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import t3h.manga.mangaweb.components.file.FileUtils;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.model.Tag;
@@ -17,8 +24,16 @@ import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 
 @Controller
@@ -39,7 +54,7 @@ public class AdminController {
 
         return "layouts/adminlte3.html";
     }
-    @GetMapping("")
+    @GetMapping("/")
     public String getAdminPage(HttpSession session,
                                Model model,
                                @RequestParam(defaultValue = "0") int page,
@@ -47,8 +62,8 @@ public class AdminController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Manga> mangaPage = mangaRepository.findAll(pageable);
         System.out.println(mangaPage.getTotalPages());
-        model.addAttribute("title", "Page");
-        model.addAttribute("mangaPage", mangaPage); // Sửa từ "mangas" thành "mangaPage"
+        model.addAttribute("title", "Admin Page");
+        model.addAttribute("mangaPage", mangaPage);
         model.addAttribute("content", "backend/mangas.html");
         return "layouts/adminlte3";
     }
@@ -94,54 +109,104 @@ public class AdminController {
     @PostMapping("/mangas/edit/{id}")
     public String editManga(@PathVariable("id") Integer id,
                             @ModelAttribute("manga") Manga updatedManga,
-                            @RequestParam(value = "selectedTags", required = false) List<Integer> selectedTags) {
+                            @RequestParam(value = "selectedTags", required = false) List<Integer> selectedTags,
+                            RedirectAttributes redirectAttributes) {
+        // Tìm manga theo id
         Manga manga = mangaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid manga Id:" + id));
 
+        // Cập nhật các thuộc tính của manga
         manga.setName(updatedManga.getName());
         manga.setAuthor(updatedManga.getAuthor());
 
+        // Cập nhật danh sách tag nếu có
         if (selectedTags != null && !selectedTags.isEmpty()) {
             List<Tag> tags = tagRepository.findAllById(selectedTags);
             manga.setListTag(tags);
         } else {
             manga.setListTag(new ArrayList<>());
         }
+
+        // Lưu manga đã cập nhật
         mangaRepository.save(manga);
 
-        return "redirect:/admin";
+        // Thêm thông báo thành công và chuyển hướng
+        redirectAttributes.addFlashAttribute("message", "Manga updated successfully!");
+        return "redirect:/admin/";
     }
+
     @GetMapping("/mangas/{mangaId}/add-chapter")
-    public String showAddChapterForm(@PathVariable("mangaId") Long mangaId, Model model) {
+    public String showAddChapterForm(@PathVariable("mangaId") Integer mangaId, Model model) {
         model.addAttribute("mangaId", mangaId);
         return "backend/add-chapter";
     }
     @PostMapping("/mangas/{mangaId}/add-chapter")
-    public String addChapter(@PathVariable("mangaId") Integer mangaId,
-                             @RequestParam("name") String name,
-                             @RequestParam("images") MultipartFile[] images) {
-        Manga manga = mangaRepository.findById(mangaId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid manga Id:" + mangaId));
+    public String handleFileUpload(@RequestParam("files") MultipartFile[] files,
+                                   @RequestParam("name") String name,
+                                   @PathVariable("mangaId") Integer mangaId,
+                                   RedirectAttributes redirectAttributes) {
+        if (files.length == 0 || files[0].isEmpty()) {
+            redirectAttributes.addFlashAttribute("message", "Vui lòng chọn thư mục chứa các tệp ảnh để tải lên.");
+            return "redirect:/admin/mangas/edit/" + mangaId;
+        }
 
-        // Tạo một đối tượng Chapter mới
-        Chapter chapter = new Chapter();
-        chapter.setName(name);
-        // Xử lý và lưu hình ảnh vào đối tượng chapter ở đây
+        List<String> imagePaths = new ArrayList<>();
+        try {
+            // Tạo thư mục tạm để lưu các tệp ảnh tải lên
+            Path tempDir = Files.createTempDirectory("");
 
-        // Lưu chapter vào danh sách chapter của manga
-        manga.getChapterList().add(chapter);
-        mangaRepository.save(manga);
+            for (MultipartFile file : files) {
+                if (file.isEmpty()) continue;
 
-        return "redirect:/admin/mangas/edit/" + mangaId; // Redirect về trang chỉnh sửa manga sau khi thêm chapter
+                String fileName = file.getOriginalFilename();
+                if (fileName != null && isImageFile(fileName)) {
+                    File tempFile = tempDir.resolve(fileName).toFile();
+                    file.transferTo(tempFile);
+                    imagePaths.add(tempFile.getAbsolutePath());
+                }
+            }
+
+            if (imagePaths.isEmpty()) {
+                redirectAttributes.addFlashAttribute("message", "Không tìm thấy tệp ảnh trong thư mục.");
+                return "redirect:/admin/mangas/edit/" + mangaId;
+            }
+
+            // Tạo đối tượng chương mới và lưu các tệp đã tải lên vào chương
+            Chapter chapter = new Chapter();
+            chapter.setName(name);
+            chapter.setPathImagesList(String.join(",", imagePaths));
+
+            // Lưu chương vào danh sách chương của manga
+            Manga manga = mangaRepository.findById(mangaId)
+                    .orElseThrow(() -> new RuntimeException("Không tìm thấy manga"));
+            chapter.setManga(manga);
+            manga.getChapterList().add(chapter);
+            mangaRepository.save(manga);
+
+            redirectAttributes.addFlashAttribute("message", "Bạn đã tải lên và xử lý thư mục thành công!");
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "Tải lên và xử lý thư mục thất bại do lỗi IO.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("message", "Đã xảy ra lỗi không mong muốn.");
+        }
+
+        return "redirect:/admin/mangas/edit/" + mangaId;
     }
-    // Phương thức để lưu hình ảnh vào thư mục lưu trữ
-//    private String saveImage(MultipartFile file) {
-        // Code để lưu hình ảnh vào thư mục lưu trữ và trả về đường dẫn của hình ảnh
-        // Ví dụ:
-        // String imagePath = "uploads/" + file.getOriginalFilename();
-        // File newFile = new File(imagePath);
-        // file.transferTo(newFile);
-        // return imagePath;
-//    }
-    
+
+    // Phương thức phụ để kiểm tra tệp có phải là tệp ảnh hay không
+    private boolean isImageFile(String fileName) {
+        String[] imageExtensions = new String[]{"png", "jpg", "jpeg", "gif", "bmp"};
+        fileName = fileName.toLowerCase();
+        for (String ext : imageExtensions) {
+            if (fileName.endsWith("." + ext)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
 }

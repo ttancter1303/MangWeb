@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title th:text="${title}"></title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"
         integrity="sha512-tWHlutFnuG0C6nQRlpvrEhE4QpkG1nn2MOUMWmUeRePl4e3Aki0VB6W1v3oLjFtd0hVOtRQ9PHpSfN6u6/QXkQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -52,9 +53,6 @@
     .sidebar a:hover {
         color: #ff4b2b;
     }
-    .form-control {
-        color: white; /* Đặt màu chữ là màu trắng */
-    }
     .tag-container {
         display: flex;
         flex-wrap: wrap;
@@ -63,6 +61,35 @@
     .tag-box {
         margin-right: 5px; /* Khoảng cách giữa các tag */
     }
+    .sidebar {
+        height: 100vh;
+        background-color: #343a40;
+        color: #fff;
+    }
+
+    .sidebar .navbar {
+        padding: 0;
+    }
+
+    .sidebar .navbar-brand {
+        padding: 1rem 1.5rem;
+        font-size: 1.5rem;
+    }
+
+    .sidebar .navbar-nav {
+        flex-direction: column;
+    }
+
+    .sidebar .nav-item .nav-link {
+        color: #adb5bd;
+    }
+
+
+
+    .sidebar .nav-item .dropdown-menu {
+        background-color: #343a40;
+    }
+
 </style>
 <body>
 <nav class="navbar navbar-expand bg-secondary navbar-dark sticky-top px-4 py-0">
@@ -75,8 +102,6 @@
 <!--    <form class="d-none d-md-flex ms-4">-->
 <!--        <input class="form-control bg-dark border-0" type="search" placeholder="Search">-->
 <!--    </form>-->
-
-
     <form th:action="@{/admin/mangas/search}" method="get" class="d-none d-md-flex ms-4">
         <input type="text" name="name" class="form-control  border-0" placeholder="Search by name" />
         <input type="text" name="tag" class="form-control  border-0" placeholder="Search by tag" />
@@ -161,32 +186,47 @@
     </div>
 </nav>
 
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2 sidebar">
-                <!-- Sidebar -->
-                <div class="d-flex flex-column p-3">
-                    <a href="#" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-                        <img src="https://via.placeholder.com/50" alt="Avatar" class="rounded-circle me-2">
-                        <span>John Doe</span>
-                    </a>
-                    <hr>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <a href="/admin/dashboard" class="nav-link text-white">Crawler</a>
-                        </li>
-                        <li>
-                            <a href="#" class="nav-link text-white">Orders</a>
-                        </li>
-                    </ul>
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-2 sidebar bg-secondary pe-4 pb-3">
+            <nav class="navbar bg-secondary navbar-dark">
+
+                <div class="navbar-nav w-100">
+                    <a href="/admin/dashboard" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Crawler</a>
+                    <a href="/admin/" class="nav-item nav-link active"><i class="fa fa-tachometer-alt me-2"></i>Home</a>
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa fa-laptop me-2"></i>Add</a>
+                        <div class="dropdown-menu bg-transparent border-0">
+                            <a href="/admin/add-author" class="dropdown-item">Add Author</a>
+                            <a href="/admin/add-manga" class="dropdown-item">Add Manga</a>
+                            <a href="/admin/add-tag" class="dropdown-item">Add Tag</a>
+                        </div>
+                    </div>
+<!--                    <a href="widget.html" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Widgets</a>-->
+<!--                    <a href="form.html" class="nav-item nav-link"><i class="fa fa-keyboard me-2"></i>Forms</a>-->
+<!--                    <a href="table.html" class="nav-item nav-link"><i class="fa fa-table me-2"></i>Tables</a>-->
+<!--                    <a href="chart.html" class="nav-item nav-link"><i class="fa fa-chart-bar me-2"></i>Charts</a>-->
+<!--                    <div class="nav-item dropdown">-->
+<!--                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><i class="far fa-file-alt me-2"></i>Pages</a>-->
+<!--                        <div class="dropdown-menu bg-transparent border-0">-->
+<!--                            <a href="signin.html" class="dropdown-item">Sign In</a>-->
+<!--                            <a href="signup.html" class="dropdown-item">Sign Up</a>-->
+<!--                            <a href="404.html" class="dropdown-item">404 Error</a>-->
+<!--                            <a href="blank.html" class="dropdown-item">Blank Page</a>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
-            </div>
-            <div class="col-md-10">
-                <div th:replace="${content}"></div>
-                </table>
-            </div>
+            </nav>
+        </div>
+        <div class="col-md-10">
+            <div th:replace="${content}"></div>
         </div>
     </div>
+</div>
+
 </body>
 
 </html>

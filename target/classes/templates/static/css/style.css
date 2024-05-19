@@ -287,3 +287,75 @@
     background: var(--dark);
     border-color: var(--primary);
 }
+/*body {*/
+/*    background-color: #1a1a1a;*/
+/*    color: #fff;*/
+/*}*/
+/*.navbar {*/
+/*    background-color: #000;*/
+/*}*/
+/*.navbar-brand {*/
+/*    color: #ff4b2b;*/
+/*}*/
+/*.nav-link, .navbar-text {*/
+/*    color: #fff;*/
+/*}*/
+/*.table-striped tbody tr:nth-of-type(odd) {*/
+/*    background-color: rgba(255, 255, 255, 0.05);*/
+/*}*/
+/*.table-dark {*/
+/*    background-color: #2d2d2d;*/
+/*}*/
+/*.table-dark th, .table-dark td, .table-dark thead th {*/
+/*    border-color: #454d55;*/
+/*}*/
+/*.sidebar {*/
+/*    background-color: #2d2d2d;*/
+/*    height: 100vh;*/
+/*    padding-top: 20px;*/
+/*}*/
+/*.sidebar a {*/
+/*    color: #fff;*/
+/*}*/
+/*.sidebar a:hover {*/
+/*    color: #ff4b2b;*/
+/*}*/
+/*.form-control {*/
+/*    color: white; !* Đặt màu chữ là màu trắng *!*/
+/*}*/
+/*.tag-container {*/
+/*    display: flex;*/
+/*    flex-wrap: wrap;*/
+/*}*/
+
+/*.tag-box {*/
+/*    margin-right: 5px; !* Khoảng cách giữa các tag *!*/
+/*}*/
+/*.sidebar {*/
+/*    height: 100vh;*/
+/*    background-color: #343a40;*/
+/*    color: #fff;*/
+/*}*/
+
+/*.sidebar .navbar {*/
+/*    padding: 0;*/
+/*}*/
+
+/*.sidebar .navbar-brand {*/
+/*    padding: 1rem 1.5rem;*/
+/*    font-size: 1.5rem;*/
+/*}*/
+
+/*.sidebar .navbar-nav {*/
+/*    flex-direction: column;*/
+/*}*/
+
+/*.sidebar .nav-item .nav-link.active,*/
+/*.sidebar .nav-item .nav-link:hover {*/
+/*    color: #000000;*/
+/*    background-color: #313438;*/
+/*}*/
+
+/*.sidebar .nav-item .dropdown-menu {*/
+/*    background-color: #343a40;*/
+/*}*/

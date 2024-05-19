@@ -8,4 +8,5 @@ import java.util.List;
 public interface ChapterRepository extends JpaRepository<Chapter,Integer> {
     Chapter findByName(String name);
     List<Chapter> findByMangaId(Integer id);
+    int countByMangaId(Integer mangaId);
 }

@@ -1,0 +1,41 @@
+
+<div class="container">
+    <h1 class="mt-3">Thông tin Manga</h1>
+    <!-- Kiểm tra xem có dữ liệu manga không -->
+    <th:block th:if="${manga != null}">
+        <div class="manga-details">
+            <!-- Hiển thị tên manga -->
+            <h2 th:text="${manga.name}"></h2>
+            <!-- Hiển thị hình thu nhỏ -->
+            <img th:src="@{${manga.thumbnailImg}}" alt="Thumbnail" style="width: 200px; height: auto;"/>
+            <!-- Hiển thị danh sách các tag -->
+            <!-- Hiển thị danh sách các tag -->
+            <p>
+                <strong>Tags:</strong>
+                <span th:each="tag, tagStat : ${manga.listTag}">
+                <span th:text="${tag.name}"></span>
+            </span>
+            </p>
+
+            <!-- Hiển thị thời gian tạo -->
+            <p><strong>Thời gian tạo:</strong> <span th:text="${manga.getCreatedTime()}"></span></p>
+            <!-- Hiển thị thời gian cập nhật -->
+            <p><strong>Thời gian cập nhật:</strong> <span th:text="${manga.getUpdatedTime()}"></span></p>
+        </div>
+
+        <!-- Hiển thị danh sách các chapter -->
+        <div class="chapter-list">
+            <h3>Các Chapter</h3>
+            <ul>
+                <li th:each="chapter : ${chapters}" th:text="${chapter.name}"></li>
+            </ul>
+        </div>
+    </th:block>
+    <!-- Trường hợp không tìm thấy manga -->
+    <th:block th:if="${manga == null}">
+        <div class="error-message">
+            <p>Sorry, manga not found!</p>
+        </div>
+    </th:block>
+</div>
+

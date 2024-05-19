@@ -1,0 +1,17 @@
+<h1 class="mt-3">Danh sách Manga</h1>
+<div class="container mt-3">
+  <div class="row">
+    <div class="col-md-3 manga-card" th:each="manga : ${mangaPage.content}">
+      <div class="card">
+        <a th:href="@{/manga/{id}(id=${manga.id})}">
+          <img th:src="${manga.thumbnailImg}" alt="Hình minh họa Manga">
+          <div class="card-body">
+            <h5 class="card-title" th:text="${manga.name}"></h5>
+            <p class="card-text">Tác giả: <span th:text="${manga.author}"></span></p>
+            <p class="card-text">Số lượng chapter: <span th:text="${#lists.size(manga.chapterList)}"></span></p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
