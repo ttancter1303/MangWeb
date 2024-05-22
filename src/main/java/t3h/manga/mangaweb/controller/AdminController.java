@@ -8,6 +8,8 @@ import org.hibernate.boot.archive.spi.ArchiveException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +47,11 @@ public class AdminController {
     TagRepository tagRepository;
     @Autowired
     ChapterRepository chapterRepository;
+    @GetMapping("")
+    public String admin(@AuthenticationPrincipal UserDetails userDetails, Model model) {
+        model.addAttribute("username", userDetails.getUsername());
+        return "layouts/adminlte3.html";
+    }
     @GetMapping("/dashboard")
     public String getDashboard(HttpSession session, Model model) {
 

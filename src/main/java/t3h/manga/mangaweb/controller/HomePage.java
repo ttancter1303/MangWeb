@@ -35,10 +35,22 @@ public class HomePage {
                                @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<Manga> mangaPage = mangaRepository.findAll(pageable);
+
         model.addAttribute("title", "Home");
         model.addAttribute("mangaPage", mangaPage);
         model.addAttribute("content", "frontend/mangas.html");
         return "frontend/index.html";
+    }
+    @GetMapping("/login")
+    public String login(Model model) {
+        model.addAttribute("title", "Login");
+        model.addAttribute("content", "frontend/login.html");
+        return "frontend/index.html";
+    }
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/";
     }
     @GetMapping("/manga/{id}")
     public String getMangaDetail(@PathVariable("id") Integer mangaId, Model model) {
