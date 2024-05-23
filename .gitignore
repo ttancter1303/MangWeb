@@ -1,8 +1,6 @@
 *.log
 logs/
-# Ignore log files
-*.log
-logs/
+/target/
 
 # Ignore other system files
 *.class
