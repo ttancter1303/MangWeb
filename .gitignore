@@ -1,7 +1,12 @@
 *.log
 logs/
 /target/
-
+*.gz
+.vscode
+target/
+target
+.vscode/
+node_modules
 # Ignore other system files
 *.class
 *.jar
@@ -17,5 +22,3 @@ Thumbs.db
 /*.iml
 /*.ipr
 /*.iws
-
-.vscode
