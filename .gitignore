@@ -1,4 +1,23 @@
-src/main/resources/application.properties
-app.log
-app.log.2024-05-12.0.gz
+*.log
+logs/
+# Ignore log files
+*.log
+logs/
+
+# Ignore other system files
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignore operating system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE specific files
+/.idea/
+/*.iml
+/*.ipr
+/*.iws
+
 .vscode
