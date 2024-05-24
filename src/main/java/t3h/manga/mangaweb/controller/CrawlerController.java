@@ -69,7 +69,8 @@ public class CrawlerController {
             HashMap<String, Object> result = crawlerService.crawlManga(url);
             if (result == null) {
                 result = new HashMap<>();
-                result.put("status", "Có điều gì đó không ổn đã xảy ra, hãy chắc chắn rằng bạn đang lấy đường dẫn truyện được cập nhật tại: https://nettruyenfull.com");
+                result.put("status",
+                        "Có điều gì đó không ổn đã xảy ra, hãy chắc chắn rằng bạn đang lấy đường dẫn truyện được cập nhật tại: https://nettruyenfull.com");
                 return ResponseEntity.status(HttpStatus.OK).body(result);
             }
             return ResponseEntity.status(HttpStatus.OK).body(result);

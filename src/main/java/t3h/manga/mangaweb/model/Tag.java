@@ -13,6 +13,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tagID;
+    
     private String name;
     private String slug;
     @ManyToMany
