@@ -44,7 +44,7 @@ public class HomeController {
     public String login(Model model) {
         model.addAttribute("title", "Login");
         model.addAttribute("content", "frontend/login.html");
-        return "frontend/index.html";
+        return "frontend/login.html";
     }
     @GetMapping("/logout")
     public String logout(HttpSession session) {
