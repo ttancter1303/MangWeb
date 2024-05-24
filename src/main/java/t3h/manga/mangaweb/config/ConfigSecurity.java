@@ -31,7 +31,7 @@ public class ConfigSecurity {
                 .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID");
-        return http.build();
+        return httpSecurity.build();
     }
 
     @Bean
