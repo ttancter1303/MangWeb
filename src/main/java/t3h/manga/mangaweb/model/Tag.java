@@ -14,12 +14,9 @@ public class Tag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tagID;
     private String name;
+    private String slug;
     @ManyToMany
-    @JoinTable(
-            name = "manga_tag",
-            joinColumns = @JoinColumn(name = "tag_id"),
-            inverseJoinColumns = @JoinColumn(name = "manga_id")
-    )
+    @JoinTable(name = "manga_tag", joinColumns = @JoinColumn(name = "tag_id"), inverseJoinColumns = @JoinColumn(name = "manga_id"))
     private List<Manga> mangas = new ArrayList<>();
 
 }

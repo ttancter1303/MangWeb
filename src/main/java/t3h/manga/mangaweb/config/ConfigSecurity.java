@@ -30,7 +30,10 @@ public class ConfigSecurity {
                 .logoutUrl("/logout")
                 .logoutSuccessUrl("/login")
                 .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID");
+                .deleteCookies("JSESSIONID")
+                .and()
+                .exceptionHandling()
+                .accessDeniedPage("/error/error.html");
         return http.build();
     }
 

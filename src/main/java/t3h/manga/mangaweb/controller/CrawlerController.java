@@ -59,7 +59,7 @@ public class CrawlerController {
 
     @PostMapping("/manga")
     public ResponseEntity<?> crawManga(@RequestParam("url") String url) {
-
+        
         if (tagRepository.count() == 0) {
             createTags();
         }

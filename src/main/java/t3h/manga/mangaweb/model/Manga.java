@@ -39,6 +39,8 @@ public class Manga {
 
     private String author;
 
+    private String status;
+
     @Column(length = 1000)
     private String source;
 
@@ -111,5 +113,9 @@ public class Manga {
             chapterList = new ArrayList<>();
         }
         chapterList.add(chapter);
+    }
+
+    public String getStatus() {
+        return (this.status != null && this.status != "")?status:"Đang cập nhật";
     }
 }

@@ -56,17 +56,12 @@
     <input class="form-control w-25" id="url-crawl" type="text"><br>
     <button type="button" id="btn-crawl" class="btn btn-primary">Let's cook</button>
 </div>
-
+<meta name="_csrf" th:attr="content=${_csrf.token}" />
+<meta name="_csrf_header" th:attr="content=${_csrf.headerName}" />
 <script>
-    swal({
-        title: "CHÚ Ý!",
-        text: "1. Khi đang cào không nên tắt hoặc thoát, nếu không thì sẽ dẫn đến điều số 2.\n2. Nếu số lượng chap cào được nhỏ hơn tổng số chap, HÃY cào lại cho đến khi nào bằng tổng số chap thì dừng.",
-        icon: "warning",
-        dangerMode: true,
-        button: "Ok",
-    });
-
     $(document).ready(function () {
+        const csrfToken = $("meta[name='_csrf']").attr("content");
+        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
         $("#btn-crawl").click((ev) => {
             let getUrl = $("#url-crawl").val().trim();
             if (getUrl) {
@@ -82,6 +77,9 @@
                             icon: "info",
                             button: "Ok",
                         });
+                    },
+                    error: (jqXHR, status, error) => {
+                        console.log(jqXHR);
                     }
                 });
             }

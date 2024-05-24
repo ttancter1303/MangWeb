@@ -41,6 +41,9 @@ public class CrawlerService {
     @Autowired
     private MangaService mangaService;
 
+    @Autowired
+    private SlugService slugService;
+
     public ArrayList<Tag> getAllTagCrawler() {
         ArrayList<Tag> listTag = new ArrayList<>();
         String url = "https://nettruyenfull.com/tim-truyen";
@@ -57,6 +60,7 @@ public class CrawlerService {
             for (String text : uniqueTexts) {
                 Tag tag = new Tag();
                 tag.setName(text);
+                tag.setSlug(slugService.convertToSlug((text + "-" +tag.getTagID())));
                 listTag.add(tag);
             }
 
@@ -117,6 +121,7 @@ public class CrawlerService {
                 Elements entryTitle = document.select("h1.title-detail");
                 Element content = document.selectFirst(".detail-content p");
                 Element authorElement = document.selectFirst(".author .col-xs-8");
+                Element statusElement = document.selectFirst(".status .col-xs-8");
                 Element imgElement = document.select("div.col-image img").first();
 
                 try {
@@ -127,10 +132,17 @@ public class CrawlerService {
                         imageUrl = "Image not found";
                     }
                     String mangaTitle = entryTitle.text();
+                    
                     if (authorElement != null) {
                         manga.setAuthor(authorElement.text());
                     } else {
                         manga.setAuthor("Đang cập nhật");
+                    }
+                    
+                    if (statusElement != null) {
+                        manga.setStatus(statusElement.text());
+                    } else {
+                        manga.setStatus("Đang cập nhật");
                     }
                     manga.setName(mangaTitle);
                     manga.setDescription(content.text());

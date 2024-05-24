@@ -1,0 +1,409 @@
+@import 'variables.scss';
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    font-family: Tahoma, sans-serif, Helvetica, Arial;
+    font-size: 14px;
+}
+
+html {
+    // overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    position: relative;
+    background-color: #ebebeb !important;
+}
+
+#sidebarOffcanvas .offcanvas-header,
+#navbar {
+    background-image: url("../img/bg-navbar.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+#navbar {
+    color: #fff;
+
+    .box-search {
+        width: max-content;
+        position: relative;
+
+        input {
+            width: 300px;
+            border-radius: unset;
+        }
+
+        button {
+            border: none;
+            box-shadow: none;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            color: #000;
+        }
+    }
+
+    #btn-open-sidebar {
+        width: 36px;
+        height: 34px;
+        border-radius: 2px;
+        background-color: #d0b32e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: #fff;
+            font-size: 1.8rem;
+        }
+    }
+}
+
+#nav-bot {
+    background-color: #e4e4e4 !important;
+    height: 40px;
+
+    .nav-item {
+        padding: 8px 12px !important;
+        height: 40px;
+        border: none;
+        box-shadow: none;
+        border-radius: unset !important;
+        border-right: 1px solid #d3d3d3;
+        text-transform: uppercase;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: #ebebeb;
+        }
+    }
+
+    .active {
+        background-color: #fff !important;
+        color: $text-main-purple !important;
+    }
+}
+
+.group {
+    position: relative;
+
+    &:hover>.group-menu {
+        visibility: visible;
+    }
+
+
+    .group-menu {
+        width: max-content;
+        max-width: 420px;
+        display: flex;
+        flex-wrap: wrap;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        visibility: hidden;
+        z-index: 99;
+        background-color: #fff;
+
+        .group-item {
+            flex: 0 1 140px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            border-radius: unset;
+            font-size: 0.8em;
+            padding: 13px auto;
+
+            &:hover {
+                background-color: #efefef;
+            }
+        }
+
+    }
+}
+
+#wrap-content {
+    background-color: $bg-content-gray;
+}
+
+.theme-page-title {
+    color: $text-main-blue;
+    font-size: 20px;
+}
+
+.theme-manga-title {
+    color: #000;
+    font-size: 21px;
+}
+
+.sm-theme-page-title {
+    color: $text-main-blue;
+    font-size: 16px;
+}
+
+.manga-card {
+    padding: 5px;
+
+    .box-img {
+        width: 100%;
+        aspect-ratio: 189.5 / 200;
+        overflow: hidden;
+        margin-bottom: 5px;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+    }
+
+    .box-name {
+        h6 {
+            font-size: 16px !important;
+            font-weight: 400;
+        }
+    }
+
+    table {
+        width: 100%;
+
+        tr {
+            display: flex;
+
+            td {
+                width: 50%;
+                display: flex;
+                align-items: center;
+            }
+        }
+    }
+
+    i {
+        font-size: 0.75em !important;
+    }
+
+    a {
+        color: #000;
+    }
+}
+
+.reading-history {
+    .sm-theme-page-title {
+        margin: 0 !important;
+    }
+
+    .manga-item {
+        width: 100%;
+        margin-top: 10px;
+        border-top: 1px solid #dedede;
+        padding-top: 10px;
+        display: flex;
+
+        .mI_thumb {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        .mI_info {
+            width: calc(100% - 70px);
+
+            .mI_name {
+                width: 100%;
+            }
+
+            .mI_control {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                a {
+                    font-size: 12px;
+                    color: $text-main-silver;
+                }
+            }
+        }
+    }
+}
+
+.reading-history,
+.list-top-manga {
+    .manga-item {
+        width: 100%;
+        margin-top: 10px;
+        border-top: 1px solid #dedede;
+        padding-top: 10px;
+        display: flex;
+
+        .mI_thumb {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+            }
+        }
+
+        .mI_info {
+            width: calc(100% - 70px);
+
+            .mI_name {
+                width: 100%;
+            }
+
+            .mI_control {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                a {
+                    font-size: 12px;
+                    color: $text-main-silver;
+                }
+            }
+        }
+    }
+}
+
+.list-top-manga {
+
+    .box-tab {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        button {
+            border: none;
+            border-radius: unset;
+            box-shadow: unset;
+            width: calc(100% / 3);
+            height: 42px;
+            background-color: #e6e8e9;
+            color: #333;
+        }
+
+        .active {
+            height: 42px;
+            background-color: $bg-content-gray;
+            border-top: 2px solid #721799;
+            border-right: 1px solid #e6e8e9;
+            border-left: 1px solid #e6e8e9;
+        }
+    }
+
+    .tab-content {
+        border: 1px solid #e6e8e9;
+        border-top: 0;
+
+        .tab-pane {
+            .top-item {
+                width: 100%;
+                display: flex;
+                align-items: center;
+
+                .box-rank {
+                    width: 40px;
+                    height: 40px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    span {
+                        font-size: 20px;
+                        color: #3b3b3b;
+                        font-weight: bold;
+                    }
+                }
+
+                // Target the first, second, and third .top-item within .tab-pane
+                &:nth-child(1) .box-rank span {
+                    color: #3498db !important;
+                }
+
+                &:nth-child(2) .box-rank span {
+                    color: #27ae60 !important;
+                }
+
+                &:nth-child(3) .box-rank span {
+                    color: #d35400 !important;
+                }
+
+                .mI_control {
+                    a {
+                        color: #000 !important;
+                    }
+                    i {
+                        font-size: 14px;
+                        color: rgb(94, 94, 94);
+                    }
+                }
+            }
+        }
+    }
+}
+
+#pagination {
+    .page-item {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #fff;
+        border-radius: 3px;
+        border: 1px solid #d7d7d7;
+    }
+
+    .active {
+        color: #fff !important;
+        background-color: $text-main-blue;
+        border: 1px solid $text-main-blue;
+    }
+
+    .inactive {
+        border: 1px solid #f1f1f1;
+        background-color: #f1f1f1;
+        cursor: unset;
+    }
+}
+
+#back-to-top {
+    width: 42px;
+    height: 42px;
+    border-radius: 21px !important;
+    background-color: #fff !important;
+    border: none !important;
+    position: fixed;
+    z-index: 999;
+    bottom: 20px;
+    right: 20px;
+    box-shadow: 0 0 10px 2px #c8c8c871;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: $text-main-blue !important;
+
+        svg {
+            color: #fff;
+        }
+    }
+}

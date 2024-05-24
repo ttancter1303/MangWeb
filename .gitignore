@@ -5,6 +5,7 @@ logs/
 .vscode
 target/
 target
+/classes/
 .vscode/
 node_modules
 # Ignore other system files
