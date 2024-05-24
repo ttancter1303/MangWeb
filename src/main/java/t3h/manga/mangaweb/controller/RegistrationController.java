@@ -23,14 +23,16 @@ public class RegistrationController {
     public String showRegistrationForm(Model model) {
         model.addAttribute("account", new Account());
         model.addAttribute("title", "register");
-        return "frontend/register.html";
+        model.addAttribute("content", "frontend/register.html");
+        return  "layouts/layout.html";
     }
 
     @PostMapping("/register")
     public String registerUser(@ModelAttribute Account account, Model model) {
         if (accountRepository.findAccountByUsername(account.getUsername()) != null) {
             model.addAttribute("error", "Username already exists!");
-            return "frontend/register";
+            model.addAttribute("content", "frontend/register.html");
+            return "layouts/layout.html";
         } 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRole("USER");

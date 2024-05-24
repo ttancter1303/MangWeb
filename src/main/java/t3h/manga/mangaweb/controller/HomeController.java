@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import t3h.manga.mangaweb.dto.ChapterDTO;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.repository.ChapterRepository;
@@ -44,7 +45,7 @@ public class HomeController {
     public String login(Model model) {
         model.addAttribute("title", "Login");
         model.addAttribute("content", "frontend/login.html");
-        return "frontend/login.html";
+        return "layouts/layout.html";
     }
     @GetMapping("/logout")
     public String logout(HttpSession session) {
@@ -73,23 +74,17 @@ public class HomeController {
     }
     @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
-                             @PathVariable("chapterId") Integer chapterID,
+                             @PathVariable("chapterId") Integer chapterId,
                              Model model) {
         // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
-
-        if (manga != null) {
-            List<Chapter> chapters = chapterRepository.findByMangaId(mangaId);
-            model.addAttribute("manga", manga);
-            model.addAttribute("chapters", chapters);
-
-            // Trả về tên của trang chi tiết truyện
-            return "frontend/manga_detail.html";
-        } else {
-            return "frontend/error.html";
-        }
+        Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
+        ChapterDTO chapterDTO = new ChapterDTO(chapter);
+        List<String> listimage = chapterDTO.getPathImagesList();
+        model.addAttribute("manga", manga);
+        model.addAttribute("chapter", chapter);
+        model.addAttribute("listImage", listimage);
+        System.out.println(listimage);
+        return "frontend/chapter_detail.html";
     }
-
-
-
 }
