@@ -1,107 +1,81 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tìm truyện tranh online - Mới cập nhật</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body>
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-3">
-            <h5 class="fw-bold">Thể loại</h5>
-            <ul class="list-group">
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Tất cả</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Action</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Adult</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Adventure</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Anime</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Chuyển Sinh</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Comedy</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Comic</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Cooking</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Cổ Đại</a></li>
-                <li class="list-group-item"><a href="#" class="text-decoration-none">Doujinshi</a></li>
-                <!-- Add more genres as needed -->
-            </ul>
-        </div>
-        <div class="col-md-9">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Thể loại</li>
-                </ol>
-            </nav>
-            <h2 class="mb-4">Tìm truyện tranh online - Mới cập nhật</h2>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Tất cả thể loại truyện tranh">
-                <button class="btn btn-outline-secondary" type="button">Tìm kiếm</button>
+<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
+<div class="m-0 px-0 py-3 w-100 row">
+    <div class="col-12 col-xl-8">
+        <h6 class="theme-title" th:text="${global.get('appname')} + ' - Truyện mới cập nhật >'"></h6>
+        <div class="row m-0 p-0">
+
+            <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangas}">
+                <a th:href="@{/manga/{id}(id=${manga.id})}">
+                    <div class="box-img">
+                        <img th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                    </div>
+                    <div class="box-name">
+                        <p th:text="${manga.name}" class="mb-2"></p>
+                    </div>
+                </a>
+                <table class="w-100">
+                    <tr>
+                        <td><a href="#"><small>Chapter 3</small></a> </td>
+                        <td class="justify-content-end">
+                            <i class="text-secondary">4 giờ trước</i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><small>Chapter 2</small></a> </td>
+                        <td class="justify-content-end">
+                            <i class="text-secondary">4 giờ trước</i>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><a href="#"><small>Chapter 1</small></a> </td>
+                        <td class="justify-content-end">
+                            <i class="text-secondary">4 giờ trước</i>
+                        </td>
+                    </tr>
+                </table>
             </div>
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div>
-                    <button class="btn btn-outline-primary">Tất cả</button>
-                    <button class="btn btn-outline-secondary">Hoàn thành</button>
-                    <button class="btn btn-outline-secondary">Đang tiến hành</button>
-                </div>
-                <div>
-                    <button class="btn btn-outline-secondary">Ngày cập nhật</button>
-                    <button class="btn btn-outline-secondary">Truyện mới</button>
-                    <button class="btn btn-outline-secondary">Top all</button>
-                    <button class="btn btn-outline-secondary">Top tháng</button>
-                    <button class="btn btn-outline-secondary">Top tuần</button>
-                    <button class="btn btn-outline-secondary">Top ngày</button>
-                    <button class="btn btn-outline-secondary">Theo dõi</button>
-                    <button class="btn btn-outline-secondary">Bình luận</button>
-                </div>
-            </div>
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="image_url1" class="card-img-top" alt="Đứa Con Của Thần Tượng">
-                        <div class="card-body">
-                            <h5 class="card-title">Đứa Con Của Thần Tượng</h5>
-                            <p class="card-text">Chapter 145<br>1 giờ trước</p>
-                            <p class="card-text"><small class="text-muted">5M | 126,767</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="image_url2" class="card-img-top" alt="Ta Ở Dị Giới Sao Chép Tuyệt Thế Thần Công">
-                        <div class="card-body">
-                            <h5 class="card-title">Ta Ở Dị Giới Sao Chép Tuyệt Thế Thần Công</h5>
-                            <p class="card-text">Chapter 43<br>1 giờ trước</p>
-                            <p class="card-text"><small class="text-muted">258K | 45,972</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="image_url3" class="card-img-top" alt="Blue Archive! (Gú Nyán Nyán)">
-                        <div class="card-body">
-                            <h5 class="card-title">Blue Archive! (Gú Nyán Nyán)</h5>
-                            <p class="card-text">Chapter 100<br>6 ngày trước</p>
-                            <p class="card-text"><small class="text-muted">12,337</small></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card h-100">
-                        <img src="image_url4" class="card-img-top" alt="Cô Ấy Ngày Nào Cũng Lên Hot Search!">
-                        <div class="card-body">
-                            <h5 class="card-title">Cô Ấy Ngày Nào Cũng Lên Hot Search!</h5>
-                            <p class="card-text">Chapter 125<br>1 giờ trước</p>
-                            <p class="card-text"><small class="text-muted">111K | 52,060</small></p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Add more cards as needed -->
-            </div>
+
         </div>
     </div>
+    <div class="col-12 col-xl-4"></div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+
+<script>
+    const swiper = new Swiper('.swiper', {
+        on: {
+            init: function () {
+                // console.clear();
+            },
+        },
+        slidesPerView: 2,
+        spaceBetween: 10,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        breakpoints: {
+            576: {
+                slidesPerView: 3,
+                spaceBetween: 10,
+            },
+            768: {
+                slidesPerView: 4,
+                spaceBetween: 10,
+            },
+            992: {
+                slidesPerView: 5,
+                spaceBetween: 10,
+            },
+            1200: {
+                slidesPerView: 6,
+                spaceBetween: 10,
+            },
+        },
+        loop: true,
+        debug: false,
+        autoplay: {
+            delay: 2000, // Time in milliseconds between slide transitions
+            disableOnInteraction: false, // Continue autoplay after user interactions
+        },
+    });
+</script>

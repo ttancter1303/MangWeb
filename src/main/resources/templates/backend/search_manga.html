@@ -1,0 +1,81 @@
+<link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
+<div class="m-0 px-0 py-3 w-100 row">
+  <div class="col-12 col-xl-8">
+    <h6 class="theme-title" th:text="${global.get('appname')} + ' - Truyện mới cập nhật >'"></h6>
+    <div class="row m-0 p-0">
+
+      <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangas}">
+        <a th:href="@{/manga/{id}(id=${manga.id})}">
+          <div class="box-img">
+            <img th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+          </div>
+          <div class="box-name">
+            <p th:text="${manga.name}" class="mb-2"></p>
+          </div>
+        </a>
+        <table class="w-100">
+          <tr>
+            <td><a href="#"><small>Chapter 3</small></a> </td>
+            <td class="justify-content-end">
+              <i class="text-secondary">4 giờ trước</i>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#"><small>Chapter 2</small></a> </td>
+            <td class="justify-content-end">
+              <i class="text-secondary">4 giờ trước</i>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#"><small>Chapter 1</small></a> </td>
+            <td class="justify-content-end">
+              <i class="text-secondary">4 giờ trước</i>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+    </div>
+  </div>
+  <div class="col-12 col-xl-4"></div>
+</div>
+
+<script>
+  const swiper = new Swiper('.swiper', {
+    on: {
+      init: function () {
+        // console.clear();
+      },
+    },
+    slidesPerView: 2,
+    spaceBetween: 10,
+    navigation: {
+      nextEl: '.swiper-button-next',
+      prevEl: '.swiper-button-prev',
+    },
+    breakpoints: {
+      576: {
+        slidesPerView: 3,
+        spaceBetween: 10,
+      },
+      768: {
+        slidesPerView: 4,
+        spaceBetween: 10,
+      },
+      992: {
+        slidesPerView: 5,
+        spaceBetween: 10,
+      },
+      1200: {
+        slidesPerView: 6,
+        spaceBetween: 10,
+      },
+    },
+    loop: true,
+    debug: false,
+    autoplay: {
+      delay: 2000, // Time in milliseconds between slide transitions
+      disableOnInteraction: false, // Continue autoplay after user interactions
+    },
+  });
+</script>

@@ -87,4 +87,24 @@ public class HomeController {
         System.out.println(listimage);
         return "frontend/chapter_detail.html";
     }
+    @GetMapping("/search")
+    public String searchManga(@RequestParam(name = "name", required = false) String name,
+                              Model model) {
+        List<Manga> mangas;
+        if (name != null && !name.isEmpty()) {
+            String searchName = "%" + name + "%";
+            mangas = mangaRepository.findMangaByNameLike(searchName);
+            for (Manga manga : mangas) {
+                System.out.println("Manga: "+manga);
+            }
+        } else {
+            mangas = mangaRepository.findAll();
+        }
+        model.addAttribute("title", "Search");
+        model.addAttribute("mangas", mangas);
+        model.addAttribute("content", "frontend/search_manga.html");
+        return "layouts/layout.html";
+    }
+
+
 }

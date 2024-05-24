@@ -35,7 +35,7 @@ public class RegistrationController {
             return "layouts/layout.html";
         } 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setRole("USER");
+        account.setRole("ROLE_USER");
         accountRepository.save(account);
         return "redirect:/login";
     }
