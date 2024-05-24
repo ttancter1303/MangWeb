@@ -23,8 +23,7 @@ public class RegistrationController {
     public String showRegistrationForm(Model model) {
         model.addAttribute("account", new Account());
         model.addAttribute("title", "register");
-        model.addAttribute("content", "frontend/register.html");
-        return "frontend/index.html";
+        return "frontend/register.html";
     }
 
     @PostMapping("/register")
@@ -32,7 +31,7 @@ public class RegistrationController {
         if (accountRepository.findAccountByUsername(account.getUsername()) != null) {
             model.addAttribute("error", "Username already exists!");
             return "frontend/register";
-        }
+        } 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setRole("USER");
         accountRepository.save(account);

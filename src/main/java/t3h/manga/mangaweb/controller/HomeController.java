@@ -68,7 +68,24 @@ public class HomeController {
             // Trả về tên của trang chi tiết truyện
             return "frontend/manga_detail.html";
         } else {
-            // Nếu không tìm thấy truyện, trả về một trang lỗi hoặc thông báo lỗi
+            return "frontend/error.html";
+        }
+    }
+    @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
+    public String getChapter(@PathVariable("mangaId") Integer mangaId,
+                             @PathVariable("chapterId") Integer chapterID,
+                             Model model) {
+        // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
+        Manga manga = mangaRepository.findById(mangaId).orElse(null);
+
+        if (manga != null) {
+            List<Chapter> chapters = chapterRepository.findByMangaId(mangaId);
+            model.addAttribute("manga", manga);
+            model.addAttribute("chapters", chapters);
+
+            // Trả về tên của trang chi tiết truyện
+            return "frontend/manga_detail.html";
+        } else {
             return "frontend/error.html";
         }
     }
