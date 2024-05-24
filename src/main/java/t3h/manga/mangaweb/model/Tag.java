@@ -13,6 +13,7 @@ public class Tag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer tagID;
+    
     private String name;
     @ManyToMany
     @JoinTable(
@@ -20,6 +21,7 @@ public class Tag {
             joinColumns = @JoinColumn(name = "tag_id"),
             inverseJoinColumns = @JoinColumn(name = "manga_id")
     )
+
     private List<Manga> mangas = new ArrayList<>();
 
 }

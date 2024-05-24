@@ -1,0 +1,132 @@
+@import 'variables.scss';
+
+* {
+    box-sizing: border-box;
+    padding: 0;
+    font-family: Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#navbar {
+    background-image: url("../img/bg-navbar.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    color: #fff;
+
+    .box-search {
+        width: max-content;
+        position: relative;
+
+        input {
+            width: 300px;
+            border-radius: unset;
+        }
+
+        button {
+            border: none;
+            box-shadow: none;
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            color: #000;
+        }
+    }
+
+    #btn-open-sidebar {
+        width: 36px;
+        height: 34px;
+        border-radius: 2px;
+        background-color: #d0b32e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        svg {
+            color: #fff;
+            font-size: 1.8rem;
+        }
+    }
+}
+
+#nav-bot {
+    background-color: #e4e4e4 !important;
+    height: 40px;
+
+    .nav-item {
+        padding: auto 10px;
+        height: 40px;
+        border: none;
+        box-shadow: none;
+        border-radius: unset !important;
+        border-right: 1px solid #d3d3d3;
+        text-transform: uppercase;
+        transition: 0.2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+            background-color: #ebebeb;
+        }
+    }
+
+    .active {
+        background-color: #fff !important;
+        color: $text-main-purple !important;
+    }
+}
+
+html {
+    overflow-x: hidden;
+}
+
+body {
+    // min-width: 100svh;
+    background-color: #ebebeb !important;
+}
+
+.group {
+    position: relative;
+
+    &:hover>.group-menu {
+        visibility: visible;
+    }
+
+
+    .group-menu {
+        width: max-content;
+        max-width: 420px;
+        display: flex;
+        flex-wrap: wrap;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        visibility: hidden;
+        z-index: 99;
+        background-color: #fff;
+        
+        .group-item {
+            flex: 0 1 140px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+            border-radius: unset;
+            font-size: 0.8em;
+            padding: 13px auto;
+
+            &:hover {
+                background-color: #efefef;
+            }
+        }
+
+    }
+}
+
+#wrap-content {
+    background-color: $bg-content-gray;
+}
+
+.theme-title {
+    color: $text-main-blue;
+    font-size: 20px;
+}
