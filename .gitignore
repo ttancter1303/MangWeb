@@ -20,6 +20,6 @@ Thumbs.db
 /*.ipr
 /*.iws
 
-*.properties
+#*.properties
 
 target/
