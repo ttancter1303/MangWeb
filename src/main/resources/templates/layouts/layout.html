@@ -19,7 +19,7 @@
     <script th:src="@{/js/swiper-bundle.min.js}"></script>
 </head>
 
-<body>
+<body  th:with="user=${#authentication.principal}">
     <div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="-1" id="sidebarOffcanvas"
         aria-labelledby="offcanvasWithBackdropLabel">
         <div class="offcanvas-header">
@@ -62,7 +62,7 @@
                 data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas"><i
                     class="fas fa-bars fa-2x"></i></button>
             <div class="box-login d-none d-md-flex align-items-center justify-content-end">
-                <a href="#" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/<a href="#"
+                <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/<a href="/register"
                     class="btn border-0 shadow-0 text-white">Đăng
                     ký</a>
             </div>

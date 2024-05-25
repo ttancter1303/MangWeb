@@ -40,7 +40,7 @@ public class InsertSampleData {
             acc.setEmail("admin@email.com");
             acc.setUsername("admin");
             acc.setPassword(passwordEncoder.encode("000000"));
-            acc.setRole("ADMIN");
+            acc.setRole("ROLE_ADMIN");
             accRepository.save(acc);
         }
     }

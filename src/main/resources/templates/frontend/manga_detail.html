@@ -16,13 +16,13 @@
 
         <div class="row m-0 p-0 manga-detail">
             <div class="col-12 col-sm-4 manga-thumb justify-content-center">
-                <div class="w-100 m-0 p-0 row">
+                <div class="w-100 m-0 p-0 row justify-content-center">
                     <div class="col-6 col-sm-12 box-thumb">
                         <img th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}" />
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-sm-8 manga-info">
+            <div class="col-12 col-sm-8 p-0 manga-info">
                 <div class="w-100 m-0 p-0">
                     <div class="w-100 m-0 row row-info py-2">
                         <div class="col-4"><i class="fas fa-user me-1"></i> Tác giả</div>
@@ -30,25 +30,84 @@
                     </div>
                     <div class="w-100 m-0 row row-info py-2">
                         <div class="col-4"><i class="fas fa-rss me-1"></i> Tình trạng</div>
-                        <div class="col-8" th:text="${manga.getStatus()}"></div>
+                        <div th:if="${manga.getStatus() != null}" class="col-8" th:text="${manga.getStatus()}"></div>
+                        <div th:unless="${manga.getStatus() != null}" class="col-8" th:text="Đang cập nhật"></div>
                     </div>
                     <div class="w-100 m-0 row row-info py-2">
                         <div class="col-4"><i class="fas fa-tags me-1"></i> Thể loại</div>
-                        <div class="col-8 d-flex gap-2">
-                            <a class="m-0 p-0 btn text-primary" th:each="tag, iterStat : ${manga.getListTag()}" th:href="'/tim-truyen?tag=' + ${tag.slug}">
-                                <span th:text="${tag.name}"></span>
-                                <span th:if="${!iterStat.last}"> - </span>
-                            </a>
+                        <div class="col-8 d-flex flex-wrap">
+                            <span class="d-flex" th:each="tag, iterStat : ${manga.getListTag()}">
+                                <a class="m-0 p-0 btn text-primary" th:href="'/tim-truyen?tag=' + ${tag.slug}"
+                                    th:text="${tag.name}">
+                                </a>
+                                <span class="mx-2" th:if="${!iterStat.last}">-</span>
+                            </span>
                         </div>
                     </div>
                 </div>
+                <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
+                    <a href="" class="btn btn-warning text-light">Đọc từ đầu</a>
+                    <a href="/" class="btn btn-warning text-light">Đọc mới nhất</a>
+                </div>
             </div>
         </div>
+        <div class="row m-0 p-0 manga-description">
+            <div class="box-title">
+                <h6 class="theme-page-title"><i class="fas fa-file-alt me-1"></i>NỘI DUNG</h6>
+            </div>
+            <div class="collapse" id="collapseDescription">
+                <p class="m-0 p-0" th:text="${manga.getDescription()}">
+                </p>
+            </div>
+            <button id="btn-collapse-description" class="btn fw-bold" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapseDescription" aria-expanded="false" aria-controls="collapseDescription">
+                Xem thêm >
+            </button>
+            <script>
+                $(document).ready(function () {
+                    $("#btn-collapse-description").click((ev) => {
+                        if ($(ev.target).attr("aria-expanded") == "true") {
+                            $(ev.target).html("< Rút gọn");
+                        } else {
+                            $(ev.target).html("Xem thêm >");
+                        }
+                    })
+                });
+            </script>
+        </div>
+        <div class="row m-0 p-0 manga-chapters">
+            <div class="box-title">
+                <h6 class="theme-page-title"><i class="fas fa-file-alt me-1"></i> DANH SÁCH CHƯƠNG</h6>
+            </div>
+            <div class="w-100 m-0 p-0 row">
+                <div class="fs-16px col-8">Số chương</div>
+                <div class="fs-16px col-4">Cập nhật</div>
+            </div>
+            <div class="w-100 mt-2 border py-2 box-chapters hidden-content">
+                <div class="w-100 m-0 p-0 row" th:each="chapter, iterStat : ${manga.chapterList}">
+                    <div class="col-8 m-0 p-0">
+                        <a href="/abc" class="btn m-0 p-0" th:text="${chapter.getName()}"></a>
+                    </div>
+                    <div class="col-4 m-0 p-0"><i th:text="${chapter.getCreatedTime()}"></i></div>
+                    <div class="break-line mt-1 pb-1" th:if="${!iterStat.last}">
+                    </div>
+                </div>
+                <button class="btn" id="btn-expand-chapter" type="button">
+                    <i class="fas fa-plus me-1"></i> Xem thêm
+                </button>
 
-
-
+                <script>
+                    $(document).ready(function () {
+                        $("#btn-expand-chapter").click((ev) => {
+                            $(ev.target).closest(".box-chapters").removeClass("hidden-content");
+                            $(ev.target).remove();
+                        })
+                    });
+                </script>
+            </div>
+        </div>
     </div>
-    <div class="col-12 ps-lg-4 col-lg-4 m-0 p-0">
+    <div class="col-12 ps-lg-4 col-lg-4 m-0 mt-3 mt-lg-0 p-0">
         <div class="w-100 m-0 p-2 mb-3 border reading-history">
             <div class="d-flex align-items-center justify-content-between">
                 <h6 class="sm-theme-page-title">Lịch sử đọc truyện</h6>

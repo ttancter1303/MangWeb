@@ -17,6 +17,7 @@ import java.time.Duration;
 public class Chapter {
     public Chapter() {
         this.createdAt = LocalDateTime.now();
+        this.views = (long) 0;
     }
 
     @Id
@@ -24,6 +25,13 @@ public class Chapter {
     private Integer id;
 
     private String name;
+
+    public String getName() {
+        if (this.name == null) {
+            return null;
+        }
+        return this.name.replaceAll("(\\.000|00)$", "");
+    }
 
     private Long views;
 

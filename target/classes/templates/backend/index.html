@@ -56,12 +56,9 @@
     <input class="form-control w-25" id="url-crawl" type="text"><br>
     <button type="button" id="btn-crawl" class="btn btn-primary">Let's cook</button>
 </div>
-<meta name="_csrf" th:attr="content=${_csrf.token}" />
-<meta name="_csrf_header" th:attr="content=${_csrf.headerName}" />
+
 <script>
     $(document).ready(function () {
-        const csrfToken = $("meta[name='_csrf']").attr("content");
-        const csrfHeader = $("meta[name='_csrf_header']").attr("content");
         $("#btn-crawl").click((ev) => {
             let getUrl = $("#url-crawl").val().trim();
             if (getUrl) {

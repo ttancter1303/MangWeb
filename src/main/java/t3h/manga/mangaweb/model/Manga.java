@@ -9,6 +9,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -27,9 +28,13 @@ public class Manga {
     private Integer id;
 
     private String name;
-
+    
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    public String getDescription() {
+        return this.description.split("\n")[0];
+    }
 
     private String thumbnailImg;
 
@@ -50,6 +55,13 @@ public class Manga {
 
     @OneToMany(mappedBy = "manga", cascade = CascadeType.ALL) // Một manga có thể có nhiều chapter
     private List<Chapter> chapterList;
+
+    public List<Chapter> getChapters() {
+        List<Chapter> list = new ArrayList<>();
+        list.addAll(chapterList);
+        Collections.reverse(list);
+        return list;
+    }
 
     private LocalDateTime createdAt;
 

@@ -16,24 +16,12 @@
                         </div>
                     </a>
                     <table class="w-100">
-                        <tr>
-                            <td><a href="#"><small>Chapter 3</small></a> </td>
-                            <td class="justify-content-end">
-                                <i class="text-secondary">4 giờ trước</i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="#"><small>Chapter 2</small></a> </td>
-                            <td class="justify-content-end">
-                                <i class="text-secondary">4 giờ trước</i>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="#"><small>Chapter 1</small></a> </td>
-                            <td class="justify-content-end">
-                                <i class="text-secondary">4 giờ trước</i>
-                            </td>
-                        </tr>
+                    <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
+                        <td><a href="#"><small th:text="${chapter.getName()}"></small></a> </td>
+                        <td class="justify-content-end">
+                            <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
+                        </td>
+                    </tr>
                     </table>
                 </div>
             </div>
@@ -56,22 +44,10 @@
                     </div>
                 </a>
                 <table class="w-100">
-                    <tr>
-                        <td><a href="#"><small>Chapter 3</small></a> </td>
+                    <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
+                        <td><a href="#"><small th:text="${chapter.getName()}"></small></a> </td>
                         <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#"><small>Chapter 2</small></a> </td>
-                        <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#"><small>Chapter 1</small></a> </td>
-                        <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
+                            <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
                         </td>
                     </tr>
                 </table>
@@ -129,8 +105,6 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-button-next"></div>
-            <div class="swiper-button-prev"></div>
         </div>
         <div class="w-100 m-0 p-0 list-top-manga">
             <div class="w-100 m-0 p-0 box-tab" role="tablist">
