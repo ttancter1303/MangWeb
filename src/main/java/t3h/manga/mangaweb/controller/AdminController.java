@@ -135,14 +135,67 @@ public class AdminController {
         } else {
             manga.setListTag(new ArrayList<>());
         }
-
-        // Lưu manga đã cập nhật
         mangaRepository.save(manga);
-
-        // Thêm thông báo thành công và chuyển hướng
         redirectAttributes.addFlashAttribute("message", "Manga updated successfully!");
         return "redirect:/admin/";
     }
+    @GetMapping("/mangas/{mangaId}/edit-chapter/{chapterId}")
+    public String showEditChapterForm(@PathVariable("mangaId") Integer mangaId,
+                                      @PathVariable("chapterId") Integer chapterId,
+                                      Model model) {
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chapter Id:" + chapterId));
+        model.addAttribute("mangaId", mangaId);
+        model.addAttribute("chapter", chapter);
+        List<String> imagePaths = List.of(chapter.getPathImagesList().split(","));
+        model.addAttribute("imagePaths", imagePaths);
+        return "backend/edit-chapter";
+    }
+    @PostMapping("/mangas/{mangaId}/edit-chapter/{chapterId}")
+    public String editChapter(@PathVariable("mangaId") Integer mangaId,
+                              @PathVariable("chapterId") Integer chapterId,
+                              @ModelAttribute("chapter") Chapter updatedChapter,
+                              @RequestParam("files") MultipartFile[] files,
+                              @RequestParam("existingImages") List<String> existingImages,
+                              RedirectAttributes redirectAttributes) {
+        Chapter chapter = chapterRepository.findById(chapterId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid chapter Id:" + chapterId));
+
+        // Cập nhật tên chapter
+        chapter.setName(updatedChapter.getName());
+
+        List<String> imagePaths = new ArrayList<>(existingImages);
+
+        // Xử lý các tệp ảnh mới nếu có
+        if (files != null && files.length > 0 && !files[0].isEmpty()) {
+            try {
+                Path tempDir = Files.createTempDirectory("");
+                for (MultipartFile file : files) {
+                    if (file.isEmpty()) continue;
+
+                    String fileName = file.getOriginalFilename();
+                    if (fileName != null && isImageFile(fileName)) {
+                        File tempFile = tempDir.resolve(fileName).toFile();
+                        file.transferTo(tempFile);
+                        imagePaths.add(tempFile.getAbsolutePath());
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                redirectAttributes.addFlashAttribute("message", "Tải lên và xử lý tệp ảnh thất bại.");
+                return "redirect:/admin/mangas/edit-chapter/" + mangaId + "/" + chapterId;
+            }
+        }
+
+        // Cập nhật danh sách đường dẫn hình ảnh
+        chapter.setPathImagesList(String.join(",", imagePaths));
+
+        chapterRepository.save(chapter);
+        redirectAttributes.addFlashAttribute("message", "Chapter đã được cập nhật thành công!");
+        return "redirect:/admin/mangas/edit/" + mangaId;
+    }
+
+
 
     @GetMapping("/mangas/{mangaId}/add-chapter")
     public String showAddChapterForm(@PathVariable("mangaId") Integer mangaId, Model model) {

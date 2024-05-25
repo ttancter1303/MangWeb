@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Chapter</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui/1.12.1/jquery-ui.min.js"></script>
+  <style>
+    .image-list {
+      list-style-type: none;
+      padding: 0;
+    }
+    .image-list li {
+      margin: 5px 0;
+      padding: 5px;
+      border: 1px solid #ccc;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+<h2>Edit Chapter</h2>
+<form th:action="@{/admin/mangas/{mangaId}/edit-chapter/{chapterId}(mangaId=${mangaId}, chapterId=${chapter.id})}" method="post" enctype="multipart/form-data">
+  <label for="name">Chapter Name:</label>
+  <input type="text" id="name" name="name" th:value="${chapter.name}" /><br/>
+
+  <h3>Current Images:</h3>
+  <ul class="image-list" id="imageList">
+    <li th:each="imagePath, iterStat : ${imagePaths}" th:id="'image-' + ${iterStat.index}">
+      <input type="hidden" name="existingImages" th:value="${imagePath}" />
+      <img th:src="@{${imagePath}}" alt="Chapter Image" width="100" height="100"/>
+      <button type="button" class="remove-image" onclick="removeImage(this)">Remove</button>
+    </li>
+  </ul>
+
+  <label for="files">Upload New Images:</label>
+  <input type="file" id="files" name="files" multiple="multiple"/><br/>
+
+  <button type="submit">Update Chapter</button>
+</form>
+<a th:href="@{/admin/mangas/edit/{mangaId}(mangaId=${mangaId})}">Back to Manga</a>
+
+<script>
+  function removeImage(button) {
+    $(button).closest('li').remove();
+  }
+
+  $(function() {
+    $("#imageList").sortable();
+    $("#imageList").disableSelection();
+  });
+</script>
+</body>
+</html>

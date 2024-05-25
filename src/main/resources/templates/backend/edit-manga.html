@@ -23,9 +23,13 @@
       <input type="text" class="form-control" id="author" name="author" th:value="${manga.author}" required>
       <label for="chapters">Chapters:</label>
       <ul>
-        <li th:each="chapter : ${chapters}" th:text="${chapter.name}"></li>
+        <li th:each="chapter : ${chapters}">
+          <a th:href="@{/admin/mangas/{mangaId}/edit-chapter/{chapterId}(mangaId=${manga.id}, chapterId=${chapter.id})}"
+             th:text="${chapter.name}"></a>
+        </li>
       </ul>
     </div>
+
     <!-- Add other fields as needed -->
     <button type="submit" class="btn btn-primary">Submit</button>
   </form>
