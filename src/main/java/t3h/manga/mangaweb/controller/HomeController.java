@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import t3h.manga.mangaweb.model.Account;
+import t3h.manga.mangaweb.dto.ChapterDTO;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.repository.AccountRepository;
@@ -51,8 +52,8 @@ public class HomeController {
     public String getHomePage(HttpSession session,
             Model model,
             @RequestParam(defaultValue = "0") int page) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
             DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
             String email = oidcUser.getAttribute("email");
@@ -69,6 +70,7 @@ public class HomeController {
             }
             session.setAttribute("USER_LOGGED", account);
         }
+
         int size = 12;
         if (page > 0) {
             page = page - 1;
@@ -123,5 +125,40 @@ public class HomeController {
             return "layouts/layout.html";
         }
     }
+
+    @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
+    public String getChapter(@PathVariable("mangaId") Integer mangaId,
+                             @PathVariable("chapterId") Integer chapterId,
+                             Model model) {
+        // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
+        Manga manga = mangaRepository.findById(mangaId).orElse(null);
+        Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
+        ChapterDTO chapterDTO = new ChapterDTO(chapter);
+        List<String> listimage = chapterDTO.getPathImagesList();
+        model.addAttribute("manga", manga);
+        model.addAttribute("chapter", chapter);
+        model.addAttribute("listImage", listimage);
+        System.out.println(listimage);
+        return "frontend/chapter_detail.html";
+    }
+    @GetMapping("/search")
+    public String searchManga(@RequestParam(name = "name", required = false) String name,
+                              Model model) {
+        List<Manga> mangas;
+        if (name != null && !name.isEmpty()) {
+            String searchName = "%" + name + "%";
+            mangas = mangaRepository.findMangaByNameLike(searchName);
+            for (Manga manga : mangas) {
+                System.out.println("Manga: "+manga);
+            }
+        } else {
+            mangas = mangaRepository.findAll();
+        }
+        model.addAttribute("title", "Search");
+        model.addAttribute("mangas", mangas);
+        model.addAttribute("content", "frontend/search_manga.html");
+        return "layouts/layout.html";
+    }
+
 
 }

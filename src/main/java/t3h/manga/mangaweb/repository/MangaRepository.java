@@ -14,8 +14,8 @@ public interface MangaRepository extends JpaRepository<Manga,Integer> {
     @Query("SELECT m FROM Manga m JOIN m.listTag t WHERE t.name = :tag")
     List<Manga> findByTagName(@Param("tag") String tag);
 
-    @Query("SELECT m FROM Manga m JOIN m.listTag t WHERE m.name LIKE %:name% AND t.name = :tag")
-    List<Manga> findByNameContainingAndTagName(@Param("name") String name, @Param("tag") String tag);
+    @Query("SELECT m FROM Manga m WHERE m.name LIKE %:name%")
+    List<Manga> findMangaByNameLike(@Param("name") String name);
 
 
     Optional<Manga> findBySource(String source);

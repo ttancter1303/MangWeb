@@ -31,10 +31,11 @@ public class RegistrationController {
     public String registerUser(@ModelAttribute Account account, Model model) {
         if (accountRepository.findAccountByUsername(account.getUsername()) != null) {
             model.addAttribute("error", "Username already exists!");
-            return "redirect:/register";
-        }
+            model.addAttribute("content", "frontend/register.html");
+            return "layouts/layout.html";
+        } 
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-        account.setRole("USER");
+        account.setRole("ROLE_USER");
         accountRepository.save(account);
         return "redirect:/login";
     }

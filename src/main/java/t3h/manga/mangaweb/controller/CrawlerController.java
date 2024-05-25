@@ -12,11 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import t3h.manga.mangaweb.dto.MangaDTO;
-import t3h.manga.mangaweb.model.Chapter;
-import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.model.Tag;
-// import t3h.manga.mangaweb.repository.AuthorRepository;
+
 import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;

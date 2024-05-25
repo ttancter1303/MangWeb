@@ -53,28 +53,38 @@
                 <img th:src="@{'/img/logo.png'}" style="height: 28px;">
             </a>
             <div class="box-search d-none d-md-flex">
-                <input class="form-control" type="text" autocomplete="false" placeholder="Tìm truyện" />
-                <button class="btn">
-                    <i class="fas fa-search"></i>
-                </button>
+                <form th:action="@{/search}" method="get" class="d-flex">
+                    <input class="form-control" type="text" th:name="name" autocomplete="off" placeholder="Tìm truyện">
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
+
             <button id="btn-open-sidebar" class="btn d-md-none" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas"><i
                     class="fas fa-bars fa-2x"></i></button>
-            <th:block th:if="${user != null}">
-                <div class="box-login d-none d-md-flex align-items-center justify-content-end">
-                    <span th:text="${user.username}">thymeleaf</span>|<a href="/logout"
-                        class="btn border-0 shadow-0 text-white">Đăng
-                        xuất</a>
+
+            <div class="dropdown box-login d-none d-md-flex justify-content-end" th:if="${user!=null}">
+                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    <span class="text-white" th:text="${user.username}"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- Link to profile -->
+                    <li><a class="dropdown-item" href="/profile">Trang cá nhân</a></li>
+                    <!-- Link to saved stories -->
+                    <li><a class="dropdown-item" href="/saved-stories">Truyện đã lưu</a></li>
+                    <!-- Link to logout -->
+                    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                </ul>
+            </div>
+            <div th:unless="${user!=null}">
+                <div class="box-login d-flex justify-content-end">
+                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/
+                    <a href="/register" class="btn border-0 shadow-0 text-white">Đăng ký</a>
                 </div>
-            </th:block>
-            <th:block th:unless="${user != null}">
-                <div class="box-login d-none d-md-flex align-items-center justify-content-end">
-                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/<a href="/register"
-                        class="btn border-0 shadow-0 text-white">Đăng
-                        ký</a>
-                </div>
-            </th:block>
+            </div>
         </div>
     </nav>
     <nav id="nav-bot" class="d-none d-md-flex">

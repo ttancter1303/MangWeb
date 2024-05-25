@@ -76,21 +76,23 @@ public class AdminController {
     }
     @GetMapping("/mangas/search")
     public String searchManga(@RequestParam(name = "name", required = false) String name,
-                              @RequestParam(name = "tag", required = false) String tag,
                               Model model) {
         List<Manga> mangas;
         if (name != null && !name.isEmpty()) {
-            mangas = mangaRepository.findMangaByName(name);
-        } else if (tag != null && !tag.isEmpty()) {
-            mangas = mangaRepository.findByTagName(tag);
+            String searchName = "%" + name + "%";
+            mangas = mangaRepository.findMangaByNameLike(searchName);
+            for (Manga manga : mangas) {
+                System.out.println("Manga: "+manga);
+            }
         } else {
             mangas = mangaRepository.findAll();
         }
-        model.addAttribute("title", "Page");
+        model.addAttribute("title", "Search");
         model.addAttribute("mangas", mangas);
-        model.addAttribute("content", "backend/mangas.html");
+        model.addAttribute("content", "backend/search_manga.html");
         return "layouts/adminlte3";
     }
+
     @GetMapping("/mangas/delete/{id}")
     public String deleteManga(@PathVariable("id") Integer id) {
         mangaRepository.deleteById(id);
