@@ -7,5 +7,5 @@ import t3h.manga.mangaweb.model.Account;
 import java.util.List;
 
 public interface AccountService extends UserDetailsService {
-        List<Account> getAll();
+        public List<Account> getAll();
 }

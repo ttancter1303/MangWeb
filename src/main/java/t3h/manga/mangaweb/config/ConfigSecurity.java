@@ -18,7 +18,6 @@ import org.springframework.security.web.savedrequest.RequestCache;
 
 @Configuration
 public class ConfigSecurity {
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf().disable()

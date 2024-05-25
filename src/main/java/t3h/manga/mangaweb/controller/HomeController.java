@@ -5,14 +5,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import t3h.manga.mangaweb.model.Account;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
+import t3h.manga.mangaweb.repository.AccountRepository;
 import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
@@ -25,17 +33,42 @@ import java.util.List;
 public class HomeController {
     @Autowired
     MangaRepository mangaRepository;
-    @Autowired
-    TagRepository tagRepository;
-    @Autowired
-    ChapterRepository chapterRepository;
 
+    @Autowired
+    private AccountRepository accountRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
+
+    @Autowired
+    private ChapterRepository chapterRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @SuppressWarnings("null")
     @GetMapping({ "/", "", "/index", "/home" })
     public String getHomePage(HttpSession session,
             Model model,
-            @RequestParam(defaultValue = "0") int page
-    // @RequestParam(defaultValue = "10") int size
-    ) {
+            @RequestParam(defaultValue = "0") int page) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+        if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
+            DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
+            String email = oidcUser.getAttribute("email");
+            Account account = accountRepository.findAccountByEmail(email);
+
+            if(account == null) {
+                account = new Account();
+                account.setUsername(email.split("@")[0]);
+                account.setPassword(passwordEncoder.encode(auth.getName()));
+                account.setEmail(email);
+                account.setAvatar(oidcUser.getAttribute("picture"));
+                account.setRole("ROLE_USER");
+                accountRepository.save(account);
+            }
+            session.setAttribute("USER_LOGGED", account);
+        }
         int size = 12;
         if (page > 0) {
             page = page - 1;
@@ -47,6 +80,7 @@ public class HomeController {
         long maxPage = (mangaRepository.count() % size != 0) ? (mangaRepository.count() / size + 1)
                 : (mangaRepository.count() / size);
         model.addAttribute("maxPage", maxPage);
+
         model.addAttribute("content", "frontend/index.html");
         return "layouts/layout.html";
     }

@@ -13,8 +13,10 @@ import t3h.manga.mangaweb.model.Account;
 import t3h.manga.mangaweb.repository.AccountRepository;
 import t3h.manga.mangaweb.service.AccountService;
 
+import org.springframework.session.Session;
+import org.springframework.session.SessionRepository;
+
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -38,6 +40,5 @@ public class AccountServiceImpl implements AccountService {
         listRole.add(new SimpleGrantedAuthority(account.getRole()));
         System.out.println(account);
         return new User(username, account.getPassword(), listRole);
-
     }
 }

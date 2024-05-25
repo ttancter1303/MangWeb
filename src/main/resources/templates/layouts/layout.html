@@ -19,7 +19,7 @@
     <script th:src="@{/js/swiper-bundle.min.js}"></script>
 </head>
 
-<body  th:with="user=${#authentication.principal}">
+<body th:with="user=${#ctx.session.USER_LOGGED}">
     <div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="-1" id="sidebarOffcanvas"
         aria-labelledby="offcanvasWithBackdropLabel">
         <div class="offcanvas-header">
@@ -61,11 +61,20 @@
             <button id="btn-open-sidebar" class="btn d-md-none" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas"><i
                     class="fas fa-bars fa-2x"></i></button>
-            <div class="box-login d-none d-md-flex align-items-center justify-content-end">
-                <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/<a href="/register"
-                    class="btn border-0 shadow-0 text-white">Đăng
-                    ký</a>
-            </div>
+            <th:block th:if="${user != null}">
+                <div class="box-login d-none d-md-flex align-items-center justify-content-end">
+                    <span th:text="${user.username}">thymeleaf</span>|<a href="/logout"
+                        class="btn border-0 shadow-0 text-white">Đăng
+                        xuất</a>
+                </div>
+            </th:block>
+            <th:block th:unless="${user != null}">
+                <div class="box-login d-none d-md-flex align-items-center justify-content-end">
+                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/<a href="/register"
+                        class="btn border-0 shadow-0 text-white">Đăng
+                        ký</a>
+                </div>
+            </th:block>
         </div>
     </nav>
     <nav id="nav-bot" class="d-none d-md-flex">
