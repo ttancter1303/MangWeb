@@ -1,11 +1,7 @@
 *.log
 logs/
-/target/
 *.gz
 .vscode
-target/
-target
-/classes/
 .vscode/
 node_modules
 # Ignore other system files
@@ -24,4 +20,6 @@ Thumbs.db
 /*.ipr
 /*.iws
 
-.properties
+*.properties
+
+target/
