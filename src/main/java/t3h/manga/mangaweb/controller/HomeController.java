@@ -109,11 +109,19 @@ public class HomeController {
         if (manga != null) {
             // Lấy danh sách các chapter của manga
             List<Chapter> chapters = manga.getChapterList();
-
+            Chapter firstChapter = null;
+            Chapter lastChapter = null;
+            if (chapters != null && !chapters.isEmpty()) {
+                // Lấy chapter đầu tiên và cuối cùng
+                firstChapter = chapters.get(0);
+                lastChapter = chapters.get(chapters.size() - 1);
+            }
             // Chuyển thông tin truyện và danh sách chapter vào model để hiển thị trên trang
             // chi tiết
             model.addAttribute("manga", manga);
             model.addAttribute("chapters", chapters);
+            model.addAttribute("firstChapter", firstChapter);
+            model.addAttribute("lastChapter", lastChapter);
             model.addAttribute("title", manga.getName());
             Collections.reverse(chapters);
             // Trả về tên của trang chi tiết truyện
