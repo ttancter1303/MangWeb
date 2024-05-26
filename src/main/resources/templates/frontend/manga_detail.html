@@ -49,6 +49,13 @@
                     <a th:if="${firstChapter != null}" th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${firstChapter.id})}" class="btn btn-warning text-light">Đọc từ đầu</a>
                     <a th:if="${lastChapter != null}" th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}" class="btn btn-warning text-light">Đọc mới nhất</a>
                 </div>
+                <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
+                    <form th:action="@{/user/saveManga}" method="post">
+                        <input type="hidden" name="mangaId" th:value="${manga.id}"/>
+                        <button type="submit" class="btn btn-primary">Lưu vào profile</button>
+                    </form>
+                </div>
+
             </div>
         </div>
         <div class="row m-0 p-0 manga-description">

@@ -40,6 +40,11 @@
       </div>
       <div class="section">
         <h3>Truyện theo dõi</h3>
+        <ul>
+          <li th:each="manga : ${savedMangas}">
+            <a th:href="@{/manga/{id}(id=${manga.id})}" th:text="${manga.name}">Manga Name</a>
+          </li>
+        </ul>
         <div class="alert alert-info">
           Truyện mới đọc gần đây sẽ hiển thị ở đầu danh sách.
         </div>
