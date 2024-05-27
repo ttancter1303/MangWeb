@@ -50,7 +50,7 @@
     <nav id="navbar" class="navbar navbar-expand-sm" style="height: 50px">
         <div class="container my-0 p-0 justify-content-between align-items-center">
             <a class="navbar-brand" href="/">
-                <img th:src="@{'/img/logo.png'}" style="height: 28px;">
+                <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
             </a>
             <div class="box-search d-none d-md-flex">
                 <form th:action="@{/search}" method="get" class="d-flex">
@@ -67,7 +67,7 @@
 
             <div class="dropdown box-login d-none d-md-flex justify-content-end" th:if="${user!=null}">
                 <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    aria-expanded="false">
                     <span class="text-white" th:text="${user.username}"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -107,12 +107,8 @@
         </ul>
     </nav>
 
-    <div class="container py-3 py-md-4" id="wrap-content">
-        <div class="w-100 m-0 p-0 container">
-
-            <div th:replace="~{${content}}"></div>
-
-        </div>
+    <div class="container py-3 px-0 py-md-4" id="wrap-content">
+        <div th:replace="~{${content}}"></div>
     </div>
 
     <footer class="bg-dark w-100">
@@ -121,7 +117,7 @@
                 <div class="col-12 col-lg-4 m-0 p-0 d-flex flex-wrap gap-4">
                     <div class="w-100 m-0 p-0">
                         <a class="logo btn border-0 shadow-0 m-0 mb-2 p-0 px-2" href="/">
-                            <img th:src="@{'/img/logo.png'}" style="height: 32px;">
+                            <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 32px;">
                         </a>
                         <br>
                         <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
@@ -169,11 +165,25 @@
     <button type="button" id="back-to-top" class="btn">
         <i class="fas fa-chevron-up"></i>
     </button>
-    <script>
+    <!-- <script th:src="@{/js/lozad.min.js}" defer></script> -->
+    <script defer>
         $(document).ready(function () {
             $("#back-to-top").click(() => {
                 $("html").scrollTop(0);
             })
+
+            // const observer = lozad('.my-class');
+            // observer.observe();
+
+            
+            // $('.lozad').each(function(index) {
+            //     $(this).on('load', function() {
+            //         $('.status').eq(index).text('Image ' + (index + 1) + ' loaded successfully.');
+            //     }).on('error', function() {
+            //         $('.status').eq(index).text('Error loading image ' + (index + 1) + '.').addClass('error');
+            //     });
+            //     $(this).attr('src', $(this).data('src'));
+            // });
         });
     </script>
 </body>

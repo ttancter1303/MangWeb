@@ -7,7 +7,7 @@
       <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangas}">
         <a th:href="@{/manga/{id}(id=${manga.id})}">
           <div class="box-img">
-            <img th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+            <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
           </div>
           <div class="box-name">
             <p th:text="${manga.name}" class="mb-2"></p>

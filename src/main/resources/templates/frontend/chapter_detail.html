@@ -1,24 +1,63 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Chapter Detail</title>
-</head>
-<body>
+<link rel="stylesheet" type="text/css" th:href="@{/css/chapter-detail.css}">
 
-    <div th:if="${chapter != null}">
-        <h2>Chapter Name: <span th:text="${chapter.name}"></span></h2>
-        <h3>Chapter Images:</h3>
-        <div th:each="image : ${listImage}">
-            <img th:src="@{${image}}" alt="Chapter Image" />
+<div class="m-0 p-0 w-100 bg-content-gray">
+    <div class="w-100 m-0 p-3 bg-white">
+        <div class="w-100 mb-3 d-flex gap-3">
+            <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
+            <span>››</span>
+            <a href="/tim-truyen" class="btn m-0 p-0 text-primary">Thể loại</a>
+            <span>››</span>
+            <a href="javascript:void(0)" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
+        </div>
+        <div class="d-flex gap-2 flex-wrap align-items-end"><a class="theme-manga-title text-main-blue btn m-0 p-0"
+                th:href="'/manga/' + ${manga.id}" th:text="${manga.name}"></a> <span class="theme-manga-title"
+                th:text="' - ' +${chapter.getName()}"></span><i class="fs-16px"
+                th:text="'[Cập nhật: ' + ${chapter.getCreatedTime()} + ']'"></sp>
         </div>
     </div>
-    <div th:unless="${chapter != null}">
-        <p>No chapter found.</p>
+    <div class="w-100 p-3">
+        <div class="alert alert-primary w-100 text-center" role="alert">
+            Sử dụng mũi tên trái (←) hoặc phải (→) để chuyển chapter
+        </div>
+        <div class="w-100 m-0 p-0 d-flex gap-3">
+            <button><i class="fas fa-home"></i></button>
+            <button><i class="fas fa-list"></i></button>
+            <button></button>
+            <button></button>
+        </div>
     </div>
+</div>
+
+<div th:if="${chapter != null}">
+    <div class="w-100 d-flex flex-wrap box-pages justify-content-center">
+        <div class="page-chapter" th:each="image : ${listImage}">
+            <div class="box-page w-100">
+                <img class="lozad w-100" loading="lazy" th:src="${image}" alt="Chapter Image" />
+            </div>
+            <div class="load-skeleton-page-chapter w-100">
+                <i class="fas fa-spinner"></i>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:unless="${chapter != null}">
+    <p>No chapter found.</p>
+</div>
 
 <div th:unless="${manga != null}">
     <p>No manga found.</p>
 </div>
-</body>
-</html>
+
+<script>
+    $(document).ready(function () {
+        $('.box-pages .lozad').each(function () {
+            let abc = "abc";
+            $(this).on('load', function () {
+
+                let box = $(this).closest(".box-page");
+                box.siblings('.load-skeleton-page-chapter').remove();
+                box.css("height", "max-content");
+            });
+        });
+    });
+</script>
