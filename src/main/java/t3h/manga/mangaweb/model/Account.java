@@ -3,6 +3,7 @@ package t3h.manga.mangaweb.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,4 +22,11 @@ public class Account {
     private String password;
     private String email;
     private String role;
+    @ManyToMany
+    @JoinTable(
+            name = "user_manga",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "manga_id")
+    )
+    private List<Manga> savedMangas = new ArrayList<>();
 }

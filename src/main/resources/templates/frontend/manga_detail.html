@@ -46,9 +46,20 @@
                     </div>
                 </div>
                 <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
-                    <a href="" class="btn btn-warning text-light">Đọc từ đầu</a>
-                    <a href="/" class="btn btn-warning text-light">Đọc mới nhất</a>
+                    <a th:if="${firstChapter != null}"
+                        th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${firstChapter.id})}"
+                        class="btn btn-warning text-light">Đọc từ đầu</a>
+                    <a th:if="${lastChapter != null}"
+                        th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}"
+                        class="btn btn-warning text-light">Đọc mới nhất</a>
                 </div>
+                <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
+                    <form th:action="@{/user/saveManga}" method="post">
+                        <input type="hidden" name="mangaId" th:value="${manga.id}" />
+                        <button type="submit" class="btn btn-primary">Lưu vào profile</button>
+                    </form>
+                </div>
+
             </div>
         </div>
         <div class="row m-0 p-0 manga-description">
@@ -86,7 +97,9 @@
             <div class="w-100 mt-2 border py-2 box-chapters hidden-content">
                 <div class="w-100 m-0 p-0 row" th:each="chapter, iterStat : ${manga.chapterList}">
                     <div class="col-8 m-0 p-0">
-                        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0" th:text="${chapter.getName()}"></a>
+                        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0"
+                            th:text="${chapter.getName()}"></a>
+                        <!-- <a th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${chapter.id})}" class="btn m-0 p-0" th:text="${chapter.getName()}"></a> -->
                     </div>
                     <div class="col-4 m-0 p-0"><i th:text="${chapter.getCreatedTime()}"></i></div>
                     <div class="break-line mt-1 pb-1" th:if="${!iterStat.last}">
