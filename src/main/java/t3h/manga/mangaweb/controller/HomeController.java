@@ -55,18 +55,22 @@ public class HomeController {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
-            DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
-            String email = oidcUser.getAttribute("email");
-            Account account = accountRepository.findAccountByEmail(email);
-
-            if(account == null) {
-                account = new Account();
-                account.setUsername(email.split("@")[0]);
-                account.setPassword(passwordEncoder.encode(auth.getName()));
-                account.setEmail(email);
-                account.setAvatar(oidcUser.getAttribute("picture"));
-                account.setRole("ROLE_USER");
-                accountRepository.save(account);
+            Account account;
+            try {
+                DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
+                String email = oidcUser.getAttribute("email");
+                account = accountRepository.findAccountByEmail(email);
+                if (account == null) {
+                    account = new Account();
+                    account.setUsername(email.split("@")[0]);
+                    account.setPassword(passwordEncoder.encode(auth.getName()));
+                    account.setEmail(email);
+                    account.setAvatar(oidcUser.getAttribute("picture"));
+                    account.setRole("ROLE_USER");
+                    accountRepository.save(account);
+                }
+            } catch (Exception e) {
+                account = accountRepository.findAccountByUsername(auth.getName());
             }
             session.setAttribute("USER_LOGGED", account);
         }
@@ -136,8 +140,8 @@ public class HomeController {
 
     @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
-                             @PathVariable("chapterId") Integer chapterId,
-                             Model model) {
+            @PathVariable("chapterId") Integer chapterId,
+            Model model) {
         // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
         Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
@@ -149,15 +153,16 @@ public class HomeController {
         System.out.println(listimage);
         return "frontend/chapter_detail.html";
     }
+
     @GetMapping("/search")
     public String searchManga(@RequestParam(name = "name", required = false) String name,
-                              Model model) {
+            Model model) {
         List<Manga> mangas;
         if (name != null && !name.isEmpty()) {
             String searchName = "%" + name + "%";
             mangas = mangaRepository.findMangaByNameLike(searchName);
             for (Manga manga : mangas) {
-                System.out.println("Manga: "+manga);
+                System.out.println("Manga: " + manga);
             }
         } else {
             mangas = mangaRepository.findAll();
@@ -167,6 +172,5 @@ public class HomeController {
         model.addAttribute("content", "frontend/search_manga.html");
         return "layouts/layout.html";
     }
-
 
 }
