@@ -48,6 +48,7 @@ public class ConfigSecurity {
         return httpSecurity.build();
     }
 
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

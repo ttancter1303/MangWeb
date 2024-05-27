@@ -52,6 +52,7 @@ public class AdminController {
         model.addAttribute("username", userDetails.getUsername());
         return "layouts/adminlte3.html";
     }
+
     @GetMapping("/dashboard")
     public String getDashboard(HttpSession session, Model model) {
 

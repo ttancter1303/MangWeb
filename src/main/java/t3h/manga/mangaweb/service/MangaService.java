@@ -7,8 +7,8 @@ import t3h.manga.mangaweb.model.Manga;
 public interface MangaService 
 {
     List<Manga> getAllManga();
-    void saveMangaForUser(String username, Integer mangaId);
-    List<Manga> getSavedMangasForUser(String username);
+//    void saveMangaForUser(String username, Integer mangaId);
+//    List<Manga> getSavedMangasForUser(String username);
     Manga getMangaById(int id);
 
     Manga getMangaBySrc(String src);
