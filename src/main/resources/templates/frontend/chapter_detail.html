@@ -75,15 +75,19 @@
                 <a th:href="@{/manga/{id}(id=${manga.id})} + '#listChapter'" class="btn m-0 border-0 btn-danger"><i
                         class="fas fa-list"></i></a>
 
-                <a th:if="${prevChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${prevChapter.id}" class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-left"></i></a>
-                <button th:unless="${prevChapter != null}" class="btn btn-inactive m-0"><i class="fas fa-chevron-left"></i></button>
+                <a th:if="${prevChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${prevChapter.id}"
+                    class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-left"></i></a>
+                <button th:unless="${prevChapter != null}" class="btn btn-inactive m-0"><i
+                        class="fas fa-chevron-left"></i></button>
 
                 <button type="button" class="btn m-0 btn-open-list-chapter dropdown-toggle" data-bs-toggle="modal"
                     data-bs-target="#listChapterOffcanvas" th:text="${chapter.name}">
                 </button>
 
-                <a th:if="${nextChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${nextChapter.id}" class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-right"></i></a>
-                <button th:unless="${nextChapter != null}" class="btn btn-inactive m-0"><i class="fas fa-chevron-right"></i></button>
+                <a th:if="${nextChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${nextChapter.id}"
+                    class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-right"></i></a>
+                <button th:unless="${nextChapter != null}" class="btn btn-inactive m-0"><i
+                        class="fas fa-chevron-right"></i></button>
             </div>
         </div>
     </div>
@@ -99,6 +103,12 @@
                 <i class="fas fa-spinner"></i>
             </div>
         </div>
+    </div>
+</div>
+<div class="w-100 m-0 py-3 bg-content-gray">
+    <div class="fb-comments"
+        th:attr="data-href='https://specially-cosmic-donkey.ngrok-free.app' +'/manga/' + ${manga.id} + '/chapter/' +${chapter.id}"
+        data-width="100%" data-numposts="5">
     </div>
 </div>
 <div th:unless="${chapter != null}">

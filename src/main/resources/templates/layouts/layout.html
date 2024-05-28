@@ -20,6 +20,10 @@
 </head>
 
 <body th:with="user=${#ctx.session.USER_LOGGED}">
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v20.0&appId=463664599404825"
+        nonce="lGe6TWVb"></script>
     <div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="-1" id="sidebarOffcanvas"
         aria-labelledby="offcanvasWithBackdropLabel">
         <div class="offcanvas-header">
@@ -175,7 +179,7 @@
             // const observer = lozad('.my-class');
             // observer.observe();
 
-            
+
             // $('.lozad').each(function(index) {
             //     $(this).on('load', function() {
             //         $('.status').eq(index).text('Image ' + (index + 1) + ' loaded successfully.');
