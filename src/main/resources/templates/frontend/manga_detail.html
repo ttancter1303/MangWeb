@@ -62,7 +62,7 @@
 
             </div>
         </div>
-        <div class="row m-0 p-0 manga-description">
+        <div th:if="${manga.getDescription() != null}" class="row m-0 p-0 manga-description">
             <div class="box-title">
                 <h6 class="theme-page-title"><i class="fas fa-file-alt me-1"></i>NỘI DUNG</h6>
             </div>
@@ -86,7 +86,7 @@
                 });
             </script>
         </div>
-        <div class="row m-0 p-0 manga-chapters">
+        <div id="listChapter" th:if="${manga.chapterList != null && manga.chapterList.size() > 0}" class="row m-0 p-0 manga-chapters">
             <div class="box-title">
                 <h6 class="theme-page-title"><i class="fas fa-file-alt me-1"></i> DANH SÁCH CHƯƠNG</h6>
             </div>

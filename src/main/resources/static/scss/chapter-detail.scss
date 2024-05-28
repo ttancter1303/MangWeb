@@ -4,6 +4,50 @@ body {
     background-color: $bg-body-dark !important;
 }
 
+#listChapterOffcanvas {
+    .box-chapters {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+
+        .box-item {
+            flex: 1 1 130px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: unset;
+            font-size: 1em;
+            padding: 13px auto;
+
+            &:hover:not(.active) {
+                border: 1px solid #000 !important;
+            }
+        }
+
+        .active {
+            border: 1px solid #fd0405 !important;
+            color: #fd0405;
+        }
+    }
+}
+
+.box-btn {
+    .btn {
+        height: 40px;
+        min-width: 40px;
+        border-radius: 4px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-open-list-chapter {
+        border: 1px solid $text-main-silver !important;
+        min-width: 150px;
+        justify-content: space-between !important;
+    }
+}
+
 .page-chapter {
     max-width: 800px;
     width: 100%;
@@ -12,4 +56,9 @@ body {
         height: 0;
         overflow: hidden;
     }
+}
+
+.btn-inactive {
+    background-color: #acacad !important;
+    color: #fff !important;
 }
