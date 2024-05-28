@@ -1,5 +1,55 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/chapter-detail.css}">
+<div class="modal fade" id="listChapterOffcanvas" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="listChapterOffcanvasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content px-3">
+            <div class="modal-header d-flex gap-2">
+                <input id="chapterSearchInput" class="form-control py-3" style="box-shadow: none !important;"
+                    placeholder="Nhập số chap, ví dụ: 100">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body box-chapters gap-2">
+                <a th:classappend="${chapter.id == ch.id} ? 'active' : ''" th:each="ch : ${manga.getChapters()}"
+                    th:href="'/manga/' + ${manga.id} + '/chapter/' + ${ch.id}" class="box-item border py-2 btn w-100"
+                    th:text="${ch.name}"></a>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light border py-2 px-3" data-bs-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function debounce(func, wait) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), wait);
+        };
+    }
 
+    $(document).ready(function () {
+        function filterChapters() {
+            var inputVal = $('#chapterSearchInput').val().toLowerCase().split(' ');
+            $('.box-item').each(function () {
+                var itemText = $(this).text().toLowerCase();
+                var match = inputVal.every(function (word) {
+                    return itemText.includes(word);
+                });
+
+                if (match) {
+                    $(this).removeClass('d-none');
+                } else {
+                    $(this).addClass('d-none');
+                }
+            });
+        }
+
+        var debouncedFilterChapters = debounce(filterChapters, 300);
+
+        $('#chapterSearchInput').on('keyup', debouncedFilterChapters);
+    });
+</script>
 <div class="m-0 p-0 w-100 bg-content-gray">
     <div class="w-100 m-0 p-3 bg-white">
         <div class="w-100 mb-3 d-flex gap-3">
@@ -19,11 +69,22 @@
         <div class="alert alert-primary w-100 text-center" role="alert">
             Sử dụng mũi tên trái (←) hoặc phải (→) để chuyển chapter
         </div>
-        <div class="w-100 m-0 p-0 d-flex gap-3">
-            <button><i class="fas fa-home"></i></button>
-            <button><i class="fas fa-list"></i></button>
-            <button></button>
-            <button></button>
+        <div class="w-100 m-0 p-0 d-flex justify-content-center">
+            <div class="d-flex gap-2 box-btn flex-wrap">
+                <a href="/" class="btn m-0 border-0 btn-danger"><i class="fas fa-home"></i></a>
+                <a th:href="@{/manga/{id}(id=${manga.id})} + '#listChapter'" class="btn m-0 border-0 btn-danger"><i
+                        class="fas fa-list"></i></a>
+
+                <a th:if="${prevChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${prevChapter.id}" class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-left"></i></a>
+                <button th:unless="${prevChapter != null}" class="btn btn-inactive m-0"><i class="fas fa-chevron-left"></i></button>
+
+                <button type="button" class="btn m-0 btn-open-list-chapter dropdown-toggle" data-bs-toggle="modal"
+                    data-bs-target="#listChapterOffcanvas" th:text="${chapter.name}">
+                </button>
+
+                <a th:if="${nextChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${nextChapter.id}" class="btn m-0 border-0 btn-danger"><i class="fas fa-chevron-right"></i></a>
+                <button th:unless="${nextChapter != null}" class="btn btn-inactive m-0"><i class="fas fa-chevron-right"></i></button>
+            </div>
         </div>
     </div>
 </div>
@@ -34,7 +95,7 @@
             <div class="box-page w-100">
                 <img class="lozad w-100" loading="lazy" th:src="${image}" alt="Chapter Image" />
             </div>
-            <div class="load-skeleton-page-chapter w-100">
+            <div class="load-skeleton-page-chapter my-2 w-100">
                 <i class="fas fa-spinner"></i>
             </div>
         </div>
@@ -42,10 +103,6 @@
 </div>
 <div th:unless="${chapter != null}">
     <p>No chapter found.</p>
-</div>
-
-<div th:unless="${manga != null}">
-    <p>No manga found.</p>
 </div>
 
 <script>

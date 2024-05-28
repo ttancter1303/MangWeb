@@ -150,9 +150,17 @@ public class HomeController {
             if (chapter != null) {
                 ChapterDTO chapterDTO = new ChapterDTO(chapter);
                 List<String> listimage = chapterDTO.getPathImagesList();
+                List<Chapter> chapters = manga.getChapterList();
                 model.addAttribute("manga", manga);
                 model.addAttribute("chapter", chapter);
+
+                Integer chapIndex = chapters.indexOf(chapter);
                 model.addAttribute("listImage", listimage);
+                model.addAttribute("nextChapter",
+                        (chapters.size() - 1 == chapIndex) ? null : chapters.get(chapIndex + 1));
+                model.addAttribute("prevChapter",
+                        (0 == chapIndex) ? null : chapters.get(chapIndex - 1));
+                model.addAttribute("title", manga.getName() + " " + chapter.getName());
                 // System.out.println(listimage);
                 model.addAttribute("content", "frontend/chapter_detail.html");
                 return "layouts/layout.html";
