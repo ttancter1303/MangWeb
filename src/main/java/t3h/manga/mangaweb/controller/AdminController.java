@@ -97,7 +97,7 @@ public class AdminController {
     @GetMapping("/mangas/delete/{id}")
     public String deleteManga(@PathVariable("id") Integer id) {
         mangaRepository.deleteById(id);
-        return "redirect:/admin"; // Redirect to manga list page after deletion
+        return "redirect:/admin/"; // Redirect to manga list page after deletion
     }
     @GetMapping("/mangas/edit/{id}")
     public String showEditForm(@PathVariable("id") Integer id, Model model) {
@@ -151,6 +151,32 @@ public class AdminController {
         List<String> imagePaths = List.of(chapter.getPathImagesList().split(","));
         model.addAttribute("imagePaths", imagePaths);
         return "backend/edit-chapter";
+    }
+    @PostMapping("/mangas/create")
+    public String createManga(@ModelAttribute("manga") Manga newManga,
+                              @RequestParam(value = "selectedTags", required = false) List<Integer> selectedTags,
+                              RedirectAttributes redirectAttributes) {
+        Manga manga = new Manga();
+        manga.setName(newManga.getName());
+        manga.setAuthor(newManga.getAuthor());
+        manga.setThumbnailImg(newManga.getThumbnailImg());
+        if (selectedTags != null && !selectedTags.isEmpty()) {
+            List<Tag> tags = tagRepository.findAllById(selectedTags);
+            manga.setListTag(tags);
+        } else {
+            manga.setListTag(new ArrayList<>());
+        }
+        mangaRepository.save(manga);
+        redirectAttributes.addFlashAttribute("message", "Manga created successfully!");
+        return "redirect:/admin/";
+    }
+
+    @GetMapping("/mangas/new")
+    public String showCreateMangaForm(Model model) {
+        model.addAttribute("manga", new Manga());
+        model.addAttribute("tags", tagRepository.findAll());
+        model.addAttribute("content", "backend/create_manga.html");
+        return "layouts/adminlte3";
     }
     @PostMapping("/mangas/{mangaId}/edit-chapter/{chapterId}")
     public String editChapter(@PathVariable("mangaId") Integer mangaId,

@@ -20,13 +20,13 @@ public class UserController {
     @Autowired
     private MangaService mangaService;
 
-//    @GetMapping("/profile")
-//    public String getUserProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    @GetMapping("/profile")
+    public String getUserProfile(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 //        List<Manga> savedMangas = mangaService.getSavedMangasForUser(userDetails.getUsername());
 //        model.addAttribute("savedMangas", savedMangas);
-//        model.addAttribute("content", "frontend/user_profile.html");
-//        return "layouts/layout.html";
-//    }
+        model.addAttribute("content", "frontend/user_profile.html");
+        return "layouts/layout.html";
+    }
 //
 //    @PostMapping("/saveManga")
 //    public String saveManga(@RequestParam("mangaId") Integer mangaId, @AuthenticationPrincipal UserDetails userDetails) {

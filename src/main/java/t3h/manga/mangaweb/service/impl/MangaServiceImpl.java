@@ -48,7 +48,7 @@ public class MangaServiceImpl implements MangaService
 //    @Override
 //    public List<Manga> getSavedMangasForUser(String username) {
 //        Account user = accountRepository.findAccountByUsername(username);
-//        return user.getSavedMangas();
+//        return (List<Manga>) user.getSavedMangas();
 //    }
     @Override public Manga  getMangaBySrc(String src) 
     {
