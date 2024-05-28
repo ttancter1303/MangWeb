@@ -17,13 +17,13 @@ public class Ranking {
     private Integer id;
 
 
-    @Column(nullable = true)
-    private List<Manga> day;
-    
-    @Column(nullable = true)
-    private List<Manga> week;
-    
-    @Column(nullable = true)
-    private List<Manga> month;
+//    @Column(nullable = true)
+//    private List<Manga> day;
+//
+//    @Column(nullable = true)
+//    private List<Manga> week;
+//
+//    @Column(nullable = true)
+//    private List<Manga> month;
 
 }

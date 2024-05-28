@@ -87,18 +87,18 @@ public class CrawlerService {
     public List<String> getImageChapter(String chapterUrl) {
         List<String> imageChapter = new ArrayList<>();
         try {
+            // Kiểm tra nếu url là "javascript:void(0)", thì bỏ qua
             if ("javascript:void(0)".equals(chapterUrl)) {
                 System.out.println("Skipping invalid URL: " + chapterUrl);
                 return null;
             }
             Document document = Jsoup.connect(chapterUrl).get();
             Elements elements = document.select(".page-chapter img.lazy");
+            // int i = 0;
             for (Element imgElement : elements) {
+                // String src = imgElement.attr("src");
                 String src = imgElement.attr("data-original");
-                Map uploadResult = uploadImage(src);
-                if (uploadResult != null && uploadResult.get("url") != null) {
-                    imageChapter.add(uploadResult.get("url").toString());
-                }
+                imageChapter.add(src);
             }
         } catch (IOException e) {
             e.printStackTrace();

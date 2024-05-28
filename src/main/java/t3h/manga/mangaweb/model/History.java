@@ -28,6 +28,6 @@ public class History {
     )
     private List<Manga> listMangas;
 
-    @Column(nullable = true)
-    private Chapter lastestChapter;
+//    @Column(nullable = true)
+//    private Chapter lastestChapter;
 }
