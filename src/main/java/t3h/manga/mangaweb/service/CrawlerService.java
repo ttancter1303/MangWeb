@@ -6,6 +6,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import t3h.manga.mangaweb.dto.MangaDTO;
 import t3h.manga.mangaweb.model.Chapter;
@@ -95,17 +97,24 @@ public class CrawlerService {
             Elements elements = document.select(".page-chapter img.lazy");
             for (Element imgElement : elements) {
                 String src = imgElement.attr("data-original");
-                Map uploadResult = uploadImage(src);
-                if (uploadResult != null && uploadResult.get("url") != null) {
-                    imageChapter.add(uploadResult.get("url").toString());
+                if (src != null && !src.isEmpty()) {
+                    // Ensure the image URL is valid by using getImage method
+                    Resource resource = getImage(src);
+                    if (resource != null && resource.exists()) {
+                        imageChapter.add(src);
+                    }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return imageChapter;
     }
-
+    public Resource getImage(String imageUrl) throws Exception {
+        return new UrlResource(imageUrl);
+    }
     public HashMap<String, Object> crawlManga(String mangaUrl) {
         HashMap<String, Object> result = new HashMap<>();
         try {

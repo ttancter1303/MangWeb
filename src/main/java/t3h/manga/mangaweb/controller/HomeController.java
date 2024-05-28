@@ -2,6 +2,8 @@ package t3h.manga.mangaweb.controller;
 
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +28,7 @@ import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -137,7 +140,9 @@ public class HomeController {
             return "layouts/layout.html";
         }
     }
-
+    public Resource getImage(String imageUrl) throws Exception {
+        return new UrlResource(imageUrl);
+    }
     @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
             @PathVariable("chapterId") Integer chapterId,
@@ -150,7 +155,21 @@ public class HomeController {
             if (chapter != null) {
                 ChapterDTO chapterDTO = new ChapterDTO(chapter);
                 List<String> listimage = chapterDTO.getPathImagesList();
+                List<Resource> listimage2 = new ArrayList<>();
                 List<Chapter> chapters = manga.getChapterList();
+                for (String src : listimage) {
+                    Resource resource = null;
+                    try {
+                        resource = getImage(src);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    if (resource != null && resource.exists()) {
+                        listimage2.add(resource);
+                    }
+                }
+
+
                 model.addAttribute("manga", manga);
                 model.addAttribute("chapter", chapter);
 
