@@ -142,16 +142,25 @@ public class HomeController {
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
             @PathVariable("chapterId") Integer chapterId,
             Model model) {
-        // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
-        Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
-        ChapterDTO chapterDTO = new ChapterDTO(chapter);
-        List<String> listimage = chapterDTO.getPathImagesList();
-        model.addAttribute("manga", manga);
-        model.addAttribute("chapter", chapter);
-        model.addAttribute("listImage", listimage);
-        System.out.println(listimage);
-        return "frontend/chapter_detail.html";
+
+        // Kiểm tra xem manga có tồn tại không
+        if (manga != null) {
+            Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
+            if (chapter != null) {
+                ChapterDTO chapterDTO = new ChapterDTO(chapter);
+                List<String> listimage = chapterDTO.getPathImagesList();
+                model.addAttribute("manga", manga);
+                model.addAttribute("chapter", chapter);
+                model.addAttribute("listImage", listimage);
+                // System.out.println(listimage);
+                model.addAttribute("content", "frontend/chapter_detail.html");
+                return "layouts/layout.html";
+            }
+        }
+        model.addAttribute("content", "error/error.html");
+        return "layouts/layout.html";
+
     }
 
     @GetMapping("/search")

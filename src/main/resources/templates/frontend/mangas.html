@@ -4,7 +4,7 @@
     <div class="col-md-3 manga-card" th:each="manga : ${mangaPage.content}">
       <div class="card">
         <a th:href="@{/manga/{id}(id=${manga.id})}">
-          <img th:src="${manga.thumbnailImg}" alt="Hình minh họa Manga">
+          <img loading="lazy" th:src="${manga.thumbnailImg}" alt="Hình minh họa Manga">
           <div class="card-body">
             <h5 class="card-title" th:text="${manga.name}"></h5>
             <p class="card-text">Tác giả: <span th:text="${manga.author}"></span></p>

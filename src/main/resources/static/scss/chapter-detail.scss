@@ -1,0 +1,15 @@
+@import 'variables.scss';
+
+body {
+    background-color: $bg-body-dark !important;
+}
+
+.page-chapter {
+    max-width: 800px;
+    width: 100%;
+
+    .box-page {
+        height: 0;
+        overflow: hidden;
+    }
+}

@@ -1,6 +1,6 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/manga-detail.css}">
 
-<div class="m-0 p-0 w-100 row">
+<div class="m-0 p-0 w-100 row bg-content-gray">
     <div class="col-12 col-lg-8 m-0 p-0">
         <div class="w-100 mb-3 d-flex gap-3">
             <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
@@ -18,7 +18,7 @@
             <div class="col-12 col-sm-4 manga-thumb justify-content-center">
                 <div class="w-100 m-0 p-0 row justify-content-center">
                     <div class="col-6 col-sm-12 box-thumb">
-                        <img th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}" />
+                        <img class="lozad" loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}" />
                     </div>
                 </div>
             </div>
@@ -46,12 +46,16 @@
                     </div>
                 </div>
                 <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
-                    <a th:if="${firstChapter != null}" th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${firstChapter.id})}" class="btn btn-warning text-light">Đọc từ đầu</a>
-                    <a th:if="${lastChapter != null}" th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}" class="btn btn-warning text-light">Đọc mới nhất</a>
+                    <a th:if="${firstChapter != null}"
+                        th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${firstChapter.id})}"
+                        class="btn btn-warning text-light">Đọc từ đầu</a>
+                    <a th:if="${lastChapter != null}"
+                        th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}"
+                        class="btn btn-warning text-light">Đọc mới nhất</a>
                 </div>
                 <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
                     <form th:action="@{/user/saveManga}" method="post">
-                        <input type="hidden" name="mangaId" th:value="${manga.id}"/>
+                        <input type="hidden" name="mangaId" th:value="${manga.id}" />
                         <button type="submit" class="btn btn-primary">Lưu vào profile</button>
                     </form>
                 </div>
@@ -93,7 +97,9 @@
             <div class="w-100 mt-2 border py-2 box-chapters hidden-content">
                 <div class="w-100 m-0 p-0 row" th:each="chapter, iterStat : ${manga.chapterList}">
                     <div class="col-8 m-0 p-0">
-                        <a th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${chapter.id})}" class="btn m-0 p-0" th:text="${chapter.getName()}"></a>
+                        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0"
+                            th:text="${chapter.getName()}"></a>
+                        <!-- <a th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${chapter.id})}" class="btn m-0 p-0" th:text="${chapter.getName()}"></a> -->
                     </div>
                     <div class="col-4 m-0 p-0"><i th:text="${chapter.getCreatedTime()}"></i></div>
                     <div class="break-line mt-1 pb-1" th:if="${!iterStat.last}">
@@ -124,7 +130,7 @@
             <div class="w-100 m-0 p-0 list-history">
                 <div class="manga-item">
                     <div class="mI_thumb">
-                        <img src="../img/user.jpg">
+                        <img class="lozad" loading="lazy" src="../img/user.jpg">
                     </div>
                     <div class="mI_info">
                         <div class="mI_name">
@@ -157,7 +163,7 @@
                         </div>
                         <div class="manga-item">
                             <div class="mI_thumb">
-                                <img src="../img/user.jpg">
+                                <img class="lozad" loading="lazy" src="../img/user.jpg">
                             </div>
                             <div class="mI_info">
                                 <div class="mI_name">
@@ -177,7 +183,7 @@
                         </div>
                         <div class="manga-item">
                             <div class="mI_thumb">
-                                <img src="../img/user.jpg">
+                                <img class="lozad" loading="lazy" src="../img/user.jpg">
                             </div>
                             <div class="mI_info">
                                 <div class="mI_name">
@@ -197,7 +203,7 @@
                         </div>
                         <div class="manga-item">
                             <div class="mI_thumb">
-                                <img src="../img/user.jpg">
+                                <img class="lozad" loading="lazy" src="../img/user.jpg">
                             </div>
                             <div class="mI_info">
                                 <div class="mI_name">
@@ -217,7 +223,7 @@
                         </div>
                         <div class="manga-item">
                             <div class="mI_thumb">
-                                <img src="../img/user.jpg">
+                                <img class="lozad" loading="lazy" src="../img/user.jpg">
                             </div>
                             <div class="mI_info">
                                 <div class="mI_name">
@@ -237,7 +243,7 @@
                         </div>
                         <div class="manga-item">
                             <div class="mI_thumb">
-                                <img src="../img/user.jpg">
+                                <img class="lozad" loading="lazy" src="../img/user.jpg">
                             </div>
                             <div class="mI_info">
                                 <div class="mI_name">

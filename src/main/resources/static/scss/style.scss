@@ -128,18 +128,22 @@ body {
     }
 }
 
-#wrap-content {
-    background-color: $bg-content-gray;
+.bg-content-gray {
+    background-color: $bg-content-gray !important;
+}
+
+.text-main-blue {
+    color: $text-main-blue !important;
 }
 
 .theme-page-title {
     color: $text-main-blue;
-    font-size: 20px;
+    font-size: 20px !important;
 }
 
 .theme-manga-title {
     color: #000;
-    font-size: 21px;
+    font-size: 21px !important;
 }
 
 .sm-theme-page-title {
@@ -426,4 +430,25 @@ body {
 
 .fs-12px {
     font-size: 12px !important;
+}
+
+.load-skeleton-page-chapter {
+    max-width: 800px;
+    width: 100%;
+    // aspect-ratio: 1 / 1;
+    height: 50px;
+    background-color: $text-main-silver;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        animation: spinning linear 0.7s infinite;
+    }
+
+    @keyframes spinning {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
 }
