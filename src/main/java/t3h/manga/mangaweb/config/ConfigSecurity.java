@@ -25,6 +25,7 @@ public class ConfigSecurity {
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/user/profile").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
+                .requestMatchers("/story/**").permitAll()
                 .anyRequest().permitAll()
                 // OAuth 2.0
                 .and()
