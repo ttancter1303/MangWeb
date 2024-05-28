@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -22,11 +24,11 @@ public class Account {
     private String password;
     private String email;
     private String role;
-    @ManyToMany
-    @JoinTable(
-            name = "user_manga",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "manga_id")
-    )
-    private List<Manga> savedMangas = new ArrayList<>();
+//    @ManyToMany
+//    @JoinTable(
+//            name = "user_manga",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "manga_id")
+//    )
+//    private Set<Manga> savedMangas = new HashSet<>();
 }

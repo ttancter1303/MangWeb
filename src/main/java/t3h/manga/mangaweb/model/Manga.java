@@ -22,8 +22,8 @@ public class Manga {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
-    @ManyToMany(mappedBy = "savedMangas")
-    private List<Account> accounts;
+//    @ManyToMany(mappedBy = "savedMangas")
+//    private List<Account> accounts;
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

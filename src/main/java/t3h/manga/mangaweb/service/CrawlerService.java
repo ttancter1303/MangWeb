@@ -1,34 +1,28 @@
 package t3h.manga.mangaweb.service;
 
+import com.cloudinary.Cloudinary;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import t3h.manga.mangaweb.dto.MangaDTO;
-// import t3h.manga.mangaweb.model.Author;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
 import t3h.manga.mangaweb.model.Tag;
-// import t3h.manga.mangaweb.repository.AuthorRepository;
 import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
+import t3h.manga.mangaweb.service.impl.CloudinaryServiceImpl;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 public class CrawlerService {
+
     @Autowired
     TagRepository tagRepository;
 
@@ -43,6 +37,9 @@ public class CrawlerService {
 
     @Autowired
     private SlugService slugService;
+
+    @Autowired
+    CloudinaryServiceImpl cloudinaryService;
 
     public ArrayList<Tag> getAllTagCrawler() {
         ArrayList<Tag> listTag = new ArrayList<>();
@@ -60,7 +57,7 @@ public class CrawlerService {
             for (String text : uniqueTexts) {
                 Tag tag = new Tag();
                 tag.setName(text);
-                tag.setSlug(slugService.convertToSlug((text + "-" +tag.getTagID())));
+                tag.setSlug(slugService.convertToSlug((text + "-" + tag.getTagID())));
                 listTag.add(tag);
             }
 
@@ -77,9 +74,8 @@ public class CrawlerService {
             Element liTag = document.selectFirst("li.kind.row");
             Elements aTags = liTag.select("p.col-xs-8 a");
             for (Element element : aTags) {
-                if (element.text().strip() != "") {
+                if (!element.text().strip().isEmpty()) {
                     listTag.add(element.text());
-                    // System.out.println("Tag: " + element.text());
                 }
             }
         } catch (IOException e) {
@@ -91,18 +87,18 @@ public class CrawlerService {
     public List<String> getImageChapter(String chapterUrl) {
         List<String> imageChapter = new ArrayList<>();
         try {
-            // Kiểm tra nếu url là "javascript:void(0)", thì bỏ qua
             if ("javascript:void(0)".equals(chapterUrl)) {
                 System.out.println("Skipping invalid URL: " + chapterUrl);
                 return null;
             }
             Document document = Jsoup.connect(chapterUrl).get();
             Elements elements = document.select(".page-chapter img.lazy");
-            // int i = 0;
             for (Element imgElement : elements) {
-                // String src = imgElement.attr("src");
                 String src = imgElement.attr("data-original");
-                imageChapter.add(src);
+                Map uploadResult = uploadImage(src);
+                if (uploadResult != null && uploadResult.get("url") != null) {
+                    imageChapter.add(uploadResult.get("url").toString());
+                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -110,8 +106,8 @@ public class CrawlerService {
         return imageChapter;
     }
 
-    public HashMap<String,Object> crawlManga(String mangaUrl) {
-        HashMap<String,Object> result = new HashMap<>();
+    public HashMap<String, Object> crawlManga(String mangaUrl) {
+        HashMap<String, Object> result = new HashMap<>();
         try {
             int totalChap = 0;
             Document document = Jsoup.connect(mangaUrl).get();
@@ -132,13 +128,13 @@ public class CrawlerService {
                         imageUrl = "Image not found";
                     }
                     String mangaTitle = entryTitle.text();
-                    
+
                     if (authorElement != null) {
                         manga.setAuthor(authorElement.text());
                     } else {
                         manga.setAuthor("Đang cập nhật");
                     }
-                    
+
                     if (statusElement != null) {
                         manga.setStatus(statusElement.text());
                     } else {
@@ -154,27 +150,25 @@ public class CrawlerService {
                         if (localTag != null)
                             manga.getListTag().add(localTag);
                     }
-                    manga.toString();
                     mangaRepository.save(manga);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     return null;
                 }
             }
 
-            List<String> getListUrlChapter = manga.getChapterList().stream().map(chap -> chap.getSource())
+            List<String> getListUrlChapter = manga.getChapterList().stream().map(Chapter::getSource)
                     .collect(Collectors.toList());
 
             Element listChapterElement = document.selectFirst("div.list-chapter");
-            String chapterTitleText;
             if (listChapterElement != null) {
                 Elements linkElements = listChapterElement.select(".row a");
                 Collections.reverse(linkElements);
                 totalChap = linkElements.size();
                 for (Element linkElement : linkElements) {
-                    chapterTitleText = linkElement.text();
+                    String chapterTitleText = linkElement.text();
                     String chapterUrl = linkElement.absUrl("href");
 
-                    if(!getListUrlChapter.contains(chapterUrl)) {
+                    if (!getListUrlChapter.contains(chapterUrl)) {
                         Chapter chapter = new Chapter();
                         chapter.setName(chapterTitleText);
                         chapter.setSource(chapterUrl);
@@ -185,7 +179,7 @@ public class CrawlerService {
                                 pathPagesChapter += s + ",";
                             }
                             chapter.setPathImagesList(pathPagesChapter.substring(0, pathPagesChapter.length() - 1));
-    
+
                             try {
                                 chapterRepository.save(chapter);
                                 manga.getChapterList().add(chapter);
@@ -204,6 +198,15 @@ public class CrawlerService {
             return result;
         } catch (IOException e) {
             return null;
+        }
+    }
+
+    public Map uploadImage(String imageUrl) {
+        try {
+            return cloudinaryService.uploadImageFromUrl(imageUrl);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Map.of("error", "Failed to upload image");
         }
     }
 }

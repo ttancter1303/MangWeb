@@ -38,18 +38,18 @@ public class MangaServiceImpl implements MangaService
         return Manga;
 
     }
-    @Override
-    public void saveMangaForUser(String username, Integer mangaId) {
-        Account user = accountRepository.findAccountByUsername(username);
-        Manga manga = mangaRepository.findById(mangaId).orElseThrow(() -> new RuntimeException("Manga not found"));
-        user.getSavedMangas().add(manga);
-        accountRepository.save(user);
-    }
-    @Override
-    public List<Manga> getSavedMangasForUser(String username) {
-        Account user = accountRepository.findAccountByUsername(username);
-        return user.getSavedMangas();
-    }
+//    @Override
+//    public void saveMangaForUser(String username, Integer mangaId) {
+//        Account user = accountRepository.findAccountByUsername(username);
+//        Manga manga = mangaRepository.findById(mangaId).orElseThrow(() -> new RuntimeException("Manga not found"));
+//        user.getSavedMangas().add(manga);
+//        accountRepository.save(user);
+//    }
+//    @Override
+//    public List<Manga> getSavedMangasForUser(String username) {
+//        Account user = accountRepository.findAccountByUsername(username);
+//        return user.getSavedMangas();
+//    }
     @Override public Manga  getMangaBySrc(String src) 
     {
 
