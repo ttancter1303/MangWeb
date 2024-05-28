@@ -23,6 +23,7 @@ public class ConfigSecurity {
         httpSecurity.csrf().disable()
                 .authorizeRequests()
                 .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/user/profile").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/user/**").hasRole("USER")
                 .anyRequest().permitAll()
                 // OAuth 2.0
