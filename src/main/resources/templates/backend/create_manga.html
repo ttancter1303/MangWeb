@@ -1,24 +1,15 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Create Manga</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        .tag-container {
-            display: flex;
-            flex-wrap: wrap;
-        }
-        .tag-box {
-            margin-right: 10px;
-            margin-bottom: 10px;
-        }
-    </style>
+    <title>Create New Manga</title>
+    <!-- Include Bootstrap CSS for styling (if not already included) -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
 <div class="container mt-5">
     <h2>Create New Manga</h2>
-    <form action="/admin/mangas/create" method="post">
+    <form th:action="@{/admin/mangas/create}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="name">Name:</label>
             <input type="text" class="form-control" id="name" name="name" required>
@@ -28,45 +19,29 @@
             <input type="text" class="form-control" id="author" name="author" required>
         </div>
         <div class="form-group">
-            <label for="thumbnail">Thumbnail URL:</label>
-            <input type="text" class="form-control" id="thumbnail" name="thumbnail" required>
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="status">Status:</label>
+            <input type="text" class="form-control" id="status" name="status" required>
+        </div>
+        <div class="form-group">
+            <label for="thumbnailImg">Thumbnail Image:</label>
+            <input type="file" class="form-control-file" id="thumbnailImg" name="thumbnailImg" required>
         </div>
         <div class="form-group">
             <label for="listTag">List Tag:</label>
             <div id="tagContainer" class="tag-container">
                 <!-- Hiển thị danh sách các tag -->
                 <div th:each="tag : ${tags}" class="tag-box">
-                    <input type="checkbox" class="form-check-input" th:id="'tag_' + ${tag.id}" th:name="selectedTags" th:value="${tag.id}">
-                    <label class="form-check-label" th:for="'tag_' + ${tag.id}" th:text="${tag.name}"></label>
+                    <input type="checkbox" class="form-check-input" th:id="'tag_' + ${tag.tagID}" th:name="selectedTags" th:value="${tag.tagID}">
+                    <label class="form-check-label" th:for="'tag_' + ${tag.tagID}" th:text="${tag.name}"></label>
                 </div>
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="tagModal" tabindex="-1" role="dialog" aria-labelledby="tagModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="tagModalLabel">Select Tag</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <!-- Hiển thị danh sách tất cả các tag -->
-                <div th:each="tag : ${tags}">
-                    <!-- Thêm sự kiện onclick vào thẻ <span> -->
-                    <span class="badge badge-primary tag" th:text="${tag.name}" th:data-tag-id="${tag.id}" onclick="addTag(this)"></span>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
 </div>
 
 <script th:inline="javascript">
@@ -85,8 +60,7 @@
     }
 </script>
 
+<!-- Include Bootstrap JS and jQuery (if not already included) -->
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
-</html>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></s

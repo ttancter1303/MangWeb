@@ -36,7 +36,6 @@ public class Manga {
     public String getDescription() {
         return this.description.split("\n")[0];
     }
-
     private String thumbnailImg;
 
     // @ManyToOne

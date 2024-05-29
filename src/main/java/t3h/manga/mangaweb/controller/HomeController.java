@@ -168,8 +168,6 @@ public class HomeController {
                         listimage2.add(resource);
                     }
                 }
-
-
                 model.addAttribute("manga", manga);
                 model.addAttribute("chapter", chapter);
 
