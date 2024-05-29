@@ -24,6 +24,7 @@ public class Account {
     private String password;
     private String email;
     private String role;
+    private String verificationCode;
 //    @ManyToMany
 //    @JoinTable(
 //            name = "user_manga",

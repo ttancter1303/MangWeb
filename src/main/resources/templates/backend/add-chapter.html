@@ -1,17 +1,56 @@
-
 <body>
 <h1>Add New Chapter</h1>
-<form action="#" th:action="@{/admin/mangas/{mangaId}/add-chapter(mangaId=${mangaId})}" method="post" enctype="multipart/form-data">
-    <input type="hidden" th:name="mangaId" th:value="${mangaId}" />
+<form id="addChapterForm" action="#" th:action="@{/admin/mangas/{mangaId}/add-chapter(mangaId=${mangaId})}"
+      method="post" encType="multipart/form-data">
+    <input type="hidden" th:name="mangaId" th:value="${mangaId}"/>
     <div>
-        <label for="name">Chapter Name:</label>
+        <label htmlFor="name">Chapter Name:</label>
         <input type="text" id="name" name="name" required>
     </div>
     <div>
-        <label for="images">Chapter Images:</label>
+        <label htmlFor="images">Chapter Images:</label>
         <input type="file" id="images" name="files" accept="image/*" multiple required>
+        <progress id="uploadProgress" value="0" max="100"></progress>
+        <p id="progressStatus">Upload progress: 0%</p>
     </div>
-    <button type="submit">Add Chapter</button>
+    <button type="submit" id="submitButton">Add Chapter</button>
 </form>
-</body>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var form = document.getElementById('addChapterForm');
+        var progressBar = document.getElementById('uploadProgress');
+        var progressStatus = document.getElementById('progressStatus');
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            var formData = new FormData(form);
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', form.getAttribute('action'));
+
+            xhr.upload.addEventListener('progress', function (e) {
+                if (e.lengthComputable) {
+                    var percentComplete = (e.loaded / e.total) * 100;
+                    progressBar.value = percentComplete;
+                    progressStatus.innerText = 'Upload progress: ' + percentComplete.toFixed(2) + '%';
+                }
+            });
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    // Handle response from server
+                    if (xhr.status === 200) {
+                        console.log('Upload successful!');
+                    } else {
+                        console.error('Upload failed with status: ' + xhr.status);
+                    }
+                }
+            };
+
+            xhr.send(formData);
+        });
+    });
+</script>
+</body>
