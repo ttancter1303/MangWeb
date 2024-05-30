@@ -8,6 +8,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import t3h.manga.mangaweb.model.Account;
 import t3h.manga.mangaweb.repository.AccountRepository;
@@ -18,11 +19,13 @@ import org.springframework.session.SessionRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository accountRepository;
+    private Object Optional;
 
     @Override
     public List<Account> getAll() {
@@ -41,4 +44,9 @@ public class AccountServiceImpl implements AccountService {
         System.out.println(account);
         return new User(username, account.getPassword(), listRole);
     }
+    public void changePassword(Account account, String newPassword) {
+        account.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+        accountRepository.save(account);
+    }
+
 }
