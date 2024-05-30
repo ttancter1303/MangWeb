@@ -1,5 +1,7 @@
 package t3h.manga.mangaweb.controller;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
@@ -25,6 +27,8 @@ import t3h.manga.mangaweb.model.Tag;
 import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
+import t3h.manga.mangaweb.service.CloudinaryService;
+import t3h.manga.mangaweb.service.FileStorageService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,6 +38,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -47,6 +52,10 @@ public class AdminController {
     TagRepository tagRepository;
     @Autowired
     ChapterRepository chapterRepository;
+    @Autowired
+    FileStorageService fileStorageService;
+    @Autowired
+    private Cloudinary cloudinary;
     @GetMapping("")
     public String admin(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         model.addAttribute("username", userDetails.getUsername());
@@ -153,22 +162,42 @@ public class AdminController {
         return "backend/edit-chapter";
     }
     @PostMapping("/mangas/create")
-    public String createManga(@ModelAttribute("manga") Manga newManga,
+    public String createManga(@RequestParam("thumbnailImg") MultipartFile thumbnailImg,
+                              @RequestParam("name") String name,
+                              @RequestParam("author") String author,
+                              @RequestParam("description") String description,
+                              @RequestParam("status") String status,
                               @RequestParam(value = "selectedTags", required = false) List<Integer> selectedTags,
                               RedirectAttributes redirectAttributes) {
-        Manga manga = new Manga();
-        manga.setName(newManga.getName());
-        manga.setAuthor(newManga.getAuthor());
-        manga.setThumbnailImg(newManga.getThumbnailImg());
-        if (selectedTags != null && !selectedTags.isEmpty()) {
-            List<Tag> tags = tagRepository.findAllById(selectedTags);
-            manga.setListTag(tags);
-        } else {
-            manga.setListTag(new ArrayList<>());
+        try {
+            Map<?, ?> uploadResult = cloudinary.uploader().upload(thumbnailImg.getBytes(), ObjectUtils.emptyMap());
+            String thumbnailPath = (String) uploadResult.get("url");
+
+            // Tạo đối tượng Manga mới
+            Manga manga = new Manga();
+            manga.setName(name);
+            manga.setAuthor(author);
+            manga.setDescription(description);
+            manga.setStatus(status);
+            manga.setThumbnailImg(thumbnailPath);
+
+
+            // Xử lý tag
+            if (selectedTags != null && !selectedTags.isEmpty()) {
+                List<Tag> tags = tagRepository.findAllById(selectedTags);
+                manga.setListTag(tags);
+            } else {
+                manga.setListTag(new ArrayList<>());
+            }
+            mangaRepository.save(manga);
+
+            redirectAttributes.addFlashAttribute("message", "Manga created successfully!");
+            return "redirect:/admin/";
+        } catch (IOException e) {
+            e.printStackTrace();
+            redirectAttributes.addFlashAttribute("error", "Failed to upload thumbnail image!");
+            return "redirect:/admin/";
         }
-        mangaRepository.save(manga);
-        redirectAttributes.addFlashAttribute("message", "Manga created successfully!");
-        return "redirect:/admin/";
     }
 
     @GetMapping("/mangas/new")
@@ -178,6 +207,7 @@ public class AdminController {
         model.addAttribute("content", "backend/create_manga.html");
         return "layouts/adminlte3";
     }
+
     @PostMapping("/mangas/{mangaId}/edit-chapter/{chapterId}")
     public String editChapter(@PathVariable("mangaId") Integer mangaId,
                               @PathVariable("chapterId") Integer chapterId,
@@ -241,18 +271,13 @@ public class AdminController {
 
         List<String> imagePaths = new ArrayList<>();
         try {
-            // Tạo thư mục tạm để lưu các tệp ảnh tải lên
-            Path tempDir = Files.createTempDirectory("");
-
             for (MultipartFile file : files) {
                 if (file.isEmpty()) continue;
 
-                String fileName = file.getOriginalFilename();
-                if (fileName != null && isImageFile(fileName)) {
-                    File tempFile = tempDir.resolve(fileName).toFile();
-                    file.transferTo(tempFile);
-                    imagePaths.add(tempFile.getAbsolutePath());
-                }
+                // Upload ảnh lên Cloudinary và lấy đường dẫn
+                Map<?, ?> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+                String imagePath = (String) uploadResult.get("url");
+                imagePaths.add(imagePath);
             }
 
             if (imagePaths.isEmpty()) {
@@ -260,7 +285,7 @@ public class AdminController {
                 return "redirect:/admin/mangas/edit/" + mangaId;
             }
 
-            // Tạo đối tượng chương mới và lưu các tệp đã tải lên vào chương
+            // Tạo đối tượng chương mới và lưu các đường dẫn ảnh vào chương
             Chapter chapter = new Chapter();
             chapter.setName(name);
             chapter.setPathImagesList(String.join(",", imagePaths));
@@ -295,7 +320,5 @@ public class AdminController {
         }
         return false;
     }
-
-
 
 }

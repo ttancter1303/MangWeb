@@ -12,7 +12,7 @@
     <div class="col-md-3">
       <div class="list-group">
         <a href="#" class="list-group-item list-group-item-action">Truyện theo dõi</a>
-        <a href="#" class="list-group-item list-group-item-action">Đổi mật khẩu</a>
+        <a href="/user/reset-password" class="list-group-item list-group-item-action">Đổi mật khẩu</a>
         <a href="#" class="list-group-item list-group-item-action">Thoát</a>
       </div>
     </div>
@@ -28,14 +28,13 @@
             <td></td>
           </tr>
           <tr>
-            <th>Họ và tên</th>
-            <td colspan="3">lquynhchi93</td>
+            <th>User name</th>
+            <td colspan="3" th:text="${username}"></td>
           </tr>
           <tr>
             <th>Email</th>
-            <td colspan="3">lquynhchi93@gmail.com</td>
+            <td colspan="3" th:text="${email}"></td>
           </tr>
-
         </table>
       </div>
       <div class="section">
