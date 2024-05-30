@@ -87,7 +87,8 @@
                 });
             </script>
         </div>
-        <div id="listChapter" th:if="${manga.chapterList != null && manga.chapterList.size() > 0}" class="row m-0 p-0 manga-chapters">
+        <div id="listChapter" th:if="${manga.chapterList != null && manga.chapterList.size() > 0}"
+            class="row m-0 p-0 manga-chapters">
             <div class="box-title">
                 <h6 class="theme-page-title"><i class="fas fa-file-alt me-1"></i> DANH SÁCH CHƯƠNG</h6>
             </div>
@@ -118,6 +119,12 @@
                         })
                     });
                 </script>
+            </div>
+        </div>
+        <div class="w-100 m-0 py-3 bg-content-gray">
+            <div class="fb-comments"
+                th:attr="data-href=${global.get('baseUrl')} +'/manga/' + ${manga.id}"
+                data-width="100%" data-numposts="5">
             </div>
         </div>
     </div>

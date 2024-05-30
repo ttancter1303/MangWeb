@@ -58,25 +58,26 @@ public class HomeController {
             @RequestParam(defaultValue = "0") int page) {
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("\n=======> " + auth);
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
-            Account account;
-            try {
-                DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
-                String email = oidcUser.getAttribute("email");
-                account = accountRepository.findAccountByEmail(email);
-                if (account == null) {
-                    account = new Account();
-                    account.setUsername(email.split("@")[0]);
-                    account.setPassword(passwordEncoder.encode(auth.getName()));
-                    account.setEmail(email);
-                    account.setAvatar(oidcUser.getAttribute("picture"));
-                    account.setRole("ROLE_USER");
-                    accountRepository.save(account);
-                }
-            } catch (Exception e) {
-                account = accountRepository.findAccountByUsername(auth.getName());
-            }
-            session.setAttribute("USER_LOGGED", account);
+            // Account account;
+            // try {
+            //     DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
+            //     String email = oidcUser.getAttribute("email");
+            //     account = accountRepository.findAccountByEmail(email);
+            //     if (account == null) {
+            //         account = new Account();
+            //         account.setUsername(email.split("@")[0]);
+            //         account.setPassword(passwordEncoder.encode(auth.getName()));
+            //         account.setEmail(email);
+            //         account.setAvatar(oidcUser.getAttribute("picture"));
+            //         account.setRole("ROLE_USER");
+            //         accountRepository.save(account);
+            //     }
+            // } catch (Exception e) {
+            //     account = accountRepository.findAccountByUsername(auth.getName());
+            // }
+            // session.setAttribute("USER_LOGGED", account);
         }
 
         int size = 12;
