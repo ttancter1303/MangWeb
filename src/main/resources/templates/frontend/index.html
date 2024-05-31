@@ -113,121 +113,28 @@
                     </div>
                 </div>
             </div>
-            <div class="w-100 m-0 p-0 list-top-manga">
-                <div class="w-100 m-0 p-0 box-tab" role="tablist">
-                    <button class=" active" id="top-month-tab" data-bs-toggle="tab" data-bs-target="#top-month"
-                        type="button" role="tab" aria-controls="top-month" aria-selected="true">Top tháng</button>
-                    <button class="" id="top-week-tab" data-bs-toggle="tab" data-bs-target="#top-week" type="button"
-                        role="tab" aria-controls="top-week" aria-selected="false">Top tuần</button>
-                    <button class="" id="top-day-tab" data-bs-toggle="tab" data-bs-target="#top-day" type="button"
-                        role="tab" aria-controls="top-day" aria-selected="false">Top ngày</button>
-                </div>
-                <div class="tab-content p-2">
-                    <div class="tab-pane fade show active w-100" id="top-month" role="tabpanel"
-                        aria-labelledby="top-month-tab">
-
-                        <div class="top-item">
-                            <div class="box-rank">
-                                <span>01</span>
+            <div class="container">
+                <h1 class="mt-4">Top Ranked Manga</h1>
+                <div class="row">
+                    <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangaRankings}">
+                        <a th:href="@{/manga/{id}(id=${manga.id})}">
+                            <div class="box-img">
+                                <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
                             </div>
-                            <div class="manga-item">
-                                <div class="mI_thumb">
-                                    <img loading="lazy" src="../img/user.jpg">
-                                </div>
-                                <div class="mI_info">
-                                    <div class="mI_name">
-                                        Tinh giáp hồn tướng
-                                    </div>
-                                    <div class="mI_control">
-                                        <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                        <i><i class="far fa-eye"></i> 62K</i>
-                                    </div>
-                                </div>
+                            <div class="box-name">
+                                <h6 th:text="${manga.name}" class="mb-2"></h6>
                             </div>
-                        </div>
-
-                        <div class="top-item">
-                            <div class="box-rank">
-                                <span>02</span>
-                            </div>
-                            <div class="manga-item">
-                                <div class="mI_thumb">
-                                    <img loading="lazy" src="../img/user.jpg">
-                                </div>
-                                <div class="mI_info">
-                                    <div class="mI_name">
-                                        Tinh giáp hồn tướng
-                                    </div>
-                                    <div class="mI_control">
-                                        <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                        <i><i class="far fa-eye"></i> 62K</i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="top-item">
-                            <div class="box-rank">
-                                <span>03</span>
-                            </div>
-                            <div class="manga-item">
-                                <div class="mI_thumb">
-                                    <img loading="lazy" src="../img/user.jpg">
-                                </div>
-                                <div class="mI_info">
-                                    <div class="mI_name">
-                                        Tinh giáp hồn tướng
-                                    </div>
-                                    <div class="mI_control">
-                                        <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                        <i><i class="far fa-eye"></i> 62K</i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="top-item">
-                            <div class="box-rank">
-                                <span>04</span>
-                            </div>
-                            <div class="manga-item">
-                                <div class="mI_thumb">
-                                    <img loading="lazy" src="../img/user.jpg">
-                                </div>
-                                <div class="mI_info">
-                                    <div class="mI_name">
-                                        Tinh giáp hồn tướng
-                                    </div>
-                                    <div class="mI_control">
-                                        <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                        <i><i class="far fa-eye"></i> 62K</i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="top-item">
-                            <div class="box-rank">
-                                <span>05</span>
-                            </div>
-                            <div class="manga-item">
-                                <div class="mI_thumb">
-                                    <img loading="lazy" src="../img/user.jpg">
-                                </div>
-                                <div class="mI_info">
-                                    <div class="mI_name">
-                                        Tinh giáp hồn tướng
-                                    </div>
-                                    <div class="mI_control">
-                                        <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                        <i><i class="far fa-eye"></i> 62K</i>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        </a>
+<!--                        <table class="w-100">-->
+<!--                            <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">-->
+<!--                                <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small-->
+<!--                                        th:text="${chapter.getName()}"></small></a> </td>-->
+<!--                                <td class="justify-content-end">-->
+<!--                                    <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>-->
+<!--                                </td>-->
+<!--                            </tr>-->
+<!--                        </table>-->
                     </div>
-                    <div class="tab-pane fade" id="top-week" role="tabpanel" aria-labelledby="top-week-tab">b</div>
-                    <div class="tab-pane fade" id="top-day" role="tabpanel" aria-labelledby="top-day-tab">...</div>
                 </div>
             </div>
         </div>

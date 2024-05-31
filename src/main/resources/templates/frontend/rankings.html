@@ -7,22 +7,27 @@
 <body>
 <div class="container">
     <h1 class="mt-4">Top Ranked Manga</h1>
-    <table class="table table-striped mt-3">
-        <thead>
-        <tr>
-            <th>Rank</th>
-            <th>Manga ID</th>
-            <th>Read Count</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="ranking, stat : ${mangaRankings}">
-            <td th:text="${stat.count + 1}"></td>
-            <td th:text="${ranking.mangaId}"></td>
-            <td th:text="${ranking.readCount}"></td>
-        </tr>
-        </tbody>
-    </table>
+    <div class="row">
+        <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangaRankings}">
+            <a th:href="@{/manga/{id}(id=${manga.id})}">
+                <div class="box-img">
+                    <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                </div>
+                <div class="box-name">
+                    <h6 th:text="${manga.name}" class="mb-2"></h6>
+                </div>
+            </a>
+            <table class="w-100">
+                <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
+                    <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small
+                            th:text="${chapter.getName()}"></small></a> </td>
+                    <td class="justify-content-end">
+                        <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
 </div>
 </body>
 </html>

@@ -27,6 +27,7 @@ import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 import t3h.manga.mangaweb.repository.HistoryRepository;
+import t3h.manga.mangaweb.service.MangaRankingService;
 import t3h.manga.mangaweb.service.SavedMangaService;
 
 import java.time.LocalDateTime;
@@ -57,7 +58,8 @@ public class HomeController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    private MangaRankingService mangaRankingService;
     @SuppressWarnings("null")
     @GetMapping({ "/", "", "/index", "/home" })
     public String getHomePage(HttpSession session,
@@ -102,7 +104,13 @@ public class HomeController {
                     : (mangaRepository.count() / size);
             model.addAttribute("maxPage", maxPage);
         }
-
+        List<MangaRankingService.MangaRankingDTO> mangaRankings = mangaRankingService.getTopRankedMangas();
+        List<Manga> mangas = new ArrayList<>();
+        for (MangaRankingService.MangaRankingDTO mangaRanking : mangaRankings) {
+            Optional<Manga> mangaOpt = mangaRepository.findById(mangaRanking.getMangaId());
+            mangaOpt.ifPresent(mangas::add);
+        }
+        model.addAttribute("mangaRankings", mangas);
         model.addAttribute("content", "frontend/index.html");
         return "layouts/layout.html";
     }
