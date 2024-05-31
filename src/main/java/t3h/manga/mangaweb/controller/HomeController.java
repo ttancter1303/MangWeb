@@ -7,6 +7,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -88,15 +89,19 @@ public class HomeController {
         if (page > 0) {
             page = page - 1;
         }
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
         Page<Manga> mangaPage = mangaRepository.findAll(pageable);
         model.addAttribute("title", "NetSteal Chính Thức");
         Account account = (Account) session.getAttribute("USER_LOGGED");
         model.addAttribute("history", historyRepository.findByUser(account));
         model.addAttribute("mangaPage", mangaPage);
-        long maxPage = (mangaRepository.count() % size != 0) ? (mangaRepository.count() / size + 1)
-                : (mangaRepository.count() / size);
-        model.addAttribute("maxPage", maxPage);
+
+        // Kiểm tra nếu có người dùng đăng nhập trước khi thêm thuộc tính maxPage
+        if (account != null) {
+            long maxPage = (mangaRepository.count() % size != 0) ? (mangaRepository.count() / size + 1)
+                    : (mangaRepository.count() / size);
+            model.addAttribute("maxPage", maxPage);
+        }
 
         model.addAttribute("content", "frontend/index.html");
         return "layouts/layout.html";

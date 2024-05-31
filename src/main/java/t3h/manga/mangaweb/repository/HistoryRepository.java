@@ -15,4 +15,6 @@ public interface HistoryRepository extends JpaRepository<History,Integer> {
     
     @Query("SELECT h FROM History h WHERE h.user = :user ORDER BY h.updatedAt DESC")
     List<History> findByUser(@Param("user") Account user);
+    @Query("SELECT h.manga.id, COUNT(h) as readCount FROM History h GROUP BY h.manga.id ORDER BY readCount DESC")
+    List<Object[]> findTopMangasByReadCount();
 }
