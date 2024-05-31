@@ -13,10 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import t3h.manga.mangaweb.model.Account;
 import t3h.manga.mangaweb.dto.ChapterDTO;
@@ -29,11 +26,13 @@ import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
 import t3h.manga.mangaweb.repository.HistoryRepository;
+import t3h.manga.mangaweb.service.SavedMangaService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("")
@@ -46,6 +45,8 @@ public class HomeController {
 
     @Autowired
     private TagRepository tagRepository;
+    @Autowired
+    SavedMangaService savedMangaService;
 
     @Autowired
     private HistoryRepository historyRepository;
@@ -226,9 +227,26 @@ public class HomeController {
         }
         model.addAttribute("content", "error/error.html");
         return "layouts/layout.html";
-
     }
+    @PostMapping("manga/save-manga")
+    public String saveManga(@RequestParam("username") String username,
+                            @RequestParam("mangaId") Integer mangaId,
+                            @RequestHeader(value = "Referer", required = false) String referer,
+                            Model model) {
+        Account account = accountRepository.findAccountByUsername(username);
+        Optional<Manga> mangaOpt = mangaRepository.findById(mangaId);
+        if (mangaOpt.isPresent()) {
+            Manga manga = mangaOpt.get();
+            String message = savedMangaService.saveManga(account, manga);
+            model.addAttribute("message", message);
+        }
 
+        if (referer != null) {
+            return "redirect:" + referer;
+        }
+
+        return "redirect:/";
+    }
     @GetMapping("/search")
     public String searchManga(@RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "tag", required = false) String tag,

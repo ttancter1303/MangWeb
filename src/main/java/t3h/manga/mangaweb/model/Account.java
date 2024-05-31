@@ -25,11 +25,8 @@ public class Account {
     private String email;
     private String role;
     private String verificationCode;
-//    @ManyToMany
-//    @JoinTable(
-//            name = "user_manga",
-//            joinColumns = @JoinColumn(name = "user_id"),
-//            inverseJoinColumns = @JoinColumn(name = "manga_id")
-//    )
-//    private Set<Manga> savedMangas = new HashSet<>();
+    @OneToMany(mappedBy = "account", fetch = FetchType.EAGER)
+    private Set<SavedManga> savedMangas = new HashSet<>();
+
+
 }

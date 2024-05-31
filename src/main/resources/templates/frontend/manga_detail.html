@@ -54,8 +54,9 @@
                         th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}"
                         class="btn btn-warning text-light">Đọc mới nhất</a>
                 </div>
-                <div class="w-100 m-0 my-2 p-0 d-flex flex-wrap gap-2">
-                    <form th:action="@{/user/saveManga}" method="post">
+                <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
+                    <form th:action="@{/manga/save-manga}" method="post">
+                        <input type="hidden" name="username" th:value="${#authentication.name}" />
                         <input type="hidden" name="mangaId" th:value="${manga.id}" />
                         <button type="submit" class="btn btn-primary">Lưu vào profile</button>
                     </form>

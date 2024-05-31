@@ -97,12 +97,9 @@ public class CrawlerService {
             Elements elements = document.select(".page-chapter img.lazy");
             for (Element imgElement : elements) {
                 String src = imgElement.attr("data-original");
-                if (src != null && !src.isEmpty()) {
-                    // Ensure the image URL is valid by using getImage method
-                    Resource resource = getImage(src);
-                    if (resource != null && resource.exists()) {
-                        imageChapter.add(src);
-                    }
+                Map uploadResult = uploadImage(src);
+                if (uploadResult != null && uploadResult.get("url") != null) {
+                    imageChapter.add(uploadResult.get("url").toString());
                 }
             }
         } catch (IOException e) {

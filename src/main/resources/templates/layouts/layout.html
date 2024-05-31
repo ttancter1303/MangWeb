@@ -115,7 +115,8 @@
                     <!-- Link to profile -->
                     <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
                     <!-- Link to saved stories -->
-                    <li><a class="dropdown-item" href="/saved-stories">Truyện đã lưu</a></li>
+                    <li><a class="dropdown-item" th:href="@{/user/manga-collection(username=${#authentication.name})}">Truyện đã lưu</a></li>
+
                     <!-- Link to logout -->
                     <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
                 </ul>

@@ -2,6 +2,7 @@ package t3h.manga.mangaweb.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.orm.hibernate5.support.OpenSessionInViewInterceptor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
 @Configuration
 public class ConfigSecurity {
@@ -48,8 +50,14 @@ public class ConfigSecurity {
                 .deleteCookies("JSESSIONID");
         return httpSecurity.build();
     }
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addWebRequestInterceptor(openSessionInViewInterceptor());
+    }
 
-
+    @Bean
+    public OpenSessionInViewInterceptor openSessionInViewInterceptor() {
+        return new OpenSessionInViewInterceptor();
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
