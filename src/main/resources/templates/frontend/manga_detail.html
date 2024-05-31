@@ -1,11 +1,11 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/manga-detail.css}">
 
-<div class="m-0 p-0 w-100 row bg-content-gray">
+<div class="m-0 p-0 w-100 py-3 px-2 row bg-content-gray">
     <div class="col-12 col-lg-8 m-0 p-0">
         <div class="w-100 mb-3 d-flex gap-3">
             <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
             <span>››</span>
-            <a href="/tim-truyen" class="btn m-0 p-0 text-primary">Thể loại</a>
+            <a href="/search" class="btn m-0 p-0 text-primary">Thể loại</a>
             <span>››</span>
             <a href="javascript:void(0)" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
         </div>
@@ -18,7 +18,8 @@
             <div class="col-12 col-sm-4 manga-thumb justify-content-center">
                 <div class="w-100 m-0 p-0 row justify-content-center">
                     <div class="col-6 col-sm-12 box-thumb">
-                        <img class="lozad" loading="lazy" th:src="@{${manga.thumbnailImg}}" th:attr="alt=${manga.name}" />
+                        <img class="lozad" loading="lazy" th:src="@{${manga.thumbnailImg}}"
+                            th:attr="alt=${manga.name}" />
                     </div>
                 </div>
             </div>
@@ -37,7 +38,7 @@
                         <div class="col-4"><i class="fas fa-tags me-1"></i> Thể loại</div>
                         <div class="col-8 d-flex flex-wrap">
                             <span class="d-flex" th:each="tag, iterStat : ${manga.getListTag()}">
-                                <a class="m-0 p-0 btn text-primary" th:href="'/tim-truyen?tag=' + ${tag.slug}"
+                                <a class="m-0 p-0 btn text-primary" th:href="'/search?tag=' + ${tag.slug}"
                                     th:text="${tag.name}">
                                 </a>
                                 <span class="mx-2" th:if="${!iterStat.last}">-</span>
@@ -53,7 +54,7 @@
                         th:href="@{/manga/{mangaId}/chapter/{chapterId}(mangaId=${manga.id}, chapterId=${lastChapter.id})}"
                         class="btn btn-warning text-light">Đọc mới nhất</a>
                 </div>
-                <div class="w-100 m-0 p-0 d-flex flex-wrap gap-2">
+                <div class="w-100 m-0 my-2 p-0 d-flex flex-wrap gap-2">
                     <form th:action="@{/user/saveManga}" method="post">
                         <input type="hidden" name="mangaId" th:value="${manga.id}" />
                         <button type="submit" class="btn btn-primary">Lưu vào profile</button>
@@ -121,31 +122,34 @@
             </div>
         </div>
         <div class="w-100 m-0 py-3 bg-content-gray">
-            <div class="fb-comments"
-                th:attr="data-href=${global.get('baseUrl')} +'/manga/' + ${manga.id}"
+            <div class="fb-comments" th:attr="data-href=${global.get('baseUrl')} +'/manga/' + ${manga.id}"
                 data-width="100%" data-numposts="5">
             </div>
         </div>
     </div>
     <div class="col-12 ps-lg-4 col-lg-4 m-0 mt-3 mt-lg-0 p-0">
-        <div class="w-100 m-0 p-2 mb-3 border reading-history">
+        <div class="w-100 m-0 p-2 mb-3 border reading-history" th:if="${history != null && history.size() > 0}">
             <div class="d-flex align-items-center justify-content-between">
                 <h6 class="sm-theme-page-title">Lịch sử đọc truyện</h6>
-                <a href="#" class="btn m-0 p-0 border-0 shadow-0"><i>Xem tất cả</i></a>
+                <a href="/history" class="btn m-0 p-0 border-0 shadow-0"><i>Xem tất cả</i></a>
             </div>
 
             <div class="w-100 m-0 p-0 list-history">
-                <div class="manga-item">
+                <div class="manga-item" th:each="item, iterStat : ${history}" th:if="${iterStat.index < 3}">
                     <div class="mI_thumb">
-                        <img class="lozad" loading="lazy" src="../img/user.jpg">
+                        <a th:href="'/manga/' + ${item.manga.id}" class="btn m-0 p-0 w-100">
+                            <img loading="lazy" th:src="${item.manga.thumbnailImg}">
+                        </a>
                     </div>
                     <div class="mI_info">
                         <div class="mI_name">
-                            Tinh giáp hồn tướng
+                            <a th:href="'/manga/' + ${item.manga.id}" class="btn m-0 p-0 text-dark"
+                                th:text="${item.manga.name}"></a>
                         </div>
                         <div class="mI_control">
-                            <a href="#" class="btn m-0 p-0">Đọc tiếp Chapter 205 ></a>
-                            <n><i class="fas fa-times"></i> Xóa</n>
+                            <a th:href="'/manga/' + ${item.manga.id} + '/chapter/' + ${item.chapter.id}"
+                                class="btn m-0 p-0" th:text="'Đọc tiếp ' + ${item.chapter.name} + ' >'"></a>
+                            <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i> Xóa</button>
                         </div>
                     </div>
                 </div>

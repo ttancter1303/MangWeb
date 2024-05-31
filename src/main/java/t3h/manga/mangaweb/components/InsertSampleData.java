@@ -56,15 +56,18 @@ public class InsertSampleData {
                 HashSet<String> uniqueTexts = new HashSet<>();
                 for (Element liElement : links) {
                     String nameTag = liElement.text();
-                    if (!uniqueTexts.contains(nameTag)) {
+                    if (!uniqueTexts.contains(nameTag) && !nameTag.contains("Tất cả thể loại")) {
                         uniqueTexts.add(nameTag);
                     }
                 }
+                Integer i = 1;
                 for (String text : uniqueTexts) {
                     Tag tag = new Tag();
                     tag.setName(text);
-                    tag.setSlug(slugService.convertToSlug((text + "-" + tag.getTagID())));
+                    String slug = slugService.convertToSlug(text);
+                    tag.setSlug(slug + "-" + i);
                     listTag.add(tag);
+                    i+= 1;
                 }
                 tagRepository.saveAll(listTag);
 

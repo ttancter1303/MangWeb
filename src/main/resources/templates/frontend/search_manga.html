@@ -14,22 +14,11 @@
                     </div>
                 </a>
                 <table class="w-100">
-                    <tr>
-                        <td><a href="#"><small>Chapter 3</small></a> </td>
+                    <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
+                        <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small
+                                    th:text="${chapter.getName()}"></small></a> </td>
                         <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#"><small>Chapter 2</small></a> </td>
-                        <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><a href="#"><small>Chapter 1</small></a> </td>
-                        <td class="justify-content-end">
-                            <i class="text-secondary">4 giờ trước</i>
+                            <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
                         </td>
                     </tr>
                 </table>

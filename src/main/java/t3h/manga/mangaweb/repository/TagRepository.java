@@ -5,4 +5,6 @@ import t3h.manga.mangaweb.model.Tag;
 
 public interface TagRepository extends JpaRepository<Tag,Integer> {
     Tag findByName(String name);
+
+    Tag findBySlug(String slug);
 }

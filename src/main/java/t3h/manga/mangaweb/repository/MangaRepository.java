@@ -17,7 +17,6 @@ public interface MangaRepository extends JpaRepository<Manga,Integer> {
     @Query("SELECT m FROM Manga m WHERE m.name LIKE %:name%")
     List<Manga> findMangaByNameLike(@Param("name") String name);
 
-
     Optional<Manga> findBySource(String source);
 
     void deleteById(Integer id);

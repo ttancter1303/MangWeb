@@ -10,7 +10,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +22,15 @@ import t3h.manga.mangaweb.model.Account;
 import t3h.manga.mangaweb.dto.ChapterDTO;
 import t3h.manga.mangaweb.model.Chapter;
 import t3h.manga.mangaweb.model.Manga;
+import t3h.manga.mangaweb.model.Tag;
+import t3h.manga.mangaweb.model.History;
 import t3h.manga.mangaweb.repository.AccountRepository;
 import t3h.manga.mangaweb.repository.ChapterRepository;
 import t3h.manga.mangaweb.repository.MangaRepository;
 import t3h.manga.mangaweb.repository.TagRepository;
+import t3h.manga.mangaweb.repository.HistoryRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +48,9 @@ public class HomeController {
     private TagRepository tagRepository;
 
     @Autowired
+    private HistoryRepository historyRepository;
+
+    @Autowired
     private ChapterRepository chapterRepository;
 
     @Autowired
@@ -55,28 +61,26 @@ public class HomeController {
     public String getHomePage(HttpSession session,
             Model model,
             @RequestParam(defaultValue = "0") int page) {
-
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("\n=======> " + auth);
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
-            // Account account;
-            // try {
-            //     DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
-            //     String email = oidcUser.getAttribute("email");
-            //     account = accountRepository.findAccountByEmail(email);
-            //     if (account == null) {
-            //         account = new Account();
-            //         account.setUsername(email.split("@")[0]);
-            //         account.setPassword(passwordEncoder.encode(auth.getName()));
-            //         account.setEmail(email);
-            //         account.setAvatar(oidcUser.getAttribute("picture"));
-            //         account.setRole("ROLE_USER");
-            //         accountRepository.save(account);
-            //     }
-            // } catch (Exception e) {
-            //     account = accountRepository.findAccountByUsername(auth.getName());
-            // }
-            // session.setAttribute("USER_LOGGED", account);
+            Account account;
+            try {
+                DefaultOAuth2User oidcUser = (DefaultOAuth2User) auth.getPrincipal();
+                String email = oidcUser.getAttribute("email");
+                account = accountRepository.findAccountByEmail(email);
+                if (account == null) {
+                    account = new Account();
+                    account.setUsername(email.split("@")[0]);
+                    account.setPassword(passwordEncoder.encode(auth.getName()));
+                    account.setEmail(email);
+                    account.setAvatar(oidcUser.getAttribute("picture"));
+                    account.setRole("ROLE_USER");
+                    accountRepository.save(account);
+                }
+            } catch (Exception e) {
+                account = accountRepository.findAccountByUsername(auth.getName());
+            }
+            session.setAttribute("USER_LOGGED", account);
         }
 
         int size = 12;
@@ -86,6 +90,8 @@ public class HomeController {
         Pageable pageable = PageRequest.of(page, size);
         Page<Manga> mangaPage = mangaRepository.findAll(pageable);
         model.addAttribute("title", "NetSteal Chính Thức");
+        Account account = (Account) session.getAttribute("USER_LOGGED");
+        model.addAttribute("history", historyRepository.findByUser(account));
         model.addAttribute("mangaPage", mangaPage);
         long maxPage = (mangaRepository.count() % size != 0) ? (mangaRepository.count() / size + 1)
                 : (mangaRepository.count() / size);
@@ -109,7 +115,7 @@ public class HomeController {
     }
 
     @GetMapping("/manga/{id}")
-    public String getMangaDetail(@PathVariable("id") Integer mangaId, Model model) {
+    public String getMangaDetail(@PathVariable("id") Integer mangaId, Model model, HttpSession session) {
         // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
 
@@ -127,6 +133,8 @@ public class HomeController {
             // Chuyển thông tin truyện và danh sách chapter vào model để hiển thị trên trang
             // chi tiết
             model.addAttribute("manga", manga);
+            Account account = (Account) session.getAttribute("USER_LOGGED");
+            model.addAttribute("history", historyRepository.findByUser(account));
             model.addAttribute("chapters", chapters);
             model.addAttribute("firstChapter", firstChapter);
             model.addAttribute("lastChapter", lastChapter);
@@ -141,12 +149,28 @@ public class HomeController {
             return "layouts/layout.html";
         }
     }
+
+    @GetMapping("/history")
+    public String getHistory(Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("USER_LOGGED");
+
+        if (account != null) {
+            model.addAttribute("history", historyRepository.findByUser(account));
+            model.addAttribute("content", "frontend/history.html");
+            return "layouts/layout.html";
+        } else {
+            return "redirect:/";
+        }
+    }
+
     public Resource getImage(String imageUrl) throws Exception {
         return new UrlResource(imageUrl);
     }
+
     @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
             @PathVariable("chapterId") Integer chapterId,
+            HttpSession session,
             Model model) {
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
 
@@ -154,6 +178,22 @@ public class HomeController {
         if (manga != null) {
             Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
             if (chapter != null) {
+
+                Account user = (Account) session.getAttribute("USER_LOGGED");
+                
+                if (user != null) {
+                    History history = historyRepository.findByUserAndManga(user, manga);
+                    if (history != null) {
+                        history.setUpdatedAt(LocalDateTime.now());
+                    } else {
+                        history = new History();
+                        history.setUser(user);
+                        history.setManga(manga);
+                    }
+                    history.setChapter(chapter);
+                    historyRepository.save(history);
+                }
+
                 ChapterDTO chapterDTO = new ChapterDTO(chapter);
                 List<String> listimage = chapterDTO.getPathImagesList();
                 List<Resource> listimage2 = new ArrayList<>();
@@ -191,14 +231,19 @@ public class HomeController {
 
     @GetMapping("/search")
     public String searchManga(@RequestParam(name = "name", required = false) String name,
+            @RequestParam(name = "tag", required = false) String tag,
             Model model) {
         List<Manga> mangas;
-        if (name != null && !name.isEmpty()) {
-            String searchName = "%" + name + "%";
-            mangas = mangaRepository.findMangaByNameLike(searchName);
-            for (Manga manga : mangas) {
-                System.out.println("Manga: " + manga);
+        if (tag != null && !tag.isEmpty()) {
+            String tagSlug = tag;
+            Tag getTag = tagRepository.findBySlug(tagSlug);
+            if (getTag != null) {
+                mangas = mangaRepository.findByTagName(getTag.getName());
+            } else {
+                mangas = mangaRepository.findAll();
             }
+        } else if (name != null && !name.isEmpty()) {
+            mangas = mangaRepository.findMangaByNameLike(name);
         } else {
             mangas = mangaRepository.findAll();
         }

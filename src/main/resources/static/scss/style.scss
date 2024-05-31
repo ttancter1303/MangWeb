@@ -24,7 +24,8 @@ body {
     background-repeat: no-repeat;
 }
 
-#navbar {
+#navbar,
+#sidebarOffcanvas {
     color: #fff;
 
     .box-search {
@@ -32,7 +33,6 @@ body {
         position: relative;
 
         input {
-            width: 300px;
             border-radius: unset;
         }
 
@@ -47,7 +47,8 @@ body {
         }
     }
 
-    #btn-open-sidebar {
+    #btn-open-sidebar,
+    #btn-close-sidebar {
         width: 36px;
         height: 34px;
         border-radius: 2px;
@@ -60,6 +61,29 @@ body {
             color: #fff;
             font-size: 1.8rem;
         }
+    }
+
+    #dropdownMenuButton {
+        .name {
+            height: 20px;
+            max-width: 140px;
+            overflow: hidden;
+            display: block;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            -webkit-line-clamp: 1;
+        }
+    }
+}
+
+#sidebarOffcanvas {
+
+    a:not(.dropdown-item),
+    .type {
+        text-transform: uppercase;
+        display: flex;
+        justify-content: start;
+        color: #fff;
     }
 }
 
@@ -134,6 +158,10 @@ body {
 
 .text-main-blue {
     color: $text-main-blue !important;
+}
+
+.text-main-orange {
+    color: $text-main-orange !important;
 }
 
 .theme-page-title {

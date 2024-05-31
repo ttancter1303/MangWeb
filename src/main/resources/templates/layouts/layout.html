@@ -24,31 +24,66 @@
     <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v20.0&appId=463664599404825"
         nonce="lGe6TWVb"></script>
+
     <div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="-1" id="sidebarOffcanvas"
-        aria-labelledby="offcanvasWithBackdropLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasWithBackdropLabel">
-                Offcanvas with backdrop
-            </h5>
-            <button type="button" class="btn-close text-reset text-light" data-bs-dismiss="offcanvas"
-                aria-label="Close"></button>
+        aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header d-flex justify-content-between">
+            <a class="navbar-brand offcanvas-title" href="/">
+                <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
+            </a>
+            <button type="button" id="btn-close-sidebar" class="btn m-0 text-reset text-light"
+                data-bs-dismiss="offcanvas" aria-label="Close"><i class="fas fa-times fa-2x"></i></button>
         </div>
         <div class="offcanvas-body">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <div class="box-search w-100">
+                <form th:action="@{/search}" method="get" class="d-flex w-100">
+                    <input class="form-control w-100 border-0" type="text" th:name="name" autocomplete="off"
+                        placeholder="Tìm truyện">
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <ul class="navbar-nav me-auto mb-lg-0">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
+                    <a class="nav-link text-main-orange" aria-current="page" href="/">Trang chủ</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <a class="nav-link" aria-current="page" href="/">hot</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                    <button class="type btn border-0 py-2 m-0 px-0" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        thể loại<i class="fas fa-sort-down ms-2"></i>
+                    </button>
+                    <div class="collapse bg-dark" id="collapseExample">
+                        <div class="m-0 p-0 w-100 row">
+                            <div class="col-6 m-0 p-0" th:each="tag : ${global.get('tags')}">
+                                <a th:href="'/search?tag=' + ${tag.slug}"
+                                    class="py-2 border-0 btn w-100" th:text="${tag.name}"></a>
+                            </div>
+                        </div>
+                    </div>
                 </li>
             </ul>
-            <form class="d-flex">
-                <input class="form-control bg-white me-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
+            <div class="w-100 m-0 p-0" th:if="${user!=null}">
+                <hr class="text-light my-2">
+                <button class="btn border-0 m-0 p-0 text-light" type="button" id="dropdownMenuButton"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <img th:src="${user.avatar}" style="width: 20px;height: 20px;object-fit: cover;">
+                    <span class="text-white ms-2" th:text="${user.username}"></span>
+                    <i class="fas fa-sort-down ms-2"></i>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+                    <li><a class="dropdown-item" href="/saved-stories">Truyện đã lưu</a></li>
+                    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                </ul>
+            </div>
+            <div class="w-100 m-0 p-0" th:unless="${user!=null}">
+                <a href="/login" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng nhập</a>
+                <a href="/register" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng ký</a>
+            </div>
         </div>
     </div>
     <nav id="navbar" class="navbar navbar-expand-sm" style="height: 50px">
@@ -56,9 +91,10 @@
             <a class="navbar-brand" href="/">
                 <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
             </a>
-            <div class="box-search d-none d-md-flex">
-                <form th:action="@{/search}" method="get" class="d-flex">
-                    <input class="form-control" type="text" th:name="name" autocomplete="off" placeholder="Tìm truyện">
+            <div class="box-search d-none d-md-flex" style="min-width: 300px; width: 50%;">
+                <form th:action="@{/search}" method="get" class="d-flex w-100">
+                    <input class="form-control w-100" type="text" th:name="name" autocomplete="off"
+                        placeholder="Tìm truyện">
                     <button class="btn" type="submit">
                         <i class="fas fa-search"></i>
                     </button>
@@ -70,9 +106,10 @@
                     class="fas fa-bars fa-2x"></i></button>
 
             <div class="dropdown box-login d-none d-md-flex justify-content-end" th:if="${user!=null}">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <span class="text-white" th:text="${user.username}"></span>
+                <button class="btn border-0 d-flex justify-content-center align-items-center" type="button"
+                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img th:src="${user.avatar}" style="width: 30px;height: 30px;object-fit: cover;">
+                    <span class="text-white ms-2 name" th:text="${user.username}"></span>
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <!-- Link to profile -->
@@ -83,15 +120,16 @@
                     <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
                 </ul>
             </div>
-            <div th:unless="${user!=null}">
+            <div class="dropdown box-login d-none d-md-flex justify-content-end" th:unless="${user!=null}">
                 <div class="box-login d-flex justify-content-end">
-                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a>/
+                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a><span
+                        class="d-flex align-items-center">/</span>
                     <a href="/register" class="btn border-0 shadow-0 text-white">Đăng ký</a>
                 </div>
             </div>
         </div>
     </nav>
-    <nav id="nav-bot" class="d-none d-md-flex">
+    <nav id="nav-bot" class="d-none d-md-flex sticky-top">
         <ul class="container my-0 p-0 d-flex items-center justify-start">
             <a href="/" class="nav-item btn active">
                 <i class="fas fa-home"></i>
@@ -104,8 +142,8 @@
                     thể loại
                 </a>
                 <div class="group-menu shadow">
-                    <a th:each="tag : ${global.get('tags')}" href="#" class="group-item py-2 btn w-100"
-                        th:text="${tag.name}"></a>
+                    <a th:each="tag : ${global.get('tags')}" th:href="'/search?tag=' + ${tag.slug}"
+                        class="group-item py-2 btn w-100" th:text="${tag.name}"></a>
                 </div>
             </div>
         </ul>

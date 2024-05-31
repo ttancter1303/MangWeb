@@ -1,33 +1,37 @@
-// package t3h.manga.mangaweb.model;
+package t3h.manga.mangaweb.model;
 
-// import java.util.List;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 
-// import jakarta.persistence.*;
-// import lombok.Data;
-// import lombok.Getter;
-// import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 
-// @Entity
-// @Data
-// @Getter
-// @Setter
-// public class History {
-//     @Id
-//     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//     private Integer id;
+@Entity
+@Data
+@Getter
+@Setter
+public class History {
+    public History() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
-//     @OneToOne
-//     private Account user;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-//     @ManyToMany
-//     @JoinTable(
-//         name="history_manga",
-//         joinColumns = @JoinColumn(name="history_id"),
-//         inverseJoinColumns = @JoinColumn(name = "manga_id")
-//     )
-//     private List<Manga> listMangas;
+    @ManyToOne
+    private Account user;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "manga_id")
+    private Manga manga;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "chapter_id")
+    private Chapter chapter;
 
-//     @Column(nullable = true)
-//     private Chapter lastestChapter;
-// }
+    private LocalDateTime updatedAt;
+}

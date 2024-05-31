@@ -1,118 +1,31 @@
 <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}">
 <input type="hidden" th:value="${maxPage}" id="maxPage">
 <div class="container py-3 bg-content-gray">
-    <div class="w-100 m-0 p-0">
-        <h6 class="theme-page-title" th:text="${global.get('appname')} + ' - Truyện đề cử >'"></h6>
-        <div class="w-100 m-0 p-0">
-            <!-- Swiper -->
-            <div class="swiper">
-                <div class="swiper-wrapper">
-                    <div class="swiper-slide manga-card" th:each="manga : ${mangaPage.content}">
-                        <a th:href="@{/manga/{id}(id=${manga.id})}">
-                            <div class="box-img">
-                                <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
-                            </div>
-                            <div class="box-name">
-                                <h6 th:text="${manga.name}" class="mb-2"></h6>
-                            </div>
-                        </a>
-                        <table class="w-100">
-                            <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
-                                <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small
-                                            th:text="${chapter.getName()}"></small></a> </td>
-                                <td class="justify-content-end">
-                                    <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-            </div>
-        </div>
-    </div>
     <div class="m-0 px-0 py-3 w-100 row">
         <div class="col-12 col-lg-8">
-            <h6 class="theme-page-title" th:text="${global.get('appname')} + ' - Truyện mới cập nhật >'"></h6>
+            <div class="w-100 mb-3 d-flex gap-3">
+                <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
+                <span>››</span>
+                <a href="/history" class="btn m-0 p-0 text-primary">Lịch sử</a>
+            </div>
+            <h6 class="theme-page-title">Lịch sử đọc truyện</h6>
             <div class="row m-0 p-0">
-                <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="manga : ${mangaPage.content}">
-                    <a th:href="@{/manga/{id}(id=${manga.id})}">
+                <div class="col-6 col-sm-4 col-md-3 manga-card" th:each="his : ${history}">
+                    <a th:href="@{/manga/{id}(id=${his.manga.id})}">
                         <div class="box-img">
-                            <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                            <img loading="lazy" th:src="${his.manga.thumbnailImg}" th:attr="alt=${his.manga.name}">
                         </div>
                         <div class="box-name">
-                            <h6 th:text="${manga.name}" class="mb-2"></h6>
+                            <h6 th:text="${his.manga.name}" class="mb-2"></h6>
                         </div>
                     </a>
-                    <table class="w-100">
-                        <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">
-                            <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small
-                                        th:text="${chapter.getName()}"></small></a> </td>
-                            <td class="justify-content-end">
-                                <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>
-                            </td>
-                        </tr>
-                    </table>
+
+                    <a th:href="'/manga/' + ${his.manga.id} + '/chapter/' + ${his.chapter.id}" class="btn m-0 p-0"
+                        th:text="'Đọc tiếp ' + ${his.chapter.name} + ' >'"></a>
                 </div>
             </div>
-
-            <div th:if="${maxPage > 1}" class="d-none box-pagination w-100 m-0 p-0 my-3 d-flex justify-content-center">
-                <div id="pagination" class="d-flex gap-1 gap-md-3">
-                    <a href="/?page=1" class="btn page-item inactive" id="first">
-                        ‹‹
-                    </a>
-                    <a href="#" class="btn page-item inactive" id="prev">
-                        ‹
-                    </a>
-                    <a href="/?page=1" class="btn page-item">
-                        1
-                    </a>
-                    <a href="/?page=2" class="btn page-item active">
-                        2
-                    </a>
-                    <a href="/?page=3" class="btn page-item">
-                        3
-                    </a>
-                    <a href="#" class="btn page-item" id="next">
-                        ›
-                    </a>
-                    <a th:href="'/?page=' + ${maxPage}" class="btn page-item" id="last">
-                        ››
-                    </a>
-                </div>
-            </div>
-
-
         </div>
         <div class="col-12 ps-lg-4 col-lg-4">
-            <div class="w-100 m-0 p-2 mb-3 border reading-history" th:if="${history != null && history.size() > 0}">
-                <div class="d-flex align-items-center justify-content-between">
-                    <h6 class="sm-theme-page-title">Lịch sử đọc truyện</h6>
-                    <a href="/history" class="btn m-0 p-0 border-0 shadow-0"><i>Xem tất cả</i></a>
-                </div>
-
-                <div class="w-100 m-0 p-0 list-history">
-                    <div class="manga-item" th:each="item : ${history}">
-                        <div class="mI_thumb">
-                            <a th:href="'/manga/' + ${item.manga.id}" class="btn m-0 p-0 w-100">
-                                <img loading="lazy" th:src="${item.manga.thumbnailImg}">
-                            </a>
-                        </div>
-                        <div class="mI_info">
-                            <div class="mI_name">
-                                <a th:href="'/manga/' + ${item.manga.id}" class="btn m-0 p-0 text-dark"
-                                    th:text="${item.manga.name}"></a>
-                            </div>
-                            <div class="mI_control">
-                                <a th:href="'/manga/' + ${item.manga.id} + '/chapter/' + ${item.chapter.id}"
-                                    class="btn m-0 p-0" th:text="'Đọc tiếp ' + ${item.chapter.name} + ' >'"></a>
-                                <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i> Xóa</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="w-100 m-0 p-0 list-top-manga">
                 <div class="w-100 m-0 p-0 box-tab" role="tablist">
                     <button class=" active" id="top-month-tab" data-bs-toggle="tab" data-bs-target="#top-month"
@@ -233,43 +146,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    const swiper = new Swiper('.swiper', {
-        on: {
-            init: function () {
-                // console.clear();
-            },
-        },
-        slidesPerView: 2,
-        spaceBetween: 10,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        breakpoints: {
-            576: {
-                slidesPerView: 3,
-                spaceBetween: 10,
-            },
-            768: {
-                slidesPerView: 4,
-                spaceBetween: 10,
-            },
-            992: {
-                slidesPerView: 5,
-                spaceBetween: 10,
-            },
-            1200: {
-                slidesPerView: 6,
-                spaceBetween: 10,
-            },
-        },
-        loop: true,
-        debug: false,
-        autoplay: {
-            delay: 2000, // Time in milliseconds between slide transitions
-            disableOnInteraction: false, // Continue autoplay after user interactions
-        },
-    });
-</script>

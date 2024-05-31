@@ -55,14 +55,16 @@
         <div class="w-100 mb-3 d-flex gap-3">
             <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
             <span>››</span>
-            <a href="/tim-truyen" class="btn m-0 p-0 text-primary">Thể loại</a>
+            <a href="/search" class="btn m-0 p-0 text-primary">Thể loại</a>
             <span>››</span>
-            <a href="javascript:void(0)" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
+            <a th:href="'/manga/' + ${manga.id}" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
+            <span>››</span>
+            <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary" th:text="${chapter.name}"></a>
         </div>
         <div class="d-flex gap-2 flex-wrap align-items-end"><a class="theme-manga-title text-main-blue btn m-0 p-0"
                 th:href="'/manga/' + ${manga.id}" th:text="${manga.name}"></a> <span class="theme-manga-title"
                 th:text="' - ' +${chapter.getName()}"></span><i class="fs-16px"
-                th:text="'[Cập nhật: ' + ${chapter.getCreatedTime()} + ']'"></sp>
+                th:text="'[Cập nhật: ' + ${chapter.getCreatedTime()} + ']'"></i></span>
         </div>
     </div>
     <div class="w-100 p-3">
@@ -103,6 +105,37 @@
                 <i class="fas fa-spinner"></i>
             </div>
         </div>
+    </div>
+</div>
+<div class="w-100 m-0 px-2 py-3 bg-white">
+    <div class="d-flex gap-2 flex-wrap align-items-end justify-content-center box-btn">
+        <a th:if="${prevChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${prevChapter.id}"
+            class="btn m-0 border-0 btn-danger">
+            <i class="fas fa-chevron-left me-1"></i>
+            Chap trước
+        </a>
+        <button th:unless="${prevChapter != null}" class="btn btn-inactive m-0">
+            <i class="fas fa-chevron-left me-1"></i>
+            Chap trước
+        </button>
+        <a th:if="${nextChapter != null}" th:href="'/manga/' + ${manga.id} + '/chapter/' + ${nextChapter.id}"
+            class="btn m-0 border-0 btn-danger">
+            Chap sau
+            <i class="fas fa-chevron-right ms-1"></i>
+        </a>
+        <button th:unless="${nextChapter != null}" class="btn btn-inactive m-0">
+            Chap sau
+            <i class="fas fa-chevron-right ms-1"></i>
+        </button>
+    </div>
+    <div class="w-100 m-0 d-flex gap-3">
+        <a href="/" class="btn m-0 p-0 text-primary">Trang chủ</a>
+        <span>››</span>
+        <a href="/search" class="btn m-0 p-0 text-primary">Thể loại</a>
+        <span>››</span>
+        <a th:href="'/manga/' + ${manga.id}" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
+        <span>››</span>
+        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary" th:text="${chapter.name}"></a>
     </div>
 </div>
 <div class="w-100 m-0 py-3 bg-content-gray">
