@@ -11,6 +11,9 @@
                         <a th:href="@{/manga/{id}(id=${manga.id})}">
                             <div class="box-img">
                                 <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                                <div class="box-skeleton">
+                                    <i class="fas fa-spinner"></i>
+                                </div>
                             </div>
                             <div class="box-name">
                                 <h6 th:text="${manga.name}" class="mb-2"></h6>
@@ -40,6 +43,9 @@
                     <a th:href="@{/manga/{id}(id=${manga.id})}">
                         <div class="box-img">
                             <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                            <div class="box-skeleton">
+                                <i class="fas fa-spinner"></i>
+                            </div>
                         </div>
                         <div class="box-name">
                             <h6 th:text="${manga.name}" class="mb-2"></h6>
@@ -57,32 +63,14 @@
                 </div>
             </div>
 
-            <div th:if="${maxPage > 1}" class="d-none box-pagination w-100 m-0 p-0 my-3 d-flex justify-content-center">
-                <div id="pagination" class="d-flex gap-1 gap-md-3">
-                    <a href="/?page=1" class="btn page-item inactive" id="first">
-                        ‹‹
-                    </a>
-                    <a href="#" class="btn page-item inactive" id="prev">
-                        ‹
-                    </a>
-                    <a href="/?page=1" class="btn page-item">
-                        1
-                    </a>
-                    <a href="/?page=2" class="btn page-item active">
-                        2
-                    </a>
-                    <a href="/?page=3" class="btn page-item">
-                        3
-                    </a>
-                    <a href="#" class="btn page-item" id="next">
-                        ›
-                    </a>
-                    <a th:href="'/?page=' + ${maxPage}" class="btn page-item" id="last">
-                        ››
+            <div th:if="${pagination != null}" class="box-pagination w-100 m-0 p-0 my-3 d-flex justify-content-center">
+                <div id="pagination" class="d-flex gap-1 flex-wrap gap-md-2">
+                    <a th:each="pageNum : ${#numbers.sequence(1, pagination.totalPage)}"
+                        th:classappend="${pageNum == pagination.current} ? 'active':''" th:text="${pageNum}"
+                        th:href="'/?page=' + ${pageNum}" class="btn page-item">
                     </a>
                 </div>
             </div>
-
 
         </div>
         <div class="col-12 ps-lg-4 col-lg-4">
@@ -107,7 +95,8 @@
                             <div class="mI_control">
                                 <a th:href="'/manga/' + ${item.manga.id} + '/chapter/' + ${item.chapter.id}"
                                     class="btn m-0 p-0" th:text="'Đọc tiếp ' + ${item.chapter.name} + ' >'"></a>
-                                <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i> Xóa</button>
+                                <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i>
+                                    Xóa</button>
                             </div>
                         </div>
                     </div>
@@ -120,20 +109,14 @@
                         <a th:href="@{/manga/{id}(id=${manga.id})}">
                             <div class="box-img">
                                 <img loading="lazy" th:src="${manga.thumbnailImg}" th:attr="alt=${manga.name}">
+                                <div class="box-skeleton">
+                                    <i class="fas fa-spinner"></i>
+                                </div>
                             </div>
                             <div class="box-name">
                                 <h6 th:text="${manga.name}" class="mb-2"></h6>
                             </div>
                         </a>
-<!--                        <table class="w-100">-->
-<!--                            <tr th:each="chapter, iterStat : ${manga.getChapters()}" th:if="${iterStat.index < 3}">-->
-<!--                                <td><a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}"><small-->
-<!--                                        th:text="${chapter.getName()}"></small></a> </td>-->
-<!--                                <td class="justify-content-end">-->
-<!--                                    <i class="text-secondary" th:text="${chapter.getCreatedTime()}"></i>-->
-<!--                                </td>-->
-<!--                            </tr>-->
-<!--                        </table>-->
                     </div>
                 </div>
             </div>

@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import t3h.manga.mangaweb.components.helper.Pagination;
+
 @Controller
 @RequestMapping("")
 public class HomeController {
@@ -60,11 +62,20 @@ public class HomeController {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private MangaRankingService mangaRankingService;
+
+    private Integer sizePerPage = 12;
+
     @SuppressWarnings("null")
     @GetMapping({ "/", "", "/index", "/home" })
+
     public String getHomePage(HttpSession session,
             Model model,
-            @RequestParam(defaultValue = "0") int page) {
+            @RequestParam(defaultValue = "1") Integer page) {
+        if (page <= 0) {
+            model.addAttribute("content", "error/error.html");
+            return "layouts/layout.html";
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && !(auth.getPrincipal() instanceof String)) {
             Account account;
@@ -86,24 +97,18 @@ public class HomeController {
             }
             session.setAttribute("USER_LOGGED", account);
         }
-
-        int size = 12;
-        if (page > 0) {
-            page = page - 1;
-        }
-        Pageable pageable = PageRequest.of(page, size, Sort.by("updatedAt").descending());
-        Page<Manga> mangaPage = mangaRepository.findAll(pageable);
         model.addAttribute("title", "NetSteal Chính Thức");
-        Account account = (Account) session.getAttribute("USER_LOGGED");
-        model.addAttribute("history", historyRepository.findByUser(account));
+
+        Pagination pagination = new Pagination(mangaRepository.count(), this.sizePerPage, page);
+        model.addAttribute("pagination", pagination);
+
+        Pageable pageable = PageRequest.of((page - 1), this.sizePerPage, Sort.by("updatedAt").descending());
+        Page<Manga> mangaPage = mangaRepository.findAll(pageable);
         model.addAttribute("mangaPage", mangaPage);
 
-        // Kiểm tra nếu có người dùng đăng nhập trước khi thêm thuộc tính maxPage
-        if (account != null) {
-            long maxPage = (mangaRepository.count() % size != 0) ? (mangaRepository.count() / size + 1)
-                    : (mangaRepository.count() / size);
-            model.addAttribute("maxPage", maxPage);
-        }
+        Account account = (Account) session.getAttribute("USER_LOGGED");
+        model.addAttribute("history", historyRepository.findByUser(account));
+
         List<MangaRankingService.MangaRankingDTO> mangaRankings = mangaRankingService.getTopRankedMangas();
         List<Manga> mangas = new ArrayList<>();
         for (MangaRankingService.MangaRankingDTO mangaRanking : mangaRankings) {
@@ -194,7 +199,7 @@ public class HomeController {
             if (chapter != null) {
 
                 Account user = (Account) session.getAttribute("USER_LOGGED");
-                
+
                 if (user != null) {
                     History history = historyRepository.findByUserAndManga(user, manga);
                     if (history != null) {
@@ -241,11 +246,12 @@ public class HomeController {
         model.addAttribute("content", "error/error.html");
         return "layouts/layout.html";
     }
+
     @PostMapping("manga/save-manga")
     public String saveManga(@RequestParam("username") String username,
-                            @RequestParam("mangaId") Integer mangaId,
-                            @RequestHeader(value = "Referer", required = false) String referer,
-                            Model model) {
+            @RequestParam("mangaId") Integer mangaId,
+            @RequestHeader(value = "Referer", required = false) String referer,
+            Model model) {
         Account account = accountRepository.findAccountByUsername(username);
         Optional<Manga> mangaOpt = mangaRepository.findById(mangaId);
         if (mangaOpt.isPresent()) {
@@ -260,9 +266,13 @@ public class HomeController {
 
         return "redirect:/";
     }
+
+
+    // TODO: Pagination for search page
     @GetMapping("/search")
     public String searchManga(@RequestParam(name = "name", required = false) String name,
             @RequestParam(name = "tag", required = false) String tag,
+            // @RequestParam(defaultValue = "1") Integer page,
             Model model) {
         List<Manga> mangas;
         if (tag != null && !tag.isEmpty()) {
@@ -278,6 +288,10 @@ public class HomeController {
         } else {
             mangas = mangaRepository.findAll();
         }
+
+        // Pagination pagination = new Pagination(mangaRepository.count(), this.sizePerPage, page);
+        // model.addAttribute("pagination", pagination);
+
         model.addAttribute("title", "Search");
         model.addAttribute("mangas", mangas);
         model.addAttribute("content", "frontend/search_manga.html");

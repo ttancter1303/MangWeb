@@ -59,7 +59,8 @@
             <span>››</span>
             <a th:href="'/manga/' + ${manga.id}" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
             <span>››</span>
-            <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary" th:text="${chapter.name}"></a>
+            <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary"
+                th:text="${chapter.name}"></a>
         </div>
         <div class="d-flex gap-2 flex-wrap align-items-end"><a class="theme-manga-title text-main-blue btn m-0 p-0"
                 th:href="'/manga/' + ${manga.id}" th:text="${manga.name}"></a> <span class="theme-manga-title"
@@ -135,7 +136,8 @@
         <span>››</span>
         <a th:href="'/manga/' + ${manga.id}" class="btn m-0 p-0 text-primary" th:text="${manga.name}"></a>
         <span>››</span>
-        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary" th:text="${chapter.name}"></a>
+        <a th:href="'/manga/' + ${manga.id} + '/chapter/' + ${chapter.id}" class="btn m-0 p-0 text-primary"
+            th:text="${chapter.name}"></a>
     </div>
 </div>
 <div class="w-100 m-0 py-3 bg-content-gray">
@@ -151,13 +153,20 @@
 <script>
     $(document).ready(function () {
         $('.box-pages .lozad').each(function () {
-            let abc = "abc";
-            $(this).on('load', function () {
 
+            var $img = $(this);
+
+            if ($img[0].complete && $img[0].naturalWidth !== 0) {
                 let box = $(this).closest(".box-page");
                 box.siblings('.load-skeleton-page-chapter').remove();
                 box.css("height", "max-content");
-            });
+            } else {
+                $img.on('load', function () {
+                    let box = $(this).closest(".box-page");
+                    box.siblings('.load-skeleton-page-chapter').remove();
+                    box.css("height", "max-content");
+                });
+            }
         });
     });
 </script>

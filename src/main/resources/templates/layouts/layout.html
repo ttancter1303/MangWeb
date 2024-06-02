@@ -3,6 +3,11 @@
 
 <head>
     <meta charset="UTF-8">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
     <title th:text="${title}"></title>
     <link rel="icon" th:href="@{/img/favicon.ico}" type="image/x-icon">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
@@ -18,227 +23,247 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/swiper-bundle.min.css}">
     <script th:src="@{/js/swiper-bundle.min.js}"></script>
 
+
+
     <style>
         .navbar-nav {
             z-index: 1;
         }
 
         .dropdown-menu {
-            z-index: 9999999999999;
+            z-index: 9999 !important;
         }
     </style>
 </head>
 
 <body th:with="user=${#ctx.session.USER_LOGGED}">
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous"
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
         src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v20.0&appId=463664599404825"
         nonce="lGe6TWVb"></script>
 
-<div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="1" id="sidebarOffcanvas"
-     aria-labelledby="sidebarOffcanvasLabel">
-    <div class="offcanvas-header d-flex justify-content-between">
-        <a class="navbar-brand offcanvas-title" href="/">
-            <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
-        </a>
-        <button type="button" id="btn-close-sidebar" class="btn m-0 text-reset text-light"
+    <div class="offcanvas offcanvas-start bg-black text-light" style="width: 100vw;" tabindex="1" id="sidebarOffcanvas"
+        aria-labelledby="sidebarOffcanvasLabel">
+        <div class="offcanvas-header d-flex justify-content-between">
+            <a class="navbar-brand offcanvas-title" href="/">
+                <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
+            </a>
+            <button type="button" id="btn-close-sidebar" class="btn m-0 text-reset text-light"
                 data-bs-dismiss="offcanvas" aria-label="Close"><i class="fas fa-times fa-2x"></i></button>
-    </div>
-    <div class="offcanvas-body">
-        <div class="box-search w-100">
-            <form th:action="@{/search}" method="get" class="d-flex w-100">
-                <input class="form-control w-100 border-0" type="text" th:name="name" autocomplete="off"
-                       placeholder="Tìm truyện">
-                <button class="btn" type="submit">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
         </div>
-        <ul class="navbar-nav me-auto mb-lg-0">
-            <li class="nav-item">
-                <a class="nav-link text-main-orange" aria-current="page" href="/">Trang chủ</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="/">hot</a>
-            </li>
-            <li class="nav-item">
-                <button class="type btn border-0 py-2 m-0 px-0" type="button" data-bs-toggle="collapse"
+        <div class="offcanvas-body">
+            <div class="box-search w-100">
+                <form th:action="@{/search}" method="get" class="d-flex w-100">
+                    <input class="form-control w-100 border-0" type="text" th:name="name" autocomplete="off"
+                        placeholder="Tìm truyện">
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
+            </div>
+            <ul class="navbar-nav me-auto mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link text-main-orange" aria-current="page" href="/">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" aria-current="page" href="/">hot</a>
+                </li>
+                <li class="nav-item">
+                    <button class="type btn border-0 py-2 m-0 px-0" type="button" data-bs-toggle="collapse"
                         data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    thể loại<i class="fas fa-sort-down ms-2"></i>
-                </button>
-                <div class="collapse bg-dark dropdown-content" id="collapseExample">
-                    <div class="m-0 p-0 w-100 row">
-                        <div class="col-6 m-0 p-0" th:each="tag : ${global.get('tags')}">
-                            <a th:href="'/search?tag=' + ${tag.slug}"
-                               class="py-2 border-0 btn w-100" th:text="${tag.name}"></a>
+                        thể loại<i class="fas fa-sort-down ms-2"></i>
+                    </button>
+                    <div class="collapse bg-dark dropdown-content" id="collapseExample">
+                        <div class="m-0 p-0 w-100 row">
+                            <div class="col-6 m-0 p-0" th:each="tag : ${global.get('tags')}">
+                                <a th:href="'/search?tag=' + ${tag.slug}" class="py-2 border-0 btn w-100"
+                                    th:text="${tag.name}"></a>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </li>
-        </ul>
-        <div class="w-100 m-0 p-0" th:if="${user!=null}">
-            <hr class="text-light my-2">
-            <button class="btn border-0 m-0 p-0 text-light" type="button" id="dropdownMenuButton"
+                </li>
+            </ul>
+            <div class="w-100 m-0 p-0" th:if="${user!=null}">
+                <hr class="text-light my-2">
+                <button class="btn border-0 m-0 p-0 text-light" type="button" id="dropdownMenuButton"
                     data-bs-toggle="dropdown" aria-expanded="false">
-                <img th:src="${user.avatar}" style="width: 20px;height: 20px;object-fit: cover;">
-                <span class="text-white ms-2" th:text="${user.username}"></span>
-                <i class="fas fa-sort-down ms-2"></i>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
-                <li><a class="dropdown-item" href="/saved-stories">Truyện đã lưu</a></li>
-                <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-            </ul>
-        </div>
-        <div class="w-100 m-0 p-0" th:unless="${user!=null}">
-            <a href="/login" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng nhập</a>
-            <a href="/register" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng ký</a>
-        </div>
-    </div>
-</div>
-<nav id="navbar" class="navbar navbar-expand-sm" style="height: 50px">
-    <div class="container my-0 p-0 justify-content-between align-items-center">
-        <a class="navbar-brand" href="/">
-            <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
-        </a>
-        <div class="box-search d-none d-md-flex" style="min-width: 300px; width: 50%;">
-            <form th:action="@{/search}" method="get" class="d-flex w-100">
-                <input class="form-control w-100" type="text" th:name="name" autocomplete="off"
-                       placeholder="Tìm truyện">
-                <button class="btn" type="submit">
-                    <i class="fas fa-search"></i>
+                    <img th:src="${user.avatar}" style="width: 20px;height: 20px;object-fit: cover;">
+                    <span class="text-white ms-2" th:text="${user.username}"></span>
+                    <i class="fas fa-sort-down ms-2"></i>
                 </button>
-            </form>
-        </div>
-
-        <button id="btn-open-sidebar" class="btn d-md-none" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas"><i
-                class="fas fa-bars fa-2x"></i></button>
-
-        <div class="dropdown box-login d-none d-md-flex justify-content-end" th:if="${user!=null}">
-            <button class="btn border-0 d-flex justify-content-center align-items-center" type="button"
-                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                <img th:src="${user.avatar}" style="width: 30px;height: 30px;object-fit: cover;">
-                <span class="text-white ms-2 name" th:text="${user.username}"></span>
-            </button>
-            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <!-- Link to profile -->
-                <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
-                <!-- Link to saved stories -->
-                <li><a class="dropdown-item" th:href="@{/user/manga-collection(username=${#authentication.name})}">Truyện đã lưu</a></li>
-
-                <!-- Link to logout -->
-                <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
-            </ul>
-        </div>
-        <div class="dropdown box-login d-none d-md-flex justify-content-end" th:unless="${user!=null}">
-            <div class="box-login d-flex justify-content-end">
-                <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a><span
-                    class="d-flex align-items-center">/</span>
-                <a href="/register" class="btn border-0 shadow-0 text-white">Đăng ký</a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+                    <li><a class="dropdown-item" href="/saved-stories">Truyện đã lưu</a></li>
+                    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                </ul>
+            </div>
+            <div class="w-100 m-0 p-0" th:unless="${user!=null}">
+                <a href="/login" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng nhập</a>
+                <a href="/register" class="btn m-0 px-0 w-100 border-0 shadow-0 text-white">Đăng ký</a>
             </div>
         </div>
     </div>
-</nav>
-<nav id="nav-bot" class="d-none d-md-flex sticky-top">
-    <ul class="container my-0 p-0 d-flex items-center justify-start">
-        <a href="/" class="nav-item btn active">
-            <i class="fas fa-home"></i>
-        </a>
-        <a href="/" class="nav-item btn">
-            hot
-        </a>
-        <div class="nav-item group">
-            <a href="/" class="btn">
-                thể loại
+    <nav id="navbar" class="navbar navbar-expand-sm" style="height: 50px">
+        <div class="container my-0 p-0 justify-content-between align-items-center">
+            <a class="navbar-brand" href="/">
+                <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 28px;">
             </a>
-            <div class="group-menu shadow">
-                <a th:each="tag : ${global.get('tags')}" th:href="'/search?tag=' + ${tag.slug}"
-                   class="group-item py-2 btn w-100" th:text="${tag.name}"></a>
+            <div class="box-search d-none d-md-flex" style="min-width: 300px; width: 50%;">
+                <form th:action="@{/search}" method="get" class="d-flex w-100">
+                    <input class="form-control w-100" type="text" th:name="name" autocomplete="off"
+                        placeholder="Tìm truyện">
+                    <button class="btn" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
             </div>
-        </div>
-    </ul>
-</nav>
 
-<div class="container py-3 px-0 py-md-4" id="wrap-content">
-    <div th:replace="~{${content}}"></div>
-</div>
+            <button id="btn-open-sidebar" class="btn d-md-none" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas"><i
+                    class="fas fa-bars fa-2x"></i></button>
 
-<footer class="bg-dark w-100">
-    <div class="container p-0">
-        <div class="row m-0 p-0 py-4">
-            <div class="col-12 col-lg-4 m-0 p-0 d-flex flex-wrap gap-4">
-                <div class="w-100 m-0 p-0">
-                    <a class="logo btn border-0 shadow-0 m-0 mb-2 p-0 px-2" href="/">
-                        <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 32px;">
-                    </a>
-                    <br>
-                    <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
-                        Giới thiệu
-                    </a>|
-                    <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
-                        Liên hệ
-                    </a><br>
-                    <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
-                        Điều khoản
-                    </a>|
-                    <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
-                        Chính sách bảo mật
-                    </a>
-                </div>
-                <div class="w-100 d-flex flex-wrap text-light px-2">
-                    <h1 class="mb-2 text-light fw-bold text-uppercase">Liên hệ</h1>
-                    <table class="m-0 p-0 w-100">
-                        <tr>
-                            <td>Telegram:</td>
-                            <td>@netsteal</td>
-                        </tr>
-                        <tr>
-                            <td>Email:</td>
-                            <td>netsteal@gmail.com</td>
-                        </tr>
-                        <tr class="mt-3">
-                            <td colspan="2"></td>
-                        </tr>
-                    </table>
-                    <h6 class="my-4 text-light">Copyright © 2024 NetSteal</h5>
-                </div>
+            <div class="dropdown box-login d-none d-md-flex justify-content-end" th:if="${user!=null}">
+                <button class="btn border-0 d-flex justify-content-center align-items-center" type="button"
+                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img th:src="${user.avatar}" style="width: 30px;height: 30px;object-fit: cover;">
+                    <span class="text-white ms-2 name" th:text="${user.username}"></span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <!-- Link to profile -->
+                    <li><a class="dropdown-item" href="/user/profile">Trang cá nhân</a></li>
+                    <!-- Link to saved stories -->
+                    <li><a class="dropdown-item"
+                            th:href="@{/user/manga-collection(username=${#authentication.name})}">Truyện đã lưu</a></li>
+
+                    <!-- Link to logout -->
+                    <li><a class="dropdown-item" href="/logout">Đăng xuất</a></li>
+                </ul>
             </div>
-            <div class="col-12 col-lg-8 m-0 p-0">
-                <h5 class="text-uppercase text-light">từ khóa</h5>
-                <div class="w-100 m-0 p-0 d-flex flex-wrap">
-                    <a href="#" class="btn m-1 border-light text-light" th:each="tag : ${global.get('tags')}"
-                       th:text="${tag.name}"></a>
+            <div class="dropdown box-login d-none d-md-flex justify-content-end" th:unless="${user!=null}">
+                <div class="box-login d-flex justify-content-end">
+                    <a href="/login" class="btn border-0 shadow-0 text-white">Đăng nhập</a><span
+                        class="d-flex align-items-center">/</span>
+                    <a href="/register" class="btn border-0 shadow-0 text-white">Đăng ký</a>
                 </div>
             </div>
         </div>
+    </nav>
+    <nav id="nav-bot" class="d-none d-md-flex sticky-top">
+        <ul class="container my-0 p-0 d-flex items-center justify-start">
+            <a href="/" class="nav-item btn active">
+                <i class="fas fa-home"></i>
+            </a>
+            <a href="/" class="nav-item btn">
+                hot
+            </a>
+            <div class="nav-item group">
+                <a href="/" class="btn">
+                    thể loại
+                </a>
+                <div class="group-menu shadow">
+                    <a th:each="tag : ${global.get('tags')}" th:href="'/search?tag=' + ${tag.slug}"
+                        class="group-item py-2 btn w-100" th:text="${tag.name}"></a>
+                </div>
+            </div>
+        </ul>
+    </nav>
+
+    <div class="container py-3 px-0 py-md-4" id="wrap-content">
+        <div th:replace="~{${content}}"></div>
     </div>
-</footer>
 
-<button type="button" id="back-to-top" class="btn">
-    <i class="fas fa-chevron-up"></i>
-</button>
-<!-- <script th:src="@{/js/lozad.min.js}" defer></script> -->
-<script defer>
-    $(document).ready(function () {
-        $("#back-to-top").click(() => {
-            $("html").scrollTop(0);
-        })
+    <footer class="bg-dark w-100">
+        <div class="container p-0">
+            <div class="row m-0 p-0 py-4">
+                <div class="col-12 col-lg-4 m-0 p-0 d-flex flex-wrap gap-4">
+                    <div class="w-100 m-0 p-0">
+                        <a class="logo btn border-0 shadow-0 m-0 mb-2 p-0 px-2" href="/">
+                            <img class="lozad" loading="lazy" th:src="@{'/img/logo.png'}" style="height: 32px;">
+                        </a>
+                        <br>
+                        <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
+                            Giới thiệu
+                        </a>|
+                        <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
+                            Liên hệ
+                        </a><br>
+                        <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
+                            Điều khoản
+                        </a>|
+                        <a href="#" class="btn text-light m-0 p-0 px-2 border-0 shadow-0">
+                            Chính sách bảo mật
+                        </a>
+                    </div>
+                    <div class="w-100 d-flex flex-wrap text-light px-2">
+                        <h1 class="mb-2 text-light fw-bold text-uppercase">Liên hệ</h1>
+                        <table class="m-0 p-0 w-100">
+                            <tr>
+                                <td>Telegram:</td>
+                                <td>@netsteal</td>
+                            </tr>
+                            <tr>
+                                <td>Email:</td>
+                                <td>netsteal@gmail.com</td>
+                            </tr>
+                            <tr class="mt-3">
+                                <td colspan="2"></td>
+                            </tr>
+                        </table>
+                        <h6 class="my-4 text-light">Copyright © 2024 NetSteal</h5>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-8 m-0 p-0">
+                    <h5 class="text-uppercase text-light">từ khóa</h5>
+                    <div class="w-100 m-0 p-0 d-flex flex-wrap">
+                        <a href="#" class="btn m-1 border-light text-light" th:each="tag : ${global.get('tags')}"
+                            th:text="${tag.name}"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-        // const observer = lozad('.my-class');
-        // observer.observe();
+    <button type="button" id="back-to-top" class="btn">
+        <i class="fas fa-chevron-up"></i>
+    </button>
 
 
-        // $('.lozad').each(function(index) {
-        //     $(this).on('load', function() {
-        //         $('.status').eq(index).text('Image ' + (index + 1) + ' loaded successfully.');
-        //     }).on('error', function() {
-        //         $('.status').eq(index).text('Error loading image ' + (index + 1) + '.').addClass('error');
-        //     });
-        //     $(this).attr('src', $(this).data('src'));
-        // });
-    });
-</script>
+    <!--     
+    <script>
+        var script = document.createElement('script');
+        script.src = '/js/index.js?v=' + new Date().getTime();
+        document.head.appendChild(script);
+    </script> -->
+
+
+    <script>
+        $(document).ready(function () {
+            $("#back-to-top").click(() => {
+                $("html").scrollTop(0);
+            })
+
+            $('.box-img img').each(function () {
+                $(this).on('load', function () {
+                    // $(this).siblings('.box-skeleton').remove();
+                    $(this).siblings(".box-skeleton").remove();
+                });
+            });
+        });
+
+        $(document).ready(function () {
+            $('.box-img img').each(function () {
+                var $img = $(this);
+
+                if ($img[0].complete && $img[0].naturalWidth !== 0) {
+                    $img.siblings(".box-skeleton").remove();
+                } else {
+                    $img.on('load', function () {
+                        $(this).siblings(".box-skeleton").remove();
+                    });
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

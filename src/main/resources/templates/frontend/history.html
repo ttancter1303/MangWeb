@@ -14,6 +14,9 @@
                     <a th:href="@{/manga/{id}(id=${his.manga.id})}">
                         <div class="box-img">
                             <img loading="lazy" th:src="${his.manga.thumbnailImg}" th:attr="alt=${his.manga.name}">
+                            <div class="box-skeleton">
+                                <i class="fas fa-spinner"></i>
+                            </div>
                         </div>
                         <div class="box-name">
                             <h6 th:text="${his.manga.name}" class="mb-2"></h6>

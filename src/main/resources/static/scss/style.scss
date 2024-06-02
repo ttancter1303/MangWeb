@@ -187,11 +187,22 @@ body {
         aspect-ratio: 189.5 / 200;
         overflow: hidden;
         margin-bottom: 5px;
+        position: relative;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            z-index: 1;
+        }
+
+        .box-skeleton {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 2;
         }
     }
 
@@ -465,6 +476,10 @@ body {
     width: 100%;
     // aspect-ratio: 1 / 1;
     height: 50px;
+}
+
+.load-skeleton-page-chapter,
+.box-skeleton {
     background-color: $text-main-silver;
     display: flex;
     align-items: center;
