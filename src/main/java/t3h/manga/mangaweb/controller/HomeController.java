@@ -135,22 +135,15 @@ public class HomeController {
 
     @GetMapping("/manga/{id}")
     public String getMangaDetail(@PathVariable("id") Integer mangaId, Model model, HttpSession session) {
-        // Lấy thông tin chi tiết của truyện từ repository (mangaRepository)
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
-
-        // Kiểm tra xem manga có tồn tại không
         if (manga != null) {
-            // Lấy danh sách các chapter của manga
             List<Chapter> chapters = manga.getChapterList();
             Chapter firstChapter = null;
             Chapter lastChapter = null;
             if (chapters != null && !chapters.isEmpty()) {
-                // Lấy chapter đầu tiên và cuối cùng
                 firstChapter = chapters.get(0);
                 lastChapter = chapters.get(chapters.size() - 1);
             }
-            // Chuyển thông tin truyện và danh sách chapter vào model để hiển thị trên trang
-            // chi tiết
             model.addAttribute("manga", manga);
             Account account = (Account) session.getAttribute("USER_LOGGED");
             model.addAttribute("history", historyRepository.findByUser(account));
@@ -159,11 +152,9 @@ public class HomeController {
             model.addAttribute("lastChapter", lastChapter);
             model.addAttribute("title", manga.getName());
             Collections.reverse(chapters);
-            // Trả về tên của trang chi tiết truyện
             model.addAttribute("content", "frontend/manga_detail.html");
             return "layouts/layout.html";
         } else {
-            // Nếu không tìm thấy truyện, trả về một trang lỗi hoặc thông báo lỗi
             model.addAttribute("content", "error/error.html");
             return "layouts/layout.html";
         }
@@ -172,7 +163,6 @@ public class HomeController {
     @GetMapping("/history")
     public String getHistory(Model model, HttpSession session) {
         Account account = (Account) session.getAttribute("USER_LOGGED");
-
         if (account != null) {
             model.addAttribute("history", historyRepository.findByUser(account));
             model.addAttribute("content", "frontend/history.html");
@@ -181,19 +171,30 @@ public class HomeController {
             return "redirect:/";
         }
     }
-
+    @PostMapping("/history/delete/{id}")
+    public String deleteHistory(@PathVariable Integer id, HttpSession session) {
+        Account account = (Account) session.getAttribute("USER_LOGGED");
+        if (account != null) {
+            History history = historyRepository.findById(id).orElse(null);
+            if (history != null && history.getUser().equals(account)) {
+                historyRepository.delete(history);
+            }
+            return "redirect:/";
+        } else {
+            return "redirect:/";
+        }
+    }
     public Resource getImage(String imageUrl) throws Exception {
         return new UrlResource(imageUrl);
     }
 
     @GetMapping("/manga/{mangaId}/chapter/{chapterId}")
     public String getChapter(@PathVariable("mangaId") Integer mangaId,
-            @PathVariable("chapterId") Integer chapterId,
-            HttpSession session,
-            Model model) {
+                             @PathVariable("chapterId") Integer chapterId,
+                             HttpSession session,
+                             Model model) {
         Manga manga = mangaRepository.findById(mangaId).orElse(null);
 
-        // Kiểm tra xem manga có tồn tại không
         if (manga != null) {
             Chapter chapter = chapterRepository.findById(chapterId).orElse(null);
             if (chapter != null) {
@@ -215,19 +216,7 @@ public class HomeController {
 
                 ChapterDTO chapterDTO = new ChapterDTO(chapter);
                 List<String> listimage = chapterDTO.getPathImagesList();
-                List<Resource> listimage2 = new ArrayList<>();
                 List<Chapter> chapters = manga.getChapterList();
-                for (String src : listimage) {
-                    Resource resource = null;
-                    try {
-                        resource = getImage(src);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    if (resource != null && resource.exists()) {
-                        listimage2.add(resource);
-                    }
-                }
                 model.addAttribute("manga", manga);
                 model.addAttribute("chapter", chapter);
 
@@ -245,6 +234,7 @@ public class HomeController {
         }
         model.addAttribute("content", "error/error.html");
         return "layouts/layout.html";
+
     }
 
     @PostMapping("manga/save-manga")

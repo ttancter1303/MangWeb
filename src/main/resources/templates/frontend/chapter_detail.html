@@ -140,12 +140,16 @@
             th:text="${chapter.name}"></a>
     </div>
 </div>
+
+<!-- FB: COMMENT PLUGIN -->
 <div class="w-100 m-0 py-3 bg-content-gray">
     <div class="fb-comments"
         th:attr="data-href=${global.get('baseUrl')} +'/manga/' + ${manga.id} + '/chapter/' +${chapter.id}"
         data-width="100%" data-numposts="5">
     </div>
 </div>
+
+
 <div th:unless="${chapter != null}">
     <p>No chapter found.</p>
 </div>

@@ -85,6 +85,9 @@
                         <div class="mI_thumb">
                             <a th:href="'/manga/' + ${item.manga.id}" class="btn m-0 p-0 w-100">
                                 <img loading="lazy" th:src="${item.manga.thumbnailImg}">
+                                <div class="box-skeleton">
+                                    <i class="fas fa-spinner"></i>
+                                </div>
                             </a>
                         </div>
                         <div class="mI_info">
@@ -95,8 +98,11 @@
                             <div class="mI_control">
                                 <a th:href="'/manga/' + ${item.manga.id} + '/chapter/' + ${item.chapter.id}"
                                     class="btn m-0 p-0" th:text="'Đọc tiếp ' + ${item.chapter.name} + ' >'"></a>
-                                <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i>
-                                    Xóa</button>
+                                <form th:action="@{/history/delete/{id}(id=${item.id})}" method="post">
+                                    <button class="btn m-0 p-0 bg-transparent border-0">
+                                        <i class="fas fa-times"></i> Xóa
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>
