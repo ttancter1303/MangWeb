@@ -150,128 +150,132 @@
                         <div class="mI_control">
                             <a th:href="'/manga/' + ${item.manga.id} + '/chapter/' + ${item.chapter.id}"
                                 class="btn m-0 p-0" th:text="'Đọc tiếp ' + ${item.chapter.name} + ' >'"></a>
-                            <button class="btn m-0 p-0 bg-transparent border-0"><i class="fas fa-times"></i> Xóa</button>
+                            <form th:action="@{/history/delete/{id}(id=${item.id})}" method="post">
+                                <button class="btn m-0 p-0 bg-transparent border-0">
+                                    <i class="fas fa-times"></i> Xóa
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="w-100 m-0 p-0 list-top-manga">
-            <div class="w-100 m-0 p-0 box-tab" role="tablist">
-                <button class=" active" id="top-month-tab" data-bs-toggle="tab" data-bs-target="#top-month"
-                    type="button" role="tab" aria-controls="top-month" aria-selected="true">Top tháng</button>
-                <button class="" id="top-week-tab" data-bs-toggle="tab" data-bs-target="#top-week" type="button"
-                    role="tab" aria-controls="top-week" aria-selected="false">Top tuần</button>
-                <button class="" id="top-day-tab" data-bs-toggle="tab" data-bs-target="#top-day" type="button"
-                    role="tab" aria-controls="top-day" aria-selected="false">Top ngày</button>
-            </div>
-            <div class="tab-content p-2">
-                <div class="tab-pane fade show active w-100" id="top-month" role="tabpanel"
-                    aria-labelledby="top-month-tab">
+<!--        <div class="w-100 m-0 p-0 list-top-manga">-->
+<!--            <div class="w-100 m-0 p-0 box-tab" role="tablist">-->
+<!--                <button class=" active" id="top-month-tab" data-bs-toggle="tab" data-bs-target="#top-month"-->
+<!--                    type="button" role="tab" aria-controls="top-month" aria-selected="true">Top tháng</button>-->
+<!--                <button class="" id="top-week-tab" data-bs-toggle="tab" data-bs-target="#top-week" type="button"-->
+<!--                    role="tab" aria-controls="top-week" aria-selected="false">Top tuần</button>-->
+<!--                <button class="" id="top-day-tab" data-bs-toggle="tab" data-bs-target="#top-day" type="button"-->
+<!--                    role="tab" aria-controls="top-day" aria-selected="false">Top ngày</button>-->
+<!--            </div>-->
+<!--            <div class="tab-content p-2">-->
+<!--                <div class="tab-pane fade show active w-100" id="top-month" role="tabpanel"-->
+<!--                    aria-labelledby="top-month-tab">-->
 
-                    <div class="top-item">
-                        <div class="box-rank">
-                            <span>01</span>
-                        </div>
-                        <div class="manga-item">
-                            <div class="mI_thumb">
-                                <img class="lozad" loading="lazy" src="../img/user.jpg">
-                            </div>
-                            <div class="mI_info">
-                                <div class="mI_name">
-                                    Tinh giáp hồn tướng
-                                </div>
-                                <div class="mI_control">
-                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                    <i><i class="far fa-eye"></i> 62K</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="top-item">-->
+<!--                        <div class="box-rank">-->
+<!--                            <span>01</span>-->
+<!--                        </div>-->
+<!--                        <div class="manga-item">-->
+<!--                            <div class="mI_thumb">-->
+<!--                                <img class="lozad" loading="lazy" src="../img/user.jpg">-->
+<!--                            </div>-->
+<!--                            <div class="mI_info">-->
+<!--                                <div class="mI_name">-->
+<!--                                    Tinh giáp hồn tướng-->
+<!--                                </div>-->
+<!--                                <div class="mI_control">-->
+<!--                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>-->
+<!--                                    <i><i class="far fa-eye"></i> 62K</i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="top-item">
-                        <div class="box-rank">
-                            <span>02</span>
-                        </div>
-                        <div class="manga-item">
-                            <div class="mI_thumb">
-                                <img class="lozad" loading="lazy" src="../img/user.jpg">
-                            </div>
-                            <div class="mI_info">
-                                <div class="mI_name">
-                                    Tinh giáp hồn tướng
-                                </div>
-                                <div class="mI_control">
-                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                    <i><i class="far fa-eye"></i> 62K</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="top-item">-->
+<!--                        <div class="box-rank">-->
+<!--                            <span>02</span>-->
+<!--                        </div>-->
+<!--                        <div class="manga-item">-->
+<!--                            <div class="mI_thumb">-->
+<!--                                <img class="lozad" loading="lazy" src="../img/user.jpg">-->
+<!--                            </div>-->
+<!--                            <div class="mI_info">-->
+<!--                                <div class="mI_name">-->
+<!--                                    Tinh giáp hồn tướng-->
+<!--                                </div>-->
+<!--                                <div class="mI_control">-->
+<!--                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>-->
+<!--                                    <i><i class="far fa-eye"></i> 62K</i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="top-item">
-                        <div class="box-rank">
-                            <span>03</span>
-                        </div>
-                        <div class="manga-item">
-                            <div class="mI_thumb">
-                                <img class="lozad" loading="lazy" src="../img/user.jpg">
-                            </div>
-                            <div class="mI_info">
-                                <div class="mI_name">
-                                    Tinh giáp hồn tướng
-                                </div>
-                                <div class="mI_control">
-                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                    <i><i class="far fa-eye"></i> 62K</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="top-item">-->
+<!--                        <div class="box-rank">-->
+<!--                            <span>03</span>-->
+<!--                        </div>-->
+<!--                        <div class="manga-item">-->
+<!--                            <div class="mI_thumb">-->
+<!--                                <img class="lozad" loading="lazy" src="../img/user.jpg">-->
+<!--                            </div>-->
+<!--                            <div class="mI_info">-->
+<!--                                <div class="mI_name">-->
+<!--                                    Tinh giáp hồn tướng-->
+<!--                                </div>-->
+<!--                                <div class="mI_control">-->
+<!--                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>-->
+<!--                                    <i><i class="far fa-eye"></i> 62K</i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="top-item">
-                        <div class="box-rank">
-                            <span>04</span>
-                        </div>
-                        <div class="manga-item">
-                            <div class="mI_thumb">
-                                <img class="lozad" loading="lazy" src="../img/user.jpg">
-                            </div>
-                            <div class="mI_info">
-                                <div class="mI_name">
-                                    Tinh giáp hồn tướng
-                                </div>
-                                <div class="mI_control">
-                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                    <i><i class="far fa-eye"></i> 62K</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+<!--                    <div class="top-item">-->
+<!--                        <div class="box-rank">-->
+<!--                            <span>04</span>-->
+<!--                        </div>-->
+<!--                        <div class="manga-item">-->
+<!--                            <div class="mI_thumb">-->
+<!--                                <img class="lozad" loading="lazy" src="../img/user.jpg">-->
+<!--                            </div>-->
+<!--                            <div class="mI_info">-->
+<!--                                <div class="mI_name">-->
+<!--                                    Tinh giáp hồn tướng-->
+<!--                                </div>-->
+<!--                                <div class="mI_control">-->
+<!--                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>-->
+<!--                                    <i><i class="far fa-eye"></i> 62K</i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
 
-                    <div class="top-item">
-                        <div class="box-rank">
-                            <span>05</span>
-                        </div>
-                        <div class="manga-item">
-                            <div class="mI_thumb">
-                                <img class="lozad" loading="lazy" src="../img/user.jpg">
-                            </div>
-                            <div class="mI_info">
-                                <div class="mI_name">
-                                    Tinh giáp hồn tướng
-                                </div>
-                                <div class="mI_control">
-                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>
-                                    <i><i class="far fa-eye"></i> 62K</i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="tab-pane fade" id="top-week" role="tabpanel" aria-labelledby="top-week-tab">b</div>
-                <div class="tab-pane fade" id="top-day" role="tabpanel" aria-labelledby="top-day-tab">...</div>
-            </div>
-        </div>
+<!--                    <div class="top-item">-->
+<!--                        <div class="box-rank">-->
+<!--                            <span>05</span>-->
+<!--                        </div>-->
+<!--                        <div class="manga-item">-->
+<!--                            <div class="mI_thumb">-->
+<!--                                <img class="lozad" loading="lazy" src="../img/user.jpg">-->
+<!--                            </div>-->
+<!--                            <div class="mI_info">-->
+<!--                                <div class="mI_name">-->
+<!--                                    Tinh giáp hồn tướng-->
+<!--                                </div>-->
+<!--                                <div class="mI_control">-->
+<!--                                    <a href="#" class="btn m-0 p-0">Chapter 205</a>-->
+<!--                                    <i><i class="far fa-eye"></i> 62K</i>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="tab-pane fade" id="top-week" role="tabpanel" aria-labelledby="top-week-tab">b</div>-->
+<!--                <div class="tab-pane fade" id="top-day" role="tabpanel" aria-labelledby="top-day-tab">...</div>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>
